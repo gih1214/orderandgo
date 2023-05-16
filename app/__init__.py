@@ -3,8 +3,13 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
+from sqlalchemy.ext.declarative import declarative_base
+from contextlib import contextmanager
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine, text
+
 db = SQLAlchemy()
-migrate = Migrate()
+migrate = Migrate()     
 
 def create_app():
     app = Flask(__name__)
@@ -12,6 +17,7 @@ def create_app():
     
     db.init_app(app)
     migrate.init_app(app, db)
+    
     
     # 모든 모델 클래스들을 한번에 import
     from app import models
