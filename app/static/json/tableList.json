@@ -1,0 +1,121 @@
+[
+  {
+    "categoryId" : 1,
+    "category" : "1층",
+    "tableList" : [
+      {
+        "tableId" : 1,
+        "table" : "1",
+        "statusId" : 1,
+        "status" : "빈 테이블",
+        "orderList" : []
+      },
+      {
+        "tableId" : 2,
+        "table" : "2",
+        "statusId" : 1,
+        "status" : "빈 테이블",
+        "orderList" : []
+      },
+      {
+        "tableId" : 3,
+        "table" : "3",
+        "statusId" : 3,
+        "status" : "조리 중",
+        "orderList" : [
+          {
+            "menuId" : 17,
+            "menu" : "순살치킨",
+            "price" : 7000,
+            "count" : 1,
+            "optionList" : [
+              {
+                "optionId" : 2,
+                "option" : "소스 : 간장",
+                "price" : 500,
+                "count" : 2
+              }
+            ]
+          },
+          {
+            "menuId" : 11,
+            "menu" : "30cm마약치즈돈까스",
+            "price" : 9000,
+            "count" : 1,
+            "optionList" : []
+          }
+        ]
+      },
+      {
+        "tableId" : 4,
+        "table" : "4",
+        "statusId" : 1,
+        "status" : "빈 테이블",
+        "orderList" : []
+      },
+      {
+        "tableId" : 5,
+        "table" : "5",
+        "statusId" : 4,
+        "status" : "완료",
+        "orderList" : [
+          {
+            "menuId" : 12,
+            "menu" : "통통군만두",
+            "price" : 5000,
+            "count" : 1,
+            "optionList" : []
+          },
+          {
+            "menuId" : 19,
+            "menu" : "짜파구리",
+            "price" : 8000,
+            "count" : 1,
+            "optionList" : []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "categoryId" : 2,
+    "category" : "2층",
+    "tableList" : [
+      {
+        "tableId" : 6,
+        "table" : "6",
+        "statusId" : 1,
+        "status" : "빈 테이블",
+        "orderList" : []
+      },
+      {
+        "tableId" : 7,
+        "table" : "7",
+        "statusId" : 1,
+        "status" : "빈 테이블",
+        "orderList" : []
+      },
+      {
+        "tableId" : 8,
+        "table" : "8",
+        "statusId" : 1,
+        "status" : "빈 테이블",
+        "orderList" : []
+      },
+      {
+        "tableId" : 9,
+        "table" : "9",
+        "statusId" : 1,
+        "status" : "빈 테이블",
+        "orderList" : []
+      },
+      {
+        "tableId" : 10,
+        "table" : "10",
+        "statusId" : 1,
+        "status" : "빈 테이블",
+        "orderList" : []
+      }
+    ]
+  }
+]
