@@ -23,9 +23,6 @@ class Post(db.Model):
 
     def __repr__(self):
         return f'<Post {self.title}>'
-<<<<<<< HEAD
-    
-=======
     
 class Test(db.Model):
     __tablename__ = 'test'
@@ -211,4 +208,3 @@ class Payment(db.Model):
 
     def __repr__(self):
         return f'<Post {self.title}>'
->>>>>>> 9bf087edea635ef58abc5d60439cb0b1b051777b

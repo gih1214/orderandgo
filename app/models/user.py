@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from flask import session
 from app.models import db, User
 import bcrypt
@@ -37,18 +36,3 @@ def get_user_login(username, password):
 # 로그아웃
 def logout():
     session.clear()
-=======
-# from app.models import db, User
-
-# def create_user(username, email):
-#     user = User(username=username, email=email)
-#     db.session.add(user)
-#     db.session.commit()
-#     return user
-
-# def get_user_by_id(id):
-#     return User.query.filter_by(id=id).first()
-
-# def get_user_by_username(username):
-#     return User.query.filter_by(username=username).first()
->>>>>>> 9bf087edea635ef58abc5d60439cb0b1b051777b
