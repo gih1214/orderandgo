@@ -65,8 +65,8 @@ class Store(db.Model):
     store_image = db.Column(db.String(150), nullable=False)
     main_description = db.Column(db.Text, nullable=False)
     sub_description = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.Datetime, default=datetime.now)
-    last_logged_at = db.Column(db.Datetime, nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    last_logged_at = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
         return f'<Store {self.title}>'
@@ -145,7 +145,7 @@ class Menu(db.Model):
     main_description = db.Column(db.Text, nullable=True)
     sub_description = db.Column(db.Text, nullable=True)
     is_soldout = db.Column(db.Boolean, nullable=False)
-    created_at = db.Column(db.Datetime, default=datetime.now)
+    created_at = db.Column(db.DateTime, default=datetime.now)
     store_id = db.Column(db.Integer, foreign_key=('store.id'))
     menu_has_category_id = db.Column(db.Integer, foreign_key=('manu_has_category.id'))
     menu_option_id = db.Column(db.Integer, foreign_key=('manu_option.id'))
@@ -166,7 +166,7 @@ class OrderStatus(db.Model):
 class Order(db.Model):
     __tablename__ = 'order'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    ordered_at = db.Column(db.Datetime, default=datetime.now)
+    ordered_at = db.Column(db.DateTime, default=datetime.now)
     order_status_id = db.Column(db.Integer, foreign_key=('order_status.id'))
     menu_id = db.Column(db.Integer, foreign_key=('menu.id'))
     table_id = db.Column(db.Integer, foreign_key=('table.id'))
@@ -180,8 +180,8 @@ class TableOrderList(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     table_id = db.Column(db.Integer, foreign_key=('table.id'))
     ordered_id = db.Column(db.Integer, foreign_key=('order.id'))
-    checkingin_at = db.Column(db.Datetime, nullable=False)
-    checkingout_at = db.Column(db.Datetime, nullable=False)
+    checkingin_at = db.Column(db.DateTime, nullable=False)
+    checkingout_at = db.Column(db.DateTime, nullable=False)
     order_status_id = db.Column(db.Integer, foreign_key=('order_status.id'))
 
     def __repr__(self):
@@ -201,7 +201,7 @@ class Payment(db.Model):
     __tablename__ = 'payment'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     payment_amount = db.Column(db.Integer, nullable=False)
-    payment_datetime = db.Column(db.Datetime, defalt=datetime.now)
+    payment_datetime = db.Column(db.DateTime, default=datetime.now)
     store_id = db.Column(db.Integer, foreign_key=('store.id'))
     payment_method_id = db.Column(db.Integer, foreign_key=('payment_method.id'))
     table_order_list_id = db.Column(db.Integer, foreign_key=('table_order_list.id'))
