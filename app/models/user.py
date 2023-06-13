@@ -10,7 +10,6 @@ def create_user(user_id, password, name, birthday, tel, email, address):
     db.session.commit()
     return True
 
-#create_user('test', 'asd123', '이름', '2000-01-01', '010-0000-0000', 'test@test.co.kr', '부산 어딘가')
 
 # 아이디(PK)로 유저 조회
 def get_user_by_id(id):

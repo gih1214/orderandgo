@@ -1,0 +1,35 @@
+.desktop {
+  display: none;
+}
+
+.tablet {
+  display: none;
+}
+
+.mobile {
+  display: none;
+}
+
+/* desktop */
+@media (min-width: 993px) {
+  .desktop {
+    display: inherit !important;
+  }
+}
+
+/* tablet */
+/* @media only screen and (max-width: 991px) and (min-width: 480px) { */
+@media only screen and (max-width: 992px) and (min-width: 769px) {
+  .tablet {
+    display: inherit !important;
+  }
+}
+
+
+/* mobile */
+/* @media only screen and (max-width: 479px) { */
+  @media only screen and (max-width: 768px) {
+    .mobile {
+      display: inherit !important;
+    }
+  }
