@@ -88,6 +88,10 @@ class Table(db.Model):
     name = db.Column(db.String(150), nullable=True)
     number = db.Column(db.Integer, nullable=True)
     seat_count = db.Column(db.Integer, nullable=True)
+    x_axis = db.Column(db.Integer, nullable=False)
+    y_axis = db.Column(db.Integer, nullable=False)
+    page = db.Column(db.Integer, nullable=False)
+    is_group = db.Column(db.Integer, nullable=True)
     table_category_id = db.Column(db.Integer, foreign_key=('table_category.id'))
 
     def __repr__(self):
@@ -182,7 +186,6 @@ class TableOrderList(db.Model):
     ordered_id = db.Column(db.Integer, foreign_key=('order.id'))
     checkingin_at = db.Column(db.DateTime, nullable=False)
     checkingout_at = db.Column(db.DateTime, nullable=False)
-    order_status_id = db.Column(db.Integer, foreign_key=('order_status.id'))
 
     def __repr__(self):
         return f'<TableOrderList {self.title}>'
@@ -208,3 +211,4 @@ class Payment(db.Model):
 
     def __repr__(self):
         return f'<Payment {self.title}>'
+
