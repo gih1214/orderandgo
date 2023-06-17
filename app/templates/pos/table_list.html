@@ -6,14 +6,14 @@
   <title>OrderAndGo</title>
 
   <!-- 시작 초기 css 설정 -->
-  <link rel="stylesheet" href="static/css/responsive.css">
-  <link rel="stylesheet" href="static/css/reset.css">
-  <link rel="stylesheet" href="static/css/common.css">
+  <link rel="stylesheet" href="/static/css/responsive.css">
+  <link rel="stylesheet" href="/static/css/reset.css">
+  <link rel="stylesheet" href="/static/css/common.css">
   <!-- 아이콘 -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
   <!-- 전용 css -->
-  <link rel="stylesheet" href="static/css/pos.css">
+  <link rel="stylesheet" href="/static/css/pos.css">
 </head>
 <body>
   <div id="container">
@@ -25,7 +25,7 @@
       <div class="center">
         <a href="">
           <h1>
-            <img src="static/images/common/logo-order&go-white.png" alt="">
+            <img src="/static/images/common/logo-order&go-white.png" alt="">
           </h1>
         </a>
         <div class="header_info">
@@ -55,9 +55,10 @@
           </ul>
         </nav>
         <article>
-          <div class="tables">
+          <div class="tables items">
             <!-- <h1>POS - article</h1> -->
-            <button class="table" data-state="isServed" data-call="call">
+            <button class="table item" data-state="isServed" data-call="call" 
+              onclick="clickTable(1)">
               <div class="title">
                 <h2>테이블 1 <i class="ph-fill ph-bell-ringing"></i></h2>
                 
@@ -84,7 +85,7 @@
                 </ul>
               </div>
             </button>
-            <button class="table" data-state="isCooking">
+            <button class="table item" data-state="isCooking">
               <div class="title">
                 <h2>테이블 2 <i class="ph-fill ph-bell-ringing"></i></h2>
                 <div class="table_state">조리 중</div>
@@ -110,7 +111,7 @@
                 </ul>
               </div>
             </button>
-            <button class="table" data-state="isCooking">
+            <button class="table item" data-state="isCooking">
               <div class="title">
                 <h2>테이블3 <i class="ph-fill ph-bell-ringing"></i></h2>
                 <div class="table_state">조리 중</div>
@@ -136,7 +137,7 @@
                 </ul>
               </div>
             </button>
-            <button class="table" data-state="isEmpty">
+            <button class="table item" data-state="isEmpty">
               <div class="title">
                 <h2>테이블 4 <i class="ph-fill ph-bell-ringing"></i></h2>
                 <div class="table_state"></div>
@@ -145,7 +146,7 @@
                 <i class="ph-bold ph-plus"></i>
               </div>
             </button>
-            <button class="table" data-state="isEmpty">
+            <button class="table item" data-state="isEmpty">
               <div class="title">
                 <h2>테이블 5 <i class="ph-fill ph-bell-ringing"></i></h2>
                 <div class="table_state"></div>
@@ -155,7 +156,7 @@
                 <i class="ph-bold ph-plus"></i>
               </div>
             </button>
-            <button class="table" data-state="isEmpty">
+            <button class="table item" data-state="isEmpty">
               <div class="title">
                 <h2>테이블 6 <i class="ph-fill ph-bell-ringing"></i></h2>
                 <div class="table_state"></div>
@@ -165,7 +166,7 @@
                 <i class="ph-bold ph-plus"></i>
               </div>
             </button>
-            <button class="table" data-state="isEmpty">
+            <button class="table item" data-state="isEmpty">
               <div class="title">
                 <h2>테이블 7 <i class="ph-fill ph-bell-ringing"></i></h2>
                 <div class="table_state"></div>
@@ -175,7 +176,7 @@
                 <i class="ph-bold ph-plus"></i>
               </div>
             </button>
-            <button class="table" data-state="isServed" data-call="call">
+            <button class="table item" data-state="isServed" data-call="call">
               <div class="title">
                 <h2>테이블 8 <i class="ph-fill ph-bell-ringing"></i></h2>
                 
@@ -202,7 +203,7 @@
                 </ul>
               </div>
             </button>
-            <button class="table" data-state="isCooking">
+            <button class="table item" data-state="isCooking">
               <div class="title">
                 <h2>테이블 9 <i class="ph-fill ph-bell-ringing"></i></h2>
                 <div class="table_state">조리 중</div>
@@ -228,7 +229,7 @@
                 </ul>
               </div>
             </button>
-            <button class="table" data-state="isCooking">
+            <button class="table item" data-state="isCooking">
               <div class="title">
                 <h2>테이블 10 <i class="ph-fill ph-bell-ringing"></i></h2>
                 <div class="table_state">조리 중</div>
@@ -254,7 +255,7 @@
                 </ul>
               </div>
             </button>
-            <button class="table" data-state="isEmpty">
+            <button class="table item" data-state="isEmpty">
               <div class="title">
                 <h2>테이블 11 <i class="ph-fill ph-bell-ringing"></i></h2>
                 <div class="table_state"></div>
@@ -263,7 +264,7 @@
                 <i class="ph-bold ph-plus"></i>
               </div>
             </button>
-            <button class="table" data-state="isEmpty">
+            <button class="table item" data-state="isEmpty">
               <div class="title">
                 <h2>테이블 12 <i class="ph-fill ph-bell-ringing"></i></h2>
                 <div class="table_state"></div>
@@ -273,7 +274,7 @@
                 <i class="ph-bold ph-plus"></i>
               </div>
             </button>
-            <button class="table" data-state="isEmpty">
+            <button class="table item" data-state="isEmpty">
               <div class="title">
                 <h2>테이블 13 <i class="ph-fill ph-bell-ringing"></i></h2>
                 <div class="table_state"></div>
@@ -283,7 +284,7 @@
                 <i class="ph-bold ph-plus"></i>
               </div>
             </button>
-            <button class="table" data-state="isEmpty">
+            <button class="table item" data-state="isEmpty">
               <div class="title">
                 <h2>테이블 14 <i class="ph-fill ph-bell-ringing"></i></h2>
                 <div class="table_state"></div>
@@ -292,7 +293,7 @@
                 <i class="ph-bold ph-plus"></i>
               </div>
             </button>
-            <button class="table" data-state="isEmpty">
+            <button class="table item" data-state="isEmpty">
               <div class="title">
                 <h2>테이블 15 <i class="ph-fill ph-bell-ringing"></i></h2>
                 <div class="table_state"></div>
@@ -321,6 +322,6 @@
   <!-- 공통 스크립트 -->
   <!-- <script src="static/js/common.js"></script> -->
   <!-- 전용 스크립트 -->
-  <!-- <script src="static/js/main.js"></script> -->
+  <script src="/static/js/tableList.js"></script>
 </body>
 </html>
