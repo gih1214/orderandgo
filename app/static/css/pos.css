@@ -65,6 +65,9 @@ header .center .header_info .store_state::before{
 header .center .header_info .store_state[data-state="open"]::before{
   background: #1FAA9C;
 }
+main section {
+  position: relative;
+}
 main section nav{
   padding: 8px 20px;
   background: #fff;
@@ -95,15 +98,18 @@ main section article {
   padding: 20px;
   background: #ddd;
 }
-main section article .tables {
+main section article .items{
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 15px;
-  grid-auto-rows: minmax(0, auto);
-  
+  grid-auto-rows: minmax(0, auto); 
 }
-
-main section article .table{
+main section article .item .body{
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+}
+main section article .item{
   display: flex;
   flex-flow: column;
   gap: 15px;
@@ -118,7 +124,7 @@ main section article .table .title {
   justify-content: space-between;
   width: 100%;
 }
-main section article .table .title h2{
+main section article .item .title h2{
   font-weight: 700;
   font-size: 16px;
   line-height: 19px;
@@ -128,6 +134,8 @@ main section article .table .title h2 i{
   margin-left: 3px;
   color: #F43E25;
 }
+
+
 main section article .table .body{
   width: 100%;
   height: 80px;
@@ -139,9 +147,7 @@ main section article .table .body ul li{
   align-items: center;
   justify-content: space-between;
   margin-bottom: 4px;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 17px;
+  
 }
 main section article .table .body ul li:last-child {
   font-weight: 700;
@@ -192,3 +198,172 @@ main section article .table .body i.ph-plus{
   font-size: 20px;
   color: #ccc;
 }
+main section > aside{
+  display: none;
+}
+
+/* ################# */
+/* ##### order ##### */
+#container.order main section article .menus {
+  grid-template-columns: repeat(4, 1fr);
+}
+#container.order main {
+  display: flex;
+}
+#container.order main > section {
+  flex: 1;
+}
+#container.order main > aside {
+  max-width: 284px;
+  width: 100%;
+  border-left: 1px solid #CCCCCC;
+}
+.basket_container {
+  display: flex;
+  flex-flow: column;
+  gap: 8px;
+}
+.basket_container > .count_btns{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 20px;
+}
+.basket_container > .count_btns button {
+  flex: 1;
+  height: 34px;
+  border: 1px solid #CCCCCC;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #ccc;
+  
+}
+.basket_container > .count_btns button.delete{
+  color: #F43E25;
+  border-color: #F43E25;
+}
+.basket_container .basket{
+  display: flex;
+  flex-flow: column;
+  flex: 1;
+}
+.basket_container .basket li {
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
+  padding: 12px 20px;
+}
+.basket_container .basket li > div{
+  display: flex;
+  gap: 15px;
+  font-size: 16px;
+  line-height: 19px;
+}
+.basket_container .basket li > .menu{
+  font-weight: 500;
+}
+.basket_container .basket li > .menu h2{
+  font-weight: 700;
+}
+.basket_container .basket li > div h2{
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+.basket_container .basket li > div .price{
+  width: 80px;
+  text-align: end;
+}
+.basket_container .basket li > div.menu_option{
+  border-color: #999;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #999;
+}
+.basket_container .basket li > div.menu_option h2::before{
+  content: "";
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-left: 1px solid;
+  border-bottom: 1px solid ;
+  margin-right: 5px;
+
+}
+.basket_container .bottom .total_price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  font-weight: 700;
+} 
+.basket_container .bottom .total_price h2{
+  font-size: 16px;
+}
+.basket_container .bottom .total_price .price {
+  font-size: 20px;
+}
+.basket_container .bottom ul{
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
+  padding: 20px;
+  
+}
+.basket_container .bottom li{
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  border: 1px solid #1FAA9C;
+  border-radius: 5px;
+  color: #1FAA9C;
+}
+.basket_container .bottom li.pay {
+  background: #1FAA9C;
+  color: #FFF;
+}
+.basket_container .bottom ul a{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  padding: 8px 20px;
+  
+}
+
+#container.order main section aside {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  padding: 20px;
+  background: #FFFFFF;
+  border-top: 1px solid #CCCCCC;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+#container.order main section aside .items {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+#container.order main section aside .items .item{
+  display: flex;
+  flex-flow: column;
+  gap: 15px;
+  padding: 20px;
+  background: #F5F5F5;
+  border: 1px solid #CCCCCC;
+  border-radius: 10px;
+}
+
+/* ##### order ##### */
+/* ################# */
