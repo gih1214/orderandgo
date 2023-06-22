@@ -199,48 +199,50 @@
     
   </div>
 
-
   <div>
     <form id="tableCategoryForm">
       <fieldset>
-        <legend>Table Category 생성</legend>
+        <legend>테이블 카테고리 생성</legend>
         
         <label for="categoryName">카테고리 이름:</label>
-        <input type="text" id="categoryName" name="categoryName" required><br><br>
+        <input type="text" id="categoryName" name="categoryName" required value="음식"><br><br>
         
         <label for="storeId">상점 ID:</label>
-        <input type="number" id="storeId" name="storeId" required><br><br>
+        <input type="number" id="storeId" name="storeId" required value="123"><br><br>
         
         <button type="submit">생성</button>
       </fieldset>
     </form>
   </div>
-
-
+  
+  
   <div>
     <form id="tableForm">
       <fieldset>
-        <legend>Table 추가</legend>
+        <legend>테이블 추가</legend>
         
-        <label for="tableName">Table 이름:</label>
-        <input type="text" id="tableName" name="tableName" required><br><br>
+        <label for="tableName">테이블 이름:</label>
+        <input type="text" id="tableName" name="tableName" required value="테이블1"><br><br>
         
-        <label for="tableNumber">Table 번호:</label>
-        <input type="number" id="tableNumber" name="tableNumber" required><br><br>
+        <label for="tableNumber">테이블 번호:</label>
+        <input type="number" id="tableNumber" name="tableNumber" required value="1"><br><br>
         
         <label for="seatCount">좌석 수:</label>
-        <input type="number" id="seatCount" name="seatCount" required><br><br>
+        <input type="number" id="seatCount" name="seatCount" required value="4"><br><br>
         
-        <label for="tableCategory">Table 카테고리:</label>
+        <label for="tableCategory">테이블 카테고리:</label>
         <select id="tableCategory" name="tableCategory" required>
-          <!-- Populate with table category options from the server -->
+          <option value="" disabled selected>카테고리 선택</option>
+          <option value="카테고리1">카테고리1</option>
+          <option value="카테고리2">카테고리2</option>
+          <option value="카테고리3">카테고리3</option>
         </select><br><br>
         
         <button type="submit">추가</button>
       </fieldset>
     </form>
   </div>
-
+  
 
 
 
