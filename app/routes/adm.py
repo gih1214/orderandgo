@@ -194,3 +194,65 @@ def delete_menu_sub_category(menu_sub_category_id):
     return jsonify({'message': '메뉴 서브 카테고리를 성공적으로 삭제되었습니다.'}), 204
 ### 메뉴 서브 카테고리 끝 ###
 ####################
+
+####################
+### 테이블 카테고리 시작 ###
+@adm_bp.route('/table_category', methods=['POST'])
+def create_table_category():
+    # 테이블 카테고리 생성 로직 수행
+    # ...
+    table_category_data = request.get_json()
+    print('Received JSON data:', table_category_data)
+    return jsonify({'message': '테이블 카테고리를 성공적으로 생성되었습니다.'}), 201
+
+@adm_bp.route('/table_category/<table_category_id>', methods=['GET'])
+def get_table_category(table_category_id):
+    # 테이블 카테고리 조회 로직 수행
+    # ...
+    table_category_data = {'id': table_category_id, 'name': 'John Doe', 'email': 'john@example.com'}  # 예시 데이터
+    return jsonify(table_category_data), 200
+
+@adm_bp.route('/table_category/<table_category_id>', methods=['PATCH'])
+def update_table_category(table_category_id):
+    # 테이블 카테고리 업데이트 로직 수행
+    # ...
+    return jsonify({'message': '테이블 카테고리를 성공적으로 업데이트되었습니다.'}), 200
+
+@adm_bp.route('/table_category/<table_category_id>', methods=['DELETE'])
+def delete_table_category(table_category_id):
+    # 테이블 카테고리 삭제 로직 수행
+    # ...
+    return jsonify({'message': '테이블 카테고리를 성공적으로 삭제되었습니다.'}), 204
+### 테이블 카테고리 끝 ###
+####################
+
+####################
+### 테이블 시작 ###
+@adm_bp.route('/table', methods=['POST'])
+def create_table():
+    # 테이블 생성 로직 수행
+    # ...
+    table_data = request.get_json()
+    print('Received JSON data:', table_data)
+    return jsonify({'message': '테이블을 성공적으로 생성되었습니다.'}), 201
+
+@adm_bp.route('/table/<table_id>', methods=['GET'])
+def get_table(table_id):
+    # 테이블 조회 로직 수행
+    # ...
+    table_data = {'id': table_id, 'name': 'John Doe', 'email': 'john@example.com'}  # 예시 데이터
+    return jsonify(table_data), 200
+
+@adm_bp.route('/table/<table_id>', methods=['PATCH'])
+def update_table(table_id):
+    # 테이블 업데이트 로직 수행
+    # ...
+    return jsonify({'message': '테이블을 성공적으로 업데이트되었습니다.'}), 200
+
+@adm_bp.route('/table/<table_id>', methods=['DELETE'])
+def delete_table(table_id):
+    # 테이블 삭제 로직 수행
+    # ...
+    return jsonify({'message': '테이블을 성공적으로 삭제되었습니다.'}), 204
+### 테이블 끝 ###
+####################

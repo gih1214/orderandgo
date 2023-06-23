@@ -118,6 +118,32 @@ handleFormSubmit('subCategoryForm', function(subCategoryData) {
   main();
 });
 
+handleFormSubmit('tableCategoryForm', function(subCategoryData) {
+  console.log(subCategoryData);
+  async function main() {
+    try {
+      const response = await submitFun( url+'/adm/table_category', 'POST', subCategoryData);
+      console.log('Received data:', response);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  main();
+});
+
+handleFormSubmit('tableForm', function(subCategoryData) {
+  console.log(subCategoryData);
+  async function main() {
+    try {
+      const response = await submitFun( url+'/adm/table', 'POST', subCategoryData);
+      console.log('Received data:', response);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  main();
+});
+
 
 
 async function submitFun(url, method, data) {

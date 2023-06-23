@@ -48,8 +48,8 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now)
     last_logged_at = db.Column(db.DateTime, nullable=True)
 
-    def __repr__(self):
-        return f'<User {self.title}>'
+    #def __repr__(self):
+    #    return f'<User {self.title}>'
 
 
 class Store(db.Model):
@@ -68,8 +68,8 @@ class Store(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now)
     last_logged_at = db.Column(db.DateTime, nullable=True)
 
-    def __repr__(self):
-        return f'<Store {self.title}>'
+    #def __repr__(self):
+    #    return f'<Store {self.title}>'
 
 
 class TableCategory(db.Model):
@@ -78,8 +78,8 @@ class TableCategory(db.Model):
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
     category_name = db.Column(db.String(50), nullable=True)
 
-    def __repr__(self):
-        return f'<TableCategory {self.title}>'
+    #def __repr__(self):
+    #    return f'<TableCategory {self.title}>'
 
 
 class Table(db.Model):
@@ -94,8 +94,8 @@ class Table(db.Model):
     is_group = db.Column(db.Integer, nullable=True)
     table_category_id = db.Column(db.Integer, foreign_key=('table_category.id'))
 
-    def __repr__(self):
-        return f'<Table {self.title}>'
+    #def __repr__(self):
+    #    return f'<Table {self.title}>'
 
 
 class MainCategory(db.Model):
@@ -104,8 +104,8 @@ class MainCategory(db.Model):
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
     name = db.Column(db.String(150), nullable=False)
 
-    def __repr__(self):
-        return f'<MainCategory {self.title}>'
+    #def __repr__(self):
+    #    return f'<MainCategory {self.title}>'
 
 
 class SubCategory(db.Model):
@@ -114,8 +114,8 @@ class SubCategory(db.Model):
     main_category_id = db.Column(db.Integer, db.ForeignKey('main_category.id'))
     name = db.Column(db.String(150), nullable=False)
 
-    def __repr__(self):
-        return f'<SubCategory {self.title}>'
+    #def __repr__(self):
+    #    return f'<SubCategory {self.title}>'
 
 
 class MenuHasCategory(db.Model):
@@ -124,8 +124,8 @@ class MenuHasCategory(db.Model):
     main_category_id = db.Column(db.Integer, db.ForeignKey('main_category.id'))
     sub_category_id = db.Column(db.Integer, db.ForeignKey('sub_category.id'), nullable=True)
 
-    def __repr__(self):
-        return f'<MenuHasCategory {self.title}>'
+    #def __repr__(self):
+    #    return f'<MenuHasCategory {self.title}>'
 
 
 class MenuOption(db.Model):
@@ -136,8 +136,8 @@ class MenuOption(db.Model):
     description = db.Column(db.Text, nullable=True)
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
 
-    def __repr__(self):
-        return f'<MenuOption {self.title}>'
+    #def __repr__(self):
+    #    return f'<MenuOption {self.title}>'
 
 
 class Menu(db.Model):
@@ -154,8 +154,8 @@ class Menu(db.Model):
     menu_has_category_id = db.Column(db.Integer, db.ForeignKey('menu_has_category.id'))
     menu_option_id = db.Column(db.Integer, db.ForeignKey('menu_option.id'))
 
-    def __repr__(self):
-        return f'<Menu {self.title}>'
+    #def __repr__(self):
+    #    return f'<Menu {self.title}>'
 
 
 class OrderStatus(db.Model):
@@ -163,8 +163,8 @@ class OrderStatus(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     status = db.Column(db.String(150), nullable=False)
 
-    def __repr__(self):
-        return f'<OrderStatus {self.title}>'
+    #def __repr__(self):
+    #    return f'<OrderStatus {self.title}>'
 
 
 class Order(db.Model):
@@ -175,8 +175,8 @@ class Order(db.Model):
     menu_id = db.Column(db.Integer, db.ForeignKey('menu.id'))
     table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
 
-    def __repr__(self):
-        return f'<Order {self.title}>'
+    #def __repr__(self):
+    #    return f'<Order {self.title}>'
 
 
 class TableOrderList(db.Model):
@@ -187,8 +187,8 @@ class TableOrderList(db.Model):
     checkingin_at = db.Column(db.DateTime, nullable=False)
     checkingout_at = db.Column(db.DateTime, nullable=False)
 
-    def __repr__(self):
-        return f'<TableOrderList {self.title}>'
+    #def __repr__(self):
+    #    return f'<TableOrderList {self.title}>'
 
 
 class Payment_method(db.Model):
@@ -196,8 +196,8 @@ class Payment_method(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     method = db.Column(db.String(50), nullable=False)
 
-    def __repr__(self):
-        return f'<Payment_method {self.title}>'
+    #def __repr__(self):
+    #    return f'<Payment_method {self.title}>'
 
 
 class Payment(db.Model):
@@ -209,6 +209,5 @@ class Payment(db.Model):
     payment_method_id = db.Column(db.Integer, db.ForeignKey('payment_method.id'))
     table_order_list_id = db.Column(db.Integer, db.ForeignKey('table_order_list.id'))
 
-    def __repr__(self):
-        return f'<Payment {self.title}>'
-
+    #def __repr__(self):
+    #    return f'<Payment {self.title}>'
