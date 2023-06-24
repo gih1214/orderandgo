@@ -92,7 +92,7 @@ class Table(db.Model):
     y_axis = db.Column(db.Integer, nullable=False)
     page = db.Column(db.Integer, nullable=False)
     is_group = db.Column(db.Integer, nullable=True)
-    table_category_id = db.Column(db.Integer, foreign_key=('table_category.id'))
+    table_category_id = db.Column(db.Integer, db.ForeignKey('table_category.id'))
 
     #def __repr__(self):
     #    return f'<Table {self.title}>'
