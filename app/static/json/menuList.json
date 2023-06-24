@@ -128,10 +128,12 @@
         "price" : 7000,
         "optionList" : [
           {
+            "optionId" : 4,
             "option" : "소스 : 간장",
             "price" : 500 
           },
           {
+            "optionId" : 5,
             "option" : "소스 : 크림",
             "price" : 500 
           }
