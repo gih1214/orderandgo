@@ -118,16 +118,6 @@ class SubCategory(db.Model):
     #    return f'<SubCategory {self.title}>'
 
 
-class MenuHasCategory(db.Model):
-    __tablename__ = 'menu_has_category'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    main_category_id = db.Column(db.Integer, db.ForeignKey('main_category.id'))
-    sub_category_id = db.Column(db.Integer, db.ForeignKey('sub_category.id'), nullable=True)
-
-    #def __repr__(self):
-    #    return f'<MenuHasCategory {self.title}>'
-
-
 class MenuOption(db.Model):
     __tablename__ = 'menu_option'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -151,7 +141,7 @@ class Menu(db.Model):
     is_soldout = db.Column(db.Boolean, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
-    menu_has_category_id = db.Column(db.Integer, db.ForeignKey('menu_has_category.id'))
+    main_category_id = db.Column(db.Integer, db.ForeignKey('main_category.id'))
 
     #def __repr__(self):
     #    return f'<Menu {self.title}>'
