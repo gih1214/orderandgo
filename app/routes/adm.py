@@ -1,6 +1,7 @@
 from flask import render_template, jsonify, request
 from app.routes import adm_bp
 from app.models.user import create_user
+from app.models.store import create_store
 
 @adm_bp.route('/')
 def index():
@@ -10,9 +11,9 @@ def index():
 ### 유저 시작 ###
 
 # 회원가입(유저 생성)
-# 회원가입 페이지로 옮긴 후 path 수정 필요 !!
 @adm_bp.route('/user', methods=['GET', 'POST'])
 def create_user_py():
+    # 회원가입 페이지로 옮긴 후 path 수정 필요
     #if request.method == 'GET':
     #    return render_template('/register.html')
 
@@ -27,8 +28,6 @@ def create_user_py():
         tel = user_data['tel']
         email = user_data['email']
         address = user_data['address']
-        #print(birthday)
-        print('여기까진 옴')
         user = create_user(user_id, password, name, birthday, tel, email, address)
         print("회원가입 성공", user)
         response = jsonify({'message': 'Success'})
@@ -59,13 +58,36 @@ def delete_user(user_id):
 
 ####################
 ### 스토어 시작 ###
-@adm_bp.route('/store', methods=['POST'])
-def create_store():
-    # 스토어 생성 로직 수행
-    # ...
-    store_data = request.get_json()
-    print('Received JSON data:', store_data)
-    return jsonify({'message': '사용자가 성공적으로 생성되었습니다.'}), 201
+
+# 매장 생성
+@adm_bp.route('/store', methods=['GET', 'POST'])
+def create_store_py():
+    # 매장 생성 페이지로 옮긴 후 path 수정 필요
+    # if request.method == 'GET':
+    #    return render_template('/register.html')
+
+    if request.method == 'POST':
+        store_data = request.get_json()
+        
+        #user_id = store_data['user_id']
+        # 유저 아이디 코드 수정 필요 !!!
+        user_id = 14
+        name = store_data['name']
+        address = store_data['address']
+        tel = store_data['tel']
+        manager_name = store_data['manager_name']
+        manager_tel = store_data['manager_tel']
+        logo_img = store_data['logo_img']
+        store_image = store_data['store_image']
+        main_description = store_data['main_description']
+        sub_description = store_data['sub_description']
+        store = create_store(user_id, name, address, tel, manager_name, manager_tel, logo_img, store_image, main_description, sub_description)
+        print("매장생성 성공", store)
+        response = jsonify({'message': 'Success'})
+        response.status_code = 200
+        print('Received JSON data:', store_data)
+        return response
+        #return jsonify({'message': '매장이 성공적으로 생성되었습니다.'}), 201
 
 @adm_bp.route('/store/<store_id>', methods=['GET'])
 def get_store(store_id):

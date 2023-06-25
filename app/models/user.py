@@ -15,7 +15,6 @@ def create_user(user_id, password, name, birthday, tel, email, address):
     print("comming22")
     return True
 
-
 # 아이디(PK)로 유저 조회
 def get_user_by_id(id):
     return User.query.filter_by(id=id).first()
