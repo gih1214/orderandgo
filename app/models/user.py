@@ -6,13 +6,11 @@ from datetime import datetime
 
 # 회원가입
 def create_user(user_id, password, name, birthday, tel, email, address):
-    print("comming1")
     b_day  = datetime.strptime(birthday, '%Y-%m-%d').date()
     user = User(user_id=user_id, password=bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()),
                 name=name, birthday=b_day, tel=tel, email=email, address=address)
     db.session.add(user)
     db.session.commit()
-    print("comming22")
     return True
 
 # 아이디(PK)로 유저 조회

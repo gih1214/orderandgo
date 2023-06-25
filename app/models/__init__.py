@@ -152,10 +152,16 @@ class Menu(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now)
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
     menu_has_category_id = db.Column(db.Integer, db.ForeignKey('menu_has_category.id'))
-    menu_option_id = db.Column(db.Integer, db.ForeignKey('menu_option.id'))
 
     #def __repr__(self):
     #    return f'<Menu {self.title}>'
+
+
+class MenuHasOption(db.Model):
+    __tablename__ = 'menu_has_option'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    menu_id = db.Column(db.Integer, db.ForeignKey('menu.id'))
+    option_id = db.Column(db.Integer, db.ForeignKey('menu_option.id'))
 
 
 class OrderStatus(db.Model):
