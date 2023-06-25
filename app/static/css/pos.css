@@ -13,27 +13,16 @@ header .center{
   display: flex;
   flex: 1;
   justify-content: space-between;
-  padding: 10px 20px;
+  padding: 10px 15px 10px 10px;
+}
+header .center img {
+  height: 20px
 }
 header .back_btn,
 header .home_btn {
   position: relative;
   font-size: 15px;
   padding: 12.5px 15px;
-}
-header .home_btn::after,
-header .back_btn::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  height: 100%;
-  border: 1px solid #ccc;
-}
-header .home_btn::after {
-  left: 0;
-}
-header .back_btn::after {
-  right: 0;
 }
 header .home_btn:focus-visible{
   outline: auto;
@@ -113,18 +102,33 @@ main section article .item{
   display: flex;
   flex-flow: column;
   gap: 15px;
+  width: 100%;
   padding: 20px;
   background: #FFFFFF;
   border: 1px solid #CCCCCC;
   border-radius: 10px;
+  text-align: start;
+  overflow: hidden;
+}
+main section article .item.active {
+  border-color: #1FAA9C;
+  background: #F3FAFA;
+}
+main section article .item.disabled {
+  opacity: .5;
+}
+main section article .item .title{
+  width: 100%;
 }
 main section article .table .title {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
 }
 main section article .item .title h2{
+  width: 100%;
   font-weight: 700;
   font-size: 16px;
   line-height: 19px;
@@ -149,13 +153,15 @@ main section article .table .body ul li{
   margin-bottom: 4px;
   
 }
-main section article .table .body ul li:last-child {
+main section article .table .body ul li.order_more {
   font-weight: 700;
   margin-bottom: 0;
   
 }
 
 main section article .table .table_state {
+  position: absolute;
+  right: 0;
   padding: 3.5px 8px;
   border: 1px solid;
   border-radius: 50px;
@@ -170,28 +176,32 @@ main section article .table[data-call="call"] {
 main section article .table[data-call="call"] .ph-bell-ringing{
   display: inline-flex;
 }
-main section article .table[data-state="isServed"] .table_state {
+main section article .table[data-state="3"] .table_state {
   border-color: #1FAA9C;
   color: #1FAA9C;
 }
-main section article .table[data-state="isCooking"] .table_state {
+main section article .table[data-state="3"] .table_state {
+  border-color: #1FAA9C;
+  color: #1FAA9C;
+}
+main section article .table[data-state="2"] .table_state {
   border-color: #F46325;
   color: #F46325;
 }
 
-main section article .table[data-state="isEmpty"] .body {
+main section article .table[data-state="0"] .body {
   display: flex;  
   align-items: center;
   justify-content: center;
   width: 100%;
 }
-main section article .table[data-state="isEmpty"] .table_state {
+main section article .table[data-state="0"] .table_state {
   display: none;
 }
-main section article .table[data-state="isEmpty"] .body ul {
+main section article .table[data-state="0"] .body ul {
   display: none;
 }
-main section article .table:not([data-state="isEmpty"]) i.ph-plus {
+main section article .table:not([data-state="0"]) i.ph-plus {
   display: none;
 }
 main section article .table .body i.ph-plus{
@@ -257,6 +267,31 @@ main section > aside{
   gap: 10px;
   padding: 12px 20px;
 }
+.basket_container .basket li .menu {
+  position: relative;
+}
+.basket_container .basket li .menu.active{
+}
+.basket_container .basket li .menu.active::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -12px;
+  bottom: -12px;
+  left: -20px;
+  right: -20px;
+  background: #F3FAFA;
+}
+.basket_container .basket li .menu_option.active::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -8px;
+  bottom: -8px;
+  left: -20px;
+  right: -20px;
+  background: #F3FAFA;
+}
 .basket_container .basket li > div{
   display: flex;
   gap: 15px;
@@ -280,6 +315,7 @@ main section > aside{
   text-align: end;
 }
 .basket_container .basket li > div.menu_option{
+  position: relative;
   border-color: #999;
   font-weight: 500;
   font-size: 14px;
@@ -343,12 +379,15 @@ main section > aside{
   position: absolute;
   bottom: 0;
   left: 0;
-  display: block;
+  display: none;
   width: 100%;
   padding: 20px;
   background: #FFFFFF;
   border-top: 1px solid #CCCCCC;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+#container.order main section aside.active {
+  display: block;
 }
 #container.order main section aside .items {
   display: grid;
