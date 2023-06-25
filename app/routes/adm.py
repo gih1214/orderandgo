@@ -2,6 +2,8 @@ from flask import render_template, jsonify, request
 from app.routes import adm_bp
 from app.models.user import create_user
 from app.models.menu_category import create_main_category, create_sub_category
+from app.models.store import create_store
+from app.models.menu import create_menu
 
 @adm_bp.route('/')
 def index():
@@ -113,13 +115,32 @@ def delete_store(store_id):
 
 ####################
 ### 메뉴 시작 ###
-@adm_bp.route('/menu', methods=['POST'])
-def create_menu():
-    # 메뉴 생성 로직 수행
-    # ...
-    menu_data = request.get_json()
-    print('Received JSON data:', menu_data)
-    return jsonify({'message': '메뉴가 성공적으로 생성되었습니다.'}), 201
+
+# 메뉴 생성
+@adm_bp.route('/menu', methods=['GET', 'POST'])
+def create_menu_py():
+    # 메뉴 생성 페이지로 옮긴 후 path 수정 필요
+    # if request.method == 'GET':
+    #    return render_template('/register.html')
+
+    if request.method == 'POST':
+        menu_data = request.get_json()
+
+        # store_id, menu_category_id 수정 필요
+        name = menu_data['name']
+        price = menu_data['price']
+        image = menu_data['image']
+        main_description = menu_data['main_description']
+        sub_description = menu_data['sub_description']
+        is_soldout = menu_data['is_soldout']
+        store_id = 1 #menu_data['store_id']
+        menu_category_id = 1 #menu_data['menu_category_id']
+        menu = create_menu(name, price, image, main_description, sub_description, is_soldout, store_id, menu_category_id)
+        print("메뉴생성 성공", menu)
+        response = jsonify({'message': 'Success'})
+        response.status_code = 200
+        print('Received JSON data:', menu_data)
+        return response
 
 @adm_bp.route('/menu/<menu_id>', methods=['GET'])
 def get_menu(menu_id):
