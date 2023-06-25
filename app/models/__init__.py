@@ -141,7 +141,7 @@ class Menu(db.Model):
     is_soldout = db.Column(db.Boolean, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
-    main_category_id = db.Column(db.Integer, db.ForeignKey('main_category.id'))
+    menu_category_id = db.Column(db.Integer, db.ForeignKey('sub_category.id'))
 
     #def __repr__(self):
     #    return f'<Menu {self.title}>'
