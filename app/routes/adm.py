@@ -1,5 +1,6 @@
 from flask import render_template, jsonify, request
 from app.routes import adm_bp
+from app.models.user import create_user
 
 @adm_bp.route('/')
 def index():
@@ -11,7 +12,7 @@ def index():
 # 회원가입(유저 생성)
 # 회원가입 페이지로 옮긴 후 path 수정 필요 !!
 @adm_bp.route('/user', methods=['GET', 'POST'])
-def create_user():
+def create_user_py():
     #if request.method == 'GET':
     #    return render_template('/register.html')
 
