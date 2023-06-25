@@ -1,7 +1,7 @@
 from flask import render_template, jsonify, request
 from app.routes import adm_bp
 from app.models.user import create_user
-from app.models.store import create_store
+from app.models.menu_category import create_main_category, create_sub_category
 
 @adm_bp.route('/')
 def index():
@@ -181,9 +181,14 @@ def delete_menu_option(menu_option_id):
 @adm_bp.route('/menu_main_category', methods=['POST'])
 def create_menu_main_category():
     # 메뉴 메인 카테고리 생성 로직 수행
-    # ...
-    menu_main_category_data = request.get_json()
-    print('Received JSON data:', menu_main_category_data)
+    if request.method == 'POST':
+        menu_main_category_data = request.get_json()
+        # store_id  = menu_main_category_data['store_id']
+        store_id = 1    # temp
+        name = menu_main_category_data['mainCategoryName']
+        main_category = create_main_category(store_id, name)
+        create_sub_category(main_category.id, '{}-1'.format(main_category.name))
+
     return jsonify({'message': '메뉴 메인 카테고리를 성공적으로 생성되었습니다.'}), 201
 
 @adm_bp.route('/menu_main_category/<menu_main_category_id>', methods=['GET'])
@@ -212,9 +217,11 @@ def delete_menu_main_category(menu_main_category_id):
 @adm_bp.route('/menu_sub_category', methods=['POST'])
 def create_menu_sub_category():
     # 메뉴 서브 카테고리 생성 로직 수행
-    # ...
     menu_sub_category_data = request.get_json()
-    print('Received JSON data:', menu_sub_category_data)
+    main_category_id = menu_sub_category_data['mainCategoryId']
+    name = menu_sub_category_data['subCategoryName']
+    create_sub_category(main_category_id, name)
+
     return jsonify({'message': '메뉴 서브 카테고리를 성공적으로 생성되었습니다.'}), 201
 
 @adm_bp.route('/menu_sub_category/<menu_sub_category_id>', methods=['GET'])
