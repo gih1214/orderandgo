@@ -3,6 +3,7 @@ from app.routes import auth_bp
 
 from app.models.user import create_user, get_user_login
 
+# 로그인
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
@@ -22,6 +23,7 @@ def login():
         response.status_code = 200
         return response
 
+# 회원가입
 @auth_bp.route("/register", methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':

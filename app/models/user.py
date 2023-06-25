@@ -8,8 +8,7 @@ def create_user(user_id, password, name, birthday, tel, email, address):
                 name=name, birthday=birthday, tel=tel, email=email, address=address)
     db.session.add(user)
     db.session.commit()
-    return True
-
+    return user
 
 # 아이디(PK)로 유저 조회
 def get_user_by_id(id):
@@ -39,7 +38,7 @@ def update_user(id, password, name, birthday, tel, email, address):
         user.address = address
 
         db.session.commit()
-        return True
+        return user
     
 # 아이디(PK)로 유저 삭제
 def delete_user_by_id(id):
