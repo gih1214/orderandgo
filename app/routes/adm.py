@@ -1,4 +1,6 @@
 from flask import render_template, jsonify, request
+import os
+
 from app.routes import adm_bp
 from app.models.user import create_user
 from app.models.menu_category import create_main_category, create_sub_category
@@ -83,8 +85,28 @@ def create_store_py():
         store_image = store_data['store_image']
         main_description = store_data['main_description']
         sub_description = store_data['sub_description']
+
         store = create_store(user_id, name, address, tel, manager_name, manager_tel, logo_img, store_image, main_description, sub_description)
-        print("매장생성 성공", store)
+        print("매장생성 1차 성공", store)
+
+        # store 이미지 다시 넣기
+        store_image = request.files['store_image']
+        UPLOAD_FOLDER = 'app/static/images/user/'
+        upload_path = '{}{}/{}/store_img'.format(UPLOAD_FOLDER, user_id, store.id)
+        if not os.path.exists(upload_path):
+            os.makedirs(upload_path)        
+        store_image.save(os.path.join(upload_path, store_image))
+        store_image_path = '{}/{}'.format(upload_path, store_image.filename)
+
+        # 수정할 때 컬럼을 파라미터로 전달하면 안받아져서 쿼리를 여기 넣음
+        from flask import session
+        from app.models import db, Store
+        store_item = session.query(Store).filter(Store.id == store.id).first()
+        if not store_item:
+            return '잘못된 store_item'
+        store_item.store_image = store_image_path
+        session.commit()
+
         response = jsonify({'message': 'Success'})
         response.status_code = 200
         print('Received JSON data:', store_data)
