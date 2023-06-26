@@ -89,6 +89,7 @@ def create_store_py():
         store = create_store(user_id, name, address, tel, manager_name, manager_tel, logo_img, store_image, main_description, sub_description)
         print("매장생성 1차 성공", store)
 
+        '''
         # store 이미지 다시 넣기
         store_image = request.files['store_image']
         UPLOAD_FOLDER = 'app/static/images/user/'
@@ -106,6 +107,7 @@ def create_store_py():
             return '잘못된 store_item'
         store_item.store_image = store_image_path
         session.commit()
+        '''
 
         response = jsonify({'message': 'Success'})
         response.status_code = 200
