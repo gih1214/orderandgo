@@ -1,5 +1,8 @@
-from flask import render_template, jsonify, request
+from flask import render_template, jsonify, request, session
+import os
+
 from app.routes import adm_bp
+from app.models import db, Store, TableCategory, Table
 from app.models.user import create_user
 from app.models.menu_category import create_main_category, create_sub_category
 from app.models.store import create_store
@@ -83,8 +86,21 @@ def create_store_py():
         store_image = store_data['store_image']
         main_description = store_data['main_description']
         sub_description = store_data['sub_description']
+
         store = create_store(user_id, name, address, tel, manager_name, manager_tel, logo_img, store_image, main_description, sub_description)
-        print("매장생성 성공", store)
+        print("매장생성 1차 성공", store)
+
+        '''
+        # store 이미지 다시 넣기
+        store_image = request.files['store_image']
+        UPLOAD_FOLDER = 'app/static/images/user/'
+        upload_path = '{}{}/{}/store_img'.format(UPLOAD_FOLDER, user_id, store.id)
+        if not os.path.exists(upload_path):
+            os.makedirs(upload_path)        
+        store_image.save(os.path.join(upload_path, store_image))
+        store_image_path = '{}/{}'.format(upload_path, store_image.filename)
+        '''
+
         response = jsonify({'message': 'Success'})
         response.status_code = 200
         print('Received JSON data:', store_data)
@@ -277,9 +293,17 @@ def delete_menu_sub_category(menu_sub_category_id):
 @adm_bp.route('/table_category', methods=['POST'])
 def create_table_category():
     # 테이블 카테고리 생성 로직 수행
-    # ...
     table_category_data = request.get_json()
+    store_id = int(table_category_data['storeId'])
+    category_name = table_category_data['categoryName']
     print('Received JSON data:', table_category_data)
+
+    store_id = 1    # temp
+
+    table_category = TableCategory(store_id=store_id, category_name=category_name)
+    db.session.add(table_category)
+    db.session.commit()
+
     return jsonify({'message': '테이블 카테고리를 성공적으로 생성되었습니다.'}), 201
 
 @adm_bp.route('/table_category/<table_category_id>', methods=['GET'])
@@ -308,9 +332,24 @@ def delete_table_category(table_category_id):
 @adm_bp.route('/table', methods=['POST'])
 def create_table():
     # 테이블 생성 로직 수행
-    # ...
     table_data = request.get_json()
     print('Received JSON data:', table_data)
+
+    name = table_data['tableName']
+    number = table_data['tableNumber']
+    seat_count = table_data['seatCount']
+    table_category_id = table_data['tableCategory']
+
+    store_id = 1    # temp
+    x_axis = 1    # temp
+    y_axis = 1    # temp
+    page = 1    # temp
+    table_category_id=1 #temp
+
+    table = Table(name=name, number=number, seat_count=seat_count, x_axis=x_axis, y_axis=y_axis, page=page, table_category_id=table_category_id)
+    db.session.add(table)
+    db.session.commit()
+
     return jsonify({'message': '테이블을 성공적으로 생성되었습니다.'}), 201
 
 @adm_bp.route('/table/<table_id>', methods=['GET'])

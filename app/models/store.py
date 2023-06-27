@@ -8,12 +8,19 @@ def create_store(user_id, name, address, tel, manager_name, manager_tel,
                  logo_img=logo_img, store_image=store_image, main_description=main_description, sub_description=sub_description)
     db.session.add(store)
     db.session.commit()
-    return True
+    return store
 
 # 조회
 
 
-# 수정
-
+# # 수정
+# def update_store(store_id, column, value):
+#     store_item = session.query(Store).filter(Store.id == store_id).first()
+#     if not store_item:
+#         return '잘못된 store_item'
+    
+#     store_item[column] = value
+#     session.commit()
+#     return True
 
 # 삭제
