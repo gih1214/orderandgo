@@ -388,6 +388,10 @@ main section > aside{
 }
 #container.order main section aside.active {
   display: block;
+  border-radius: 20px 20px 0px 0px;
+    border-top: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+    border-left: 1px solid #CCC;
 }
 #container.order main section aside .items {
   display: grid;
@@ -402,6 +406,10 @@ main section > aside{
   background: #F5F5F5;
   border: 1px solid #CCCCCC;
   border-radius: 10px;
+}
+#container.order main section aside .items .item .title {
+  font-size: 16px;
+  font-weight: 700;
 }
 
 /* ##### order ##### */
