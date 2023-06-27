@@ -3,7 +3,7 @@ from app.routes import adm_bp
 from app.models.user import create_user
 from app.models.menu_category import create_main_category, create_sub_category
 from app.models.store import create_store
-from app.models.menu import create_menu
+from app.models.menu import create_menu, create_menu_option
 
 @adm_bp.route('/')
 def index():
@@ -168,12 +168,18 @@ def delete_menu(menu_id):
 ####################
 ### 메뉴옵션 시작 ###
 @adm_bp.route('/menu_option', methods=['POST'])
-def create_menu_option():
-    # 메뉴옵션 생성 로직 수행
-    # ...
-    menu_option_data = request.get_json()
-    print('Received JSON data:', menu_option_data)
-    return jsonify({'message': '메뉴 옵션을 성공적으로 생성되었습니다.'}), 201
+def create_menu_option_py():
+    if request.method == 'POST':
+        menu_option_data = request.get_json()
+        # create_menu_option(name, price, description, store_id)
+        name = menu_option_data['optionName']
+        price = menu_option_data['optionPrice']
+        description = menu_option_data['optionDescription']
+        store_id = 1 #menu_option_data['store_id']
+        menu_option = create_menu_option(name, price, description,store_id)
+        print("메뉴생성 성공", menu_option)
+        print('Received JSON data:', menu_option_data)
+        return jsonify({'message': '메뉴 옵션이 성공적으로 생성되었습니다.'}), 201
 
 @adm_bp.route('/menu_option/<menu_option_id>', methods=['GET'])
 def get_menu_option(menu_option_id):
