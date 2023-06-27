@@ -19,7 +19,7 @@ def create_store(user_id, name, address, tel, manager_name, manager_tel,
 #     if not store_item:
 #         return '잘못된 store_item'
     
-#     store_item.column = value
+#     store_item[column] = value
 #     session.commit()
 #     return True
 
