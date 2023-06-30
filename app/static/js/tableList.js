@@ -93,3 +93,34 @@ function clickTable(table_id){
   window.location.href=`/pos/menuList/${table_id}`
 }
 
+const clickSetBtn = (event) => {
+  openModalFun(event)
+  const _modal = document.querySelector('.modal');
+  const _modalTitle = document.querySelector('.modal-content h1');
+  const _modalBody = document.querySelector('.modal-content .modal-body');
+  _modalTitle.innerHTML = '설정'
+  let html = `
+    <div class="top">
+      <div class="grid">
+        <button class="" onclick="clickMoveAndjoinBtn(event)">
+          <i class="ph ph-swap"></i>
+          <span>이동/합석</span>
+        </button>
+        <button class="" onclick="clickGroupBtn(event)">
+          <i class="ph ph-users-three"></i>
+          <span>그룹</span>
+        </button>
+        <button class="" onclick="clickZoningBtn(event)">
+          <i class="ph ph-squares-four"></i>
+          <span>구역 설정</span>
+        </button>
+        <button class="" onclick="clickSetTableBtn(event)">
+          <i class="ph ph-subtract-square"></i>
+          <span>테이블 설정</span>
+        </button>
+      </div>
+    </div>
+    <div class="bottom"></div>
+  `
+  _modalBody.innerHTML = html;
+}

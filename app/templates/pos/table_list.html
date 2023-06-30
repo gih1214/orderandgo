@@ -30,7 +30,7 @@
         </a>
         <div class="header_info">
           <span>2023-05-01(월) 14:00</span>
-          <span class="store_state" data-state="open">영업중</span>
+          <span class="store_state" data-state="open">영업 중</span>
         </div>
       </div>
     </header>
@@ -44,7 +44,11 @@
               <button>1층</button>
             </li>
           </ul>
+          <button class="btn_set" onclick="clickSetBtn(event)">
+            <i class="ph ph-gear-six"></i>
+          </button>
         </nav>
+
         <article>
           <div class="tables items">
             <!-- <h1>POS - article</h1> -->
@@ -311,7 +315,7 @@
   <div id="alarm"></div>
 
   <!-- 공통 스크립트 -->
-  <!-- <script src="static/js/common.js"></script> -->
+  <script src="/static/js/common.js"></script>
   <!-- 전용 스크립트 -->
   <script src="/static/js/tableList.js"></script>
 </body>
