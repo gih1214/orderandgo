@@ -95,11 +95,46 @@ main section article {
   padding: 20px;
   background: #ddd;
 }
+main section article.disabled {
+  background: #00000080;
+}
 main section article .items{
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 15px;
   grid-auto-rows: minmax(0, auto); 
+}
+main section article .item{
+  position: relative;
+  overflow: hidden;
+}
+main section article .item .transparent_box{
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0);
+}
+main section article.disabled .item .transparent_box{
+  display: block;
+}
+main section article .item .item_grop_num {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 20px;
+  width: auto;
+  height: 20px;
+  border-radius: 0px 0px 5px 0px;
+  color: #FFF;
+  font-size: 10px;
+  font-weight: 700;
 }
 main section article .item .body{
   font-weight: 400;
@@ -217,7 +252,86 @@ main section article .table .body i.ph-plus{
   color: #ccc;
 }
 main section > aside{
+  position: absolute;
+  bottom: 0;
+  left: 0;
   display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 20px;
+  border-radius: 20px 20px 0px 0px;
+  background: #FFFFFF;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+main section > aside.active{
+  display: flex;
+}
+main section > aside .left {
+  
+}
+main section > aside .selete_box_group {
+  position: relative;
+}
+main section > aside .selete_box_group .btn-dropdown{
+  display: flex;
+  padding: 15px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  border: 1px solid #CCC;
+  background: #FFF;
+}
+main section > aside .selete_box_group .btn-dropdown div,
+main section > aside .selete_box_group .dropdown-list div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: #17C7FF;
+  color: #FFF;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 0;
+}
+main section > aside .selete_box_group .btn-dropdown span ,
+main section > aside .selete_box_group .dropdown-list span {
+  width: 168px;
+  color: #000;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: start;
+}
+main section > aside .selete_box_group .dropdown-list{
+  top: initial;
+  bottom: calc(100% + 10px);
+}
+main section > aside .selete_box_group .dropdown-list > button,
+main section > aside .selete_box_group .dropdown-list > li{
+  display: flex;
+  padding: 15px;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+main section > aside .right {
+  font-size: 18px;
+  font-weight: 700;
+}
+main section > aside .custom_btns {
+  display: flex;
+  gap: 15px;
+}
+main section > aside .custom_btns button{
+  display: flex;
+  width: 100px;
+  height: 50px;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
 }
 
 /* ################# */
@@ -383,24 +497,7 @@ main section > aside{
   
 }
 
-#container.order main section aside {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  display: none;
-  width: 100%;
-  padding: 20px;
-  background: #FFFFFF;
-  border-top: 1px solid #CCCCCC;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-#container.order main section aside.active {
-  display: block;
-  border-radius: 20px 20px 0px 0px;
-    border-top: 1px solid #CCC;
-    border-right: 1px solid #CCC;
-    border-left: 1px solid #CCC;
-}
+
 #container.order main section aside .items {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

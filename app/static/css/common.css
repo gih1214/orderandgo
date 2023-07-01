@@ -34,6 +34,43 @@
 }
 
 
+/* ############################## */
+/* ######### 버튼 ############### */
+.custom_btns {
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+}
+.custom_btns button {
+  padding: 8px 20px;
+  border: 1px solid #1FAA9C;
+  border-radius: 5px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 18px;
+  color: #1FAA9C;
+}
+.custom_btns button.active {
+  background: #1FAA9C;
+  color: #fff;
+}
+.custom_btn {
+  padding: 8px 20px;
+  border: 1px solid #1FAA9C;
+  border-radius: 5px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 18px;
+  color: #1FAA9C;
+}
+.custom_btn.active {
+  background: #1FAA9C;
+  color: #fff;
+}
+/* ######### 버튼 ############### */
+/* ############################## */
+
+/* ######### 모달 ############### */
 .modal {
   position: fixed;
   z-index: 1;
@@ -106,4 +143,31 @@
   border-radius: 5px;
   border: 1px solid #CCC;
 }
+/* ######### 모달 ############### */
+/* ############################## */
 
+/* ############################## */
+/* ######### 드랍다운 ########### */
+.dropdown-list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  visibility: hidden;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all .25s;
+  border-radius: 5px;
+  background: #FFF;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.10);
+}
+.dropdown-list.active {
+  visibility: visible;
+  max-height: 250px;
+  overflow: scroll;
+  opacity: 1;
+}
+/* ######### 드랍다운 ########### */
+/* ############################## */
