@@ -310,10 +310,7 @@ const clickTransparentGroupTable = (event) => {
 
 // 그룹 지정 취소 버튼 클릭 시
 const clickSetGroupCancelBtn = (event) => {
-  const _mainEl = document.querySelector('main section article');
-  const _aside = document.querySelector('main section > aside');
-  _mainEl.classList.remove('disabled');
-  _aside.classList.remove('active');
+  changeStyleOnSet();
 
   const curCategoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
   const curPage = 1
@@ -333,11 +330,7 @@ const clickSetGroupCancelBtn = (event) => {
 
 // 그룹 지정 저장 버튼 클릭 시
 const clickSetGroupSaveBtn = (event) => {
-  const _mainEl = document.querySelector('main section article')
-  const _aside = document.querySelector('main section > aside');
-
-  _mainEl.classList.remove('disabled')
-  _aside.classList.remove('active');
+  changeStyleOnSet()
   // 백으로 저장 api 호출하기
   tableData = JSON.parse(JSON.stringify(cachingData));
   cachingData = null;
@@ -359,19 +352,31 @@ const clickTransparentMoveTable = (event) => {
       .find((pageData)=>pageData.page == curPage)
       .tableList
       .find((table)=>table.tableId == Number(itemId))
-  
   const targetStatusId = targetData.statusId;
   const curCachingDataLen = cachingSetTableData.length;
   if(targetStatusId != 0 && curCachingDataLen == 0) {
     // 첫번째 테이블 선택
     cachingSetTableData.push(targetData)
   }else if(targetStatusId != 0 && curCachingDataLen != 0){
+    if (targetData.tableId == cachingSetTableData[0].tableId) return
     // 테이블 합석
     console.log(`${cachingSetTableData[0].table}에서 ${targetData.table}(으)로 합석합니다.`)
-    
-    // cachingSetTableData[0].tableId 
-    // targetData.tableId
 
+
+    targetData.orderList = mergeOrderLists(cachingSetTableData[0], targetData).orderList;
+    
+    
+    
+    cachingSetTableData[0] = createEmptyTable(cachingSetTableData[0]);
+
+    const tables_html = changeTableHtml(cachingData
+      .find((category)=>category.categoryId == Number(curCategoryId))
+      .pageList
+      .find((pageData)=>pageData.page == curPage)
+      .tableList
+    )
+    const _table = document.querySelector('main section article .items');
+    _table.innerHTML = tables_html;
 
     // 초기화
     cachingSetTableData.length = 0
@@ -379,39 +384,101 @@ const clickTransparentMoveTable = (event) => {
     // 테이블 이동
     console.log(`${cachingSetTableData[0].table}에서 ${targetData.table}(으)로 이동합니다.`)
     for( key in targetData) {
-      if(targetData[key] != 'table' || targetData[key] != 'tableId'){
-        console.log(key, targetData[key])
+      if(key != 'table' && key != 'tableId'){
+        targetData[key] = JSON.parse(JSON.stringify(cachingSetTableData[0][key]));   
       }
     }
-    console.log(targetData)
-    
-    // cachingSetTableData[0].tableId 
-    // targetData.tableId
+    cachingSetTableData[0] = createEmptyTable(cachingSetTableData[0]);
 
+    const tables_html = changeTableHtml(cachingData
+      .find((category)=>category.categoryId == Number(curCategoryId))
+      .pageList
+      .find((pageData)=>pageData.page == curPage)
+      .tableList
+    )
+    const _table = document.querySelector('main section article .items');
+    _table.innerHTML = tables_html;
 
     // 초기화
     cachingSetTableData.length = 0
   }
-  // if (targetData.isGroup == 1 && targetData.groupId == Number(value)) {
-  //   targetData.groupColor = '';
-  //   targetData.groupId = '';
-  //   targetData.groupNum = '';
-  //   targetData.isGroup = 0;
-  // } else {
-  //   targetData.groupColor = backgroundColor;
-  //   targetData.groupId = Number(value);
-  //   targetData.groupNum = Number(value);
-  //   targetData.isGroup = 1;
-  // }
-  // const changeTableData = cachingData
-  //   .find((category)=>category.categoryId == Number(curCategoryId))
-  //   .pageList
-  //   .find((pageData)=>pageData.page == curPage)
-  //   .tableList
-  
-  // const tables_html = changeTableHtml(changeTableData)
-  // const _table = document.querySelector('main section article .items');
-  // _table.innerHTML = tables_html;
 
+}
 
+// orderList 병합 하기
+function mergeOrderLists(existingData, newData) {
+  const existingOrders = existingData.orderList;
+  const newOrders = newData.orderList;
+
+  newOrders.forEach(newOrder => {
+    const existingOrder = existingOrders.find(order => order.menuId === newOrder.menuId);
+
+    if (existingOrder) {
+      existingOrder.count += newOrder.count;
+
+      newOrder.optionList.forEach(newOption => {
+        const existingOption = existingOrder.optionList.find(option => option.optionId === newOption.optionId);
+
+        if (existingOption) {
+          existingOption.count += newOption.count;
+        } else {
+          existingOrder.optionList.push(newOption);
+        }
+      });
+    } else {
+      existingOrders.push(newOrder);
+    }
+  });
+
+  return existingData;
+}
+
+// 이동/합석 취소 버튼 클릭 시
+const clickCombineMoveCancelBtn = (event) => {
+  changeStyleOnSet();
+
+  const curCategoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
+  const curPage = 1
+  const targetData = 
+    tableData
+    .find((category)=>category.categoryId == Number(curCategoryId))
+    .pageList
+    .find((pageData)=>pageData.page == curPage)
+    .tableList
+
+  const tables_html = changeTableHtml(targetData)
+  const _table = document.querySelector('main section article .items');
+  _table.innerHTML = tables_html;
+  cachingData = null
+}
+
+// 이동/합석 저장 버튼 클릭 시
+const clickCombineMoveSaveBtn = (event) => {
+  changeStyleOnSet();
+  // 백으로 저장 api 호출하기
+  tableData = JSON.parse(JSON.stringify(cachingData));
+  cachingData = null;
+  console.log(tableData)
+}
+
+// 빈 테이블 만들기
+const createEmptyTable = (tableData) => {
+  tableData['groupColor'] = ''
+  tableData['groupId'] = ''
+  tableData['groupNum'] = ''
+  tableData['isGroup'] = 0
+  tableData['orderList'] = []
+  tableData['status'] = '빈 테이블'
+  tableData['statusId'] = 0
+  return tableData
+}
+
+// 테이블 설정 시 배경 화면 설정
+const changeStyleOnSet = () => {
+  const _mainEl = document.querySelector('main section article');
+  const _aside = document.querySelector('main section > aside');
+  _mainEl.classList.remove('group')
+  _mainEl.classList.remove('move')
+  _mainEl.classList.remove('disabled')
+  _aside.classList.remove('active');
 }

@@ -9,9 +9,31 @@
           {
             "tableId" : 1,
             "table" : "테이블 1",
-            "statusId" : 0,
-            "status" : "빈 테이블",
-            "orderList" : [],
+            "statusId" : 2,
+            "status" : "조리 중",
+            "orderList" : [
+              {
+                "menuId" : 17,
+                "menu" : "순살치킨",
+                "price" : 7000,
+                "count" : 1,
+                "optionList" : [
+                  {
+                    "optionId" : 2,
+                    "option" : "소스 : 간장",
+                    "price" : 500,
+                    "count" : 2
+                  }
+                ]
+              },
+              {
+                "menuId" : 20,
+                "menu" : "500cc 생맥주",
+                "price" : 6000,
+                "count" : 1,
+                "optionList" : []
+              }
+            ],
             "isGroup" : 1,
             "groupId" : 1,
             "groupNum" : 1,
@@ -20,9 +42,24 @@
           {
             "tableId" : 2,
             "table" : "테이블 2",
-            "statusId" : 0,
-            "status" : "빈 테이블",
-            "orderList" : [],
+            "statusId" : 2,
+            "status" : "조리 중",
+            "orderList" : [
+              {
+                "menuId" : 17,
+                "menu" : "순살치킨",
+                "price" : 7000,
+                "count" : 1,
+                "optionList" : [
+                  {
+                    "optionId" : 2,
+                    "option" : "소스 : 간장",
+                    "price" : 500,
+                    "count" : 2
+                  }
+                ]
+              }
+            ],
             "isGroup" : 1,
             "groupId" : 1,
             "groupNum" : 1,
