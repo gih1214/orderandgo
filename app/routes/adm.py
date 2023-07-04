@@ -5,7 +5,7 @@ from app.routes import adm_bp
 from app.models import db, Store, TableCategory, Table
 from app.models.user import create_user
 from app.models.menu_category import create_main_category, create_sub_category
-from app.models.store import create_store
+from app.models.store import create_store, update_store
 from app.models.menu import create_menu, create_menu_option
 
 @adm_bp.route('/')
@@ -118,6 +118,7 @@ def get_store(store_id):
 def update_store(store_id):
     # 스토어 업데이트 로직 수행
     # ...
+    
     return jsonify({'message': '스토어가 성공적으로 업데이트되었습니다.'}), 200
 
 @adm_bp.route('/store/<store_id>', methods=['DELETE'])

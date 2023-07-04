@@ -13,7 +13,15 @@ def create_store(user_id, name, address, tel, manager_name, manager_tel,
 # 조회
 
 
-# # 수정
+# 수정
+def update_store(store_id, column, value):
+    store_item = Store.query.filter_by(id=store_id).first()
+    if not store_item:
+        return '잘못된 store_item'
+    
+    setattr(store_item, column, value)
+    db.session.commit()
+    return True
 # def update_store(store_id, column, value):
 #     store_item = session.query(Store).filter(Store.id == store_id).first()
 #     if not store_item:
@@ -22,5 +30,6 @@ def create_store(user_id, name, address, tel, manager_name, manager_tel,
 #     store_item[column] = value
 #     session.commit()
 #     return True
+
 
 # 삭제
