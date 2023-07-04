@@ -108,7 +108,8 @@ main section article .item{
   position: relative;
   overflow: hidden;
 }
-main section article .item .transparent_box{
+main section article .item .transparent_group_box,
+main section article .item .transparent_move_box {
   position: absolute;
   top: 0;
   left: 0;
@@ -118,7 +119,10 @@ main section article .item .transparent_box{
   height: 100%;
   background: rgba(0, 0, 0, 0);
 }
-main section article.disabled .item .transparent_box{
+main section article.group .item .transparent_group_box{
+  display: block;
+}
+main section article.move .item .transparent_move_box{
   display: block;
 }
 main section article .item .item_grop_num {
