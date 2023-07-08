@@ -26,9 +26,18 @@ const createHtml = (tablePageData) => {
     _tableCategory.innerHTML =  nav_html;
     if(index != 0) return;
 
-    const tables = data.pageList[0].tableList;
+    const pageIndex = 0;
+    const tables = data.pageList[pageIndex].tableList;
     const tables_html = changeTableHtml(tables);
     _table.innerHTML = tables_html;
+
+    _table.setAttribute('data-page', pageIndex);
+    createPageNationBtnHtml();
+    const _article = document.querySelector('main section article');
+    const curCategoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
+    const pageLen = tableData.find((category)=>category.categoryId == Number(curCategoryId)).pageList.length;
+    if(0 < pageIndex){_article.classList.add('hasPrevPage')};
+    if(pageIndex < pageLen-1){_article.classList.add('hasNextPage')};
   })
 }
 
@@ -41,17 +50,29 @@ const changeTableCategory = (event, index) => {
   const _table = document.querySelector('main section article .items');
 
   _li.dataset.state = 'active'
-
+  const pageIndex = 0;
   let tables_html
   if(cachingData != null) {
-    tables_html = changeTableHtml(cachingData[index].pageList[0].tableList);
+    tables_html = changeTableHtml(cachingData[index].pageList[pageIndex].tableList);
   }else {
-    tables_html = changeTableHtml(tableData[index].pageList[0].tableList);  
+    tables_html = changeTableHtml(tableData[index].pageList[pageIndex].tableList);  
   }
   _table.innerHTML = tables_html;
+  _table.setAttribute('data-page', pageIndex);
+
+  const _article = document.querySelector('main section article');
+  _article.classList.remove('hasNextPage');
+  _article.classList.remove('hasPrevPage');
+
+
+  const curCategoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
+  const pageLen = tableData.find((category)=>category.categoryId == Number(curCategoryId)).pageList.length;
+  if(pageIndex < pageLen-1){_article.classList.add('hasNextPage')};
+
 }
 
 const changeTableHtml = (tables) => {
+
   let html = '';
   tables.forEach((table, index)=>{
     html += `
@@ -101,6 +122,62 @@ const changeTableHtml = (tables) => {
       </button>`
   })
   return html;
+}
+
+// 페이지 변경 버튼 html 만들기 
+const createPageNationBtnHtml = (event) => {
+  console.log('화살표 만듬')
+  const _article = document.querySelector('main section article');
+  let html = `
+  <button class="change_page_btn prev_page_btn" onclick="clickChagePageBtn(event, 'prev')">
+    <i class="ph ph-caret-left"></i>
+  </button>
+  <button class="change_page_btn next_page_btn" onclick="clickChagePageBtn(event, 'next')">
+    <i class="ph ph-caret-right"></i>
+  </button>
+  `
+  _article.insertAdjacentHTML('beforeend',html)
+}
+// 페이지 변경 버튼 클릭 시
+const clickChagePageBtn = (event, type) => {
+  const _article = document.querySelector('main section article')
+  const _table = document.querySelector('main section article .items');
+
+  const curPageIndex = Number(_table.dataset.page);
+  const curCategoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
+  let pageLen;
+  if(cachingData != null) {
+    pageLen = cachingData.find((category)=>category.categoryId == Number(curCategoryId)).pageList.length;
+  }else {
+    pageLen = tableData.find((category)=>category.categoryId == Number(curCategoryId)).pageList.length;
+  }
+
+  
+  let newPageIndex
+  console.log(type, curPageIndex)
+  if(type == 'prev' && curPageIndex > 0){
+    newPageIndex = curPageIndex - 1;
+  }
+  if(type == 'next' && curPageIndex < pageLen-1){
+    newPageIndex = curPageIndex + 1;
+  }
+  if(newPageIndex == undefined) return;
+  let targetData;
+  if(cachingData != null) {
+    targetData = cachingData.find((category)=>category.categoryId == Number(curCategoryId)).pageList[newPageIndex].tableList
+  }else {
+    targetData = tableData.find((category)=>category.categoryId == Number(curCategoryId)).pageList[newPageIndex].tableList
+  }
+  
+  const tables_html = changeTableHtml(targetData);
+  _table.innerHTML = tables_html; 
+  _table.setAttribute('data-page', newPageIndex);
+  
+  _article.classList.remove('hasNextPage');
+  _article.classList.remove('hasPrevPage');
+
+  if(0 < newPageIndex){_article.classList.add('hasPrevPage')};
+  if(newPageIndex < pageLen-1){_article.classList.add('hasNextPage')};
 }
 
 function clickTable(table_id){
@@ -274,14 +351,15 @@ const clickTransparentGroupTable = (event) => {
   const backgroundColor = computedStyle.backgroundColor;
   
   const curCategoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
-  const curPage = 1
+  const _table = document.querySelector('main section article .items');
+
+  const curPage = Number(_table.dataset.page);
   const itemId = _target.dataset.id;
 
   const targetData = 
     cachingData
       .find((category)=>category.categoryId == Number(curCategoryId))
-      .pageList
-      .find((pageData)=>pageData.page == curPage)
+      .pageList[curPage]
       .tableList
       .find((table)=>table.tableId == Number(itemId))
 
@@ -298,12 +376,10 @@ const clickTransparentGroupTable = (event) => {
   }
   const changeTableData = cachingData
     .find((category)=>category.categoryId == Number(curCategoryId))
-    .pageList
-    .find((pageData)=>pageData.page == curPage)
+    .pageList[curPage]
     .tableList
   
   const tables_html = changeTableHtml(changeTableData)
-  const _table = document.querySelector('main section article .items');
   _table.innerHTML = tables_html;
 
 }
@@ -313,16 +389,15 @@ const clickSetGroupCancelBtn = (event) => {
   changeStyleOnSet();
 
   const curCategoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
-  const curPage = 1
+  const _table = document.querySelector('main section article .items');
+  const curPage = Number(_table.dataset.page);
   const targetData = 
     tableData
     .find((category)=>category.categoryId == Number(curCategoryId))
-    .pageList
-    .find((pageData)=>pageData.page == curPage)
+    .pageList[curPage]
     .tableList
 
   const tables_html = changeTableHtml(targetData)
-  const _table = document.querySelector('main section article .items');
   _table.innerHTML = tables_html;
   cachingData = null
 }
@@ -342,15 +417,15 @@ const clickTransparentMoveTable = (event) => {
   event.stopPropagation();
   const _target = event.currentTarget.closest('.item');
   const curCategoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
-  const curPage = 1
+  const _table = document.querySelector('main section article .items');
+  const curPage = Number(_table.dataset.page);
   const itemId = _target.dataset.id;
 
+  
   const targetData = 
     cachingData
       .find((category)=>category.categoryId == Number(curCategoryId))
-      .pageList
-      .find((pageData)=>pageData.page == curPage)
-      .tableList
+      .pageList[curPage].tableList
       .find((table)=>table.tableId == Number(itemId))
   const targetStatusId = targetData.statusId;
   const curCachingDataLen = cachingSetTableData.length;
@@ -371,9 +446,7 @@ const clickTransparentMoveTable = (event) => {
 
     const tables_html = changeTableHtml(cachingData
       .find((category)=>category.categoryId == Number(curCategoryId))
-      .pageList
-      .find((pageData)=>pageData.page == curPage)
-      .tableList
+      .pageList[curPage].tableList
     )
     const _table = document.querySelector('main section article .items');
     _table.innerHTML = tables_html;
@@ -392,9 +465,7 @@ const clickTransparentMoveTable = (event) => {
 
     const tables_html = changeTableHtml(cachingData
       .find((category)=>category.categoryId == Number(curCategoryId))
-      .pageList
-      .find((pageData)=>pageData.page == curPage)
-      .tableList
+      .pageList[curPage].tableList
     )
     const _table = document.querySelector('main section article .items');
     _table.innerHTML = tables_html;
@@ -438,16 +509,14 @@ const clickCombineMoveCancelBtn = (event) => {
   changeStyleOnSet();
 
   const curCategoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
-  const curPage = 1
+  const _table = document.querySelector('main section article .items');
+  const curPage = _table.dataset.page;
   const targetData = 
     tableData
     .find((category)=>category.categoryId == Number(curCategoryId))
-    .pageList
-    .find((pageData)=>pageData.page == curPage)
-    .tableList
+    .pageList[curPage].tableList
 
   const tables_html = changeTableHtml(targetData)
-  const _table = document.querySelector('main section article .items');
   _table.innerHTML = tables_html;
   cachingData = null
 }
