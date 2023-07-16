@@ -82,6 +82,13 @@ class TableCategory(db.Model):
     #    return f'<TableCategory {self.title}>'
 
 
+class TableCategoryPage(db.Model):
+    __tablename__ ='table_category_page'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    table_category_id = db.Column(db.Integer, db.ForeignKey('table_category.id'))
+    page = db.Column(db.Integer, nullable=False)
+
+
 class Table(db.Model):
     __tablename__ = 'table'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -90,9 +97,8 @@ class Table(db.Model):
     seat_count = db.Column(db.Integer, nullable=True)
     x_axis = db.Column(db.Integer, nullable=False)
     y_axis = db.Column(db.Integer, nullable=False)
-    page = db.Column(db.Integer, nullable=False)
     is_group = db.Column(db.Integer, nullable=True)
-    table_category_id = db.Column(db.Integer, db.ForeignKey('table_category.id'))
+    category_page_id = db.Column(db.Integer, db.ForeignKey('table_category_page.id'))
 
     #def __repr__(self):
     #    return f'<Table {self.title}>'
@@ -124,7 +130,7 @@ class MenuOption(db.Model):
     name = db.Column(db.String(150), nullable=False)
     price = db.Column(db.Integer, nullable=False)
     description = db.Column(db.Text, nullable=True)
-    store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
+    menu_id = db.Column(db.Integer, db.ForeignKey('menu.id'))
 
     #def __repr__(self):
     #    return f'<MenuOption {self.title}>'
@@ -147,11 +153,11 @@ class Menu(db.Model):
     #    return f'<Menu {self.title}>'
 
 
-class MenuHasOption(db.Model):
-    __tablename__ = 'menu_has_option'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    menu_id = db.Column(db.Integer, db.ForeignKey('menu.id'))
-    option_id = db.Column(db.Integer, db.ForeignKey('menu_option.id'))
+# class MenuHasOption(db.Model):
+#     __tablename__ = 'menu_has_option'
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     menu_id = db.Column(db.Integer, db.ForeignKey('menu.id'))
+#     option_id = db.Column(db.Integer, db.ForeignKey('menu_option.id'))
 
 
 class OrderStatus(db.Model):
