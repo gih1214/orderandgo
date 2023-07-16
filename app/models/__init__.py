@@ -82,6 +82,13 @@ class TableCategory(db.Model):
     #    return f'<TableCategory {self.title}>'
 
 
+class TableCategoryPage(db.Model):
+    __tablename__ ='table_category_page'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    table_category_id = db.Column(db.Integer, db.ForeignKey('table_category.id'))
+    page = db.Column(db.Integer, nullable=False)
+
+
 class Table(db.Model):
     __tablename__ = 'table'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -92,7 +99,7 @@ class Table(db.Model):
     y_axis = db.Column(db.Integer, nullable=False)
     page = db.Column(db.Integer, nullable=False)
     is_group = db.Column(db.Integer, nullable=True)
-    table_category_id = db.Column(db.Integer, db.ForeignKey('table_category.id'))
+    category_page_id = db.Column(db.Integer, db.ForeignKey('table_category_page.id'))
 
     #def __repr__(self):
     #    return f'<Table {self.title}>'
