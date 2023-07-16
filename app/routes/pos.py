@@ -2,7 +2,7 @@ from flask import render_template, jsonify
 import json
 
 from app.routes import pos_bp
-from app.models.table import create_table_catgory, select_table_category, update_table_category, delete_table_category, select_table
+from app.models.table import create_table_catgory, select_table_category, update_table_category, delete_table_category, select_table, select_table_category_page
 from app.models import db
 
 
@@ -27,22 +27,47 @@ def get_table_page():
     '''
     
     store_id = 1    # temp
+    all_table_list = []
     table_categories = select_table_category(store_id)
-
-    tables = select_table(store_id)
-
-    table_list = []
 
     # 테이블 카테고리
     for t in table_categories:
-        table_list.append({
+        page_list = []
+        table_category_pages = select_table_category_page(t.id)
+        
+        for p in table_category_pages:
+            table_list = []
+            tables = select_table(p.id)
+
+            for table in tables:
+                table_list.append({
+                    'tableId' : table.id,
+                    'table' : table.name,
+                    'statusId' : 0,
+                    'status' : '???',
+                    'orderList' :  [],
+                    'isGroup' : 0,
+                    'groupId' : '',
+                    'groupNum' : '',
+                    'groupColor' : ''
+                })
+
+            page_list.append({
+                'page' : p.page,
+                'tableList' : table_list
+            })
+
+        all_table_list.append({
             'categoryId' : t.id,
-            'category' : t.category_name
+            'category' : t.category_name,
+            'pageList' : page_list
         })
+
+
         
 
     # JSON 데이터를 프론트에 반환
-    return jsonify(table_list)
+    return jsonify(all_table_list)
 
 @pos_bp.route('/menuList/<table_id>', methods=['GET'])
 def menuList(table_id):

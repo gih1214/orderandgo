@@ -1,14 +1,35 @@
 from flask import session
-from app.models import db, Table, TableCategory
+from app.models import db, Table, TableCategory, TableCategoryPage
+
+
+# 테이블 카테고리 페이지 생성
+def create_table_catgory_page(table_category_id, page):
+    table_category_page_item = TableCategoryPage(table_category_id, page)
+    db.session.add(table_category_page_item)
+    db.session.commit()
+    db.session.refresh(table_category_page_item)
+
+
+# 테이블 카테고리 페이지 조회
+def select_table_category_page(table_category_id):
+    item = TableCategoryPage.query.filter(TableCategoryPage.table_category_id == table_category_id).all()
+    if not item:
+        return '잘못됨'
+    return item
 
 
 # 테이블 카테고리 생성
 def create_table_catgory(data):
-    item = TableCategory(data['store_id'], data['category_name'])
-    db.session.add(item)
+    table_category_item = TableCategory(data['store_id'], data['category_name'])
+    db.session.add(table_category_item)
     db.session.commit()
-    db.session.refresh(item)
-    return item
+    db.session.refresh(table_category_item)
+
+    # 테이블 카테고리 만들 때 자동으로 테이블 카테고리 페이지(1페이지로) 생성
+    create_table_catgory_page(table_category_item.id, 1)
+
+    return table_category_item
+
 
 # 테이블 카테고리 조회
 def select_table_category(store_id):
@@ -47,14 +68,15 @@ def create_table(data):
     db.session.refresh(item)
     return item
 
-# 테이블 카테고리 조회
-def select_table(table_category_id):
-    item = Table.query.filter(Table.table_category_id == table_category_id).all()
+# 테이블 조회
+def select_table(category_page_id):
+    print("@#$",category_page_id)
+    item = Table.query.filter(Table.category_page_id == category_page_id).all()
     if not item:
         return '잘못됨'
     return item
 
-# 테이블 카테고리 수정
+# 테이블 수정
 def update_table(table_id, change_dict):
     item = Table.query.filter(Table.id == table_id).first()
     if not item:
@@ -68,7 +90,7 @@ def update_table(table_id, change_dict):
     return True
 
 
-# 테이블 카테고리 삭제
+# 테이블 삭제
 def delete_table(table_id):
     item = Table.query.filter(Table.id == table_id).first()
     if not item:
