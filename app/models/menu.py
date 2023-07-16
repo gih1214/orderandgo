@@ -19,19 +19,35 @@ def create_menu_option(name, price, description, store_id):
     db.session.commit()
     return True
 
-# 메뉴 조회
+# 메뉴 조회 (SELECT ALL)
 def select_menu(store_id):
-    menu = db.session.query(Menu).filter(Menu.store_id == store_id).all()
-    print(menu)
-    #print(type(menu))
-    #result = stock.query.filter(stock.name.like('%'+search_text+'%')).all()
-
-    #df = pd.read_sql(menu.statement, menu.session.bind)
-    #print(json.loads(df.to_json(orient='records')))
-    #print('json으로 변환 성공')
-    return menu
+    item = Menu.query.filter(Menu.store_id == store_id).all()
+    if not item:
+        return '없는 메뉴입니다.'
+    return item
 
 # 메뉴 수정
+def update_menu(menu_id, name, price, image, main_description, sub_description, is_soldout):
+    item = Menu.query.filter(Menu.id == menu_id).first()
+    if not item:
+        return '없는 메뉴입니다.'
+    
+    item.name = name
+    item.price = price
+    item.image = image
+    item.main_description = main_description
+    item.sub_description = sub_description
+    item.is_soldout = is_soldout
 
+    db.session.commit()
+    return True
 
 # 메뉴 삭제
+def delete_menu(menu_id):
+    item = Menu.query.filter(Menu.id == menu_id).first()
+    if not item:
+        return '없는 메뉴입니다.'
+    
+    db.session.delete(item)
+    db.session.commit()
+    return True

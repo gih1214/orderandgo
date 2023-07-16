@@ -6,7 +6,7 @@ from app.models import db, Store, TableCategory, Table
 from app.models.user import create_user
 from app.models.menu_category import create_main_category, create_sub_category
 from app.models.store import create_store, update_store
-from app.models.menu import create_menu, create_menu_option
+from app.models.menu import create_menu, create_menu_option, delete_menu, update_menu
 
 @adm_bp.route('/')
 def index():
@@ -159,6 +159,7 @@ def create_menu_py():
         print('Received JSON data:', menu_data)
         return response
 
+# 메뉴 조회
 @adm_bp.route('/menu/<menu_id>', methods=['GET'])
 def get_menu(menu_id):
     # 메뉴 조회 로직 수행
@@ -166,17 +167,37 @@ def get_menu(menu_id):
     menu_data = {'id': menu_id, 'name': 'John Doe', 'email': 'john@example.com'}  # 예시 데이터
     return jsonify(menu_data), 200
 
+# 메뉴 수정
 @adm_bp.route('/menu/<menu_id>', methods=['PATCH'])
-def update_menu(menu_id):
-    # 메뉴 업데이트 로직 수행
-    # ...
+def update_menu_py(menu_id):
+    if request.method == 'PATCH':
+        menu_data = request.get_json()
+
+        menu_id = 5 # temp
+
+        name = menu_data['name']
+        price = menu_data['price']
+        image = menu_data['image']
+        main_description = menu_data['main_description']
+        sub_description = menu_data['sub_description']
+        is_soldout = menu_data['is_soldout']
+        menu = update_menu(menu_id, name, price, image, main_description, sub_description, is_soldout)
+        
+        print("메뉴수정 성공", menu)
+
+        response = jsonify({'message': 'Success'})
+        response.status_code = 200
+        print('Received JSON data:', menu_data)
+
     return jsonify({'message': '메뉴가 성공적으로 업데이트되었습니다.'}), 200
 
+# 메뉴 삭제
 @adm_bp.route('/menu/<menu_id>', methods=['DELETE'])
-def delete_menu(menu_id):
-    # 메뉴 삭제 로직 수행
-    # ...
-    return jsonify({'message': '메뉴가 성공적으로 삭제되었습니다.'}), 204
+def delete_menu_py(menu_id):
+    if request.method == 'DELETE':
+        delete_menu(menu_id)
+        print('메뉴 삭제 성공')
+        return jsonify({'message': '메뉴가 성공적으로 삭제되었습니다.'}), 204
 ### 메뉴 끝 ###
 ####################
 
