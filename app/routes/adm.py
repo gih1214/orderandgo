@@ -151,7 +151,7 @@ def create_menu_py():
         sub_description = menu_data['sub_description']
         is_soldout = menu_data['is_soldout']
         store_id = 1 #menu_data['store_id']
-        menu_category_id = 1 #menu_data['menu_category_id']
+        menu_category_id = menu_data['menu_category_id']
         menu = create_menu(name, price, image, main_description, sub_description, is_soldout, store_id, menu_category_id)
         print("메뉴생성 성공", menu)
         response = jsonify({'message': 'Success'})
@@ -231,7 +231,7 @@ def create_menu_main_category():
         store_id = 1    # temp
         name = menu_main_category_data['mainCategoryName']
         main_category = create_main_category(store_id, name)
-        create_sub_category(main_category.id, '{}-1'.format(main_category.name))
+        #create_sub_category(main_category.id, '{}-1'.format(main_category.name))
 
     return jsonify({'message': '메뉴 메인 카테고리를 성공적으로 생성되었습니다.'}), 201
 

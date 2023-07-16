@@ -1,4 +1,5 @@
 from flask import render_template, jsonify
+from app.models.menu import select_menu
 from app.routes import pos_bp
 import json
 
@@ -19,6 +20,7 @@ def get_table_page():
     # JSON 데이터를 프론트에 반환
     return jsonify(json_data)
 
+# 테이블 -> 메뉴리스트 페이지
 @pos_bp.route('/menuList/<table_id>', methods=['GET'])
 def menuList(table_id):
     
@@ -27,12 +29,14 @@ def menuList(table_id):
 
 @pos_bp.route('/get_menu_list/<table_id>', methods=['GET'])
 def get_menu_list(table_id):
+    #menu_list = select_menu(1)
+
     # JSON 파일 경로 설정
     json_file_path = 'app/static/json/menuList.json'
         
     # JSON 파일 로드
     with open(json_file_path, 'r', encoding='UTF-8') as file:
         json_data = json.load(file)
-    print(json_data)
+    #print(json_data)
     # JSON 데이터를 프론트에 반환
     return jsonify(json_data)
