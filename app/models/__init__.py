@@ -95,9 +95,9 @@ class Table(db.Model):
     name = db.Column(db.String(150), nullable=True)
     number = db.Column(db.Integer, nullable=True)
     seat_count = db.Column(db.Integer, nullable=True)
-    x_axis = db.Column(db.Integer, nullable=False)
-    y_axis = db.Column(db.Integer, nullable=False)
+    order = db.Column(db.Integer, nullable=False)
     is_group = db.Column(db.Integer, nullable=True)
+    group_color = db.Column(db.String(50), nullable=False)
     category_page_id = db.Column(db.Integer, db.ForeignKey('table_category_page.id'))
 
     #def __repr__(self):
