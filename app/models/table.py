@@ -1,4 +1,4 @@
-from flask import session
+from flask import session, jsonify
 from app.models import db, Table, TableCategory, TableCategoryPage
 
 
@@ -102,21 +102,23 @@ def delete_table(table_id):
 
 
 # 테이블 그룹 설정/취소
-def create_table_group(make_or_del, table_group, group_id, group_color):
+def set_table_group(set_or_del, group_id_list, group_id, group_color):
     table_group = [1,2]   # temp
     # make_or_del은 make or del로 받음. 설정은 make, 취소는 del
-    for t in table_group:
+    for t in group_id_list:
         item = Table.query.filter(Table.id == t).first()
         if not item:
-            return '잘못됨'
+            return jsonify({'message': 'Not found table id'}), 400
         
-        if make_or_del == 'make':
+        if set_or_del == 'set':
             item['is_group'] = group_id
             item['group_color'] = group_color
             session.commit()
-        elif make_or_del == 'del':
+        elif set_or_del == 'del':
             item['is_group'] = None
             item['group_color'] = None
             session.commit()
     
-    return True    
+    return jsonify({'message': 'User updated successfully'}), 200  
+
+

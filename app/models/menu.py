@@ -1,7 +1,6 @@
 import json
 from flask import session
 from app.models import db, Menu, MenuOption
-import pandas as pd
 
 # 메뉴 생성
 def create_menu(name, price, image, main_description, sub_description,

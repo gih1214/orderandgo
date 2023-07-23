@@ -1,15 +1,28 @@
-from flask import render_template, jsonify
+from flask import render_template, jsonify, request
 from app.routes import pos_bp
 import json
 
 from app.routes import pos_bp
-from app.models.table import create_table_catgory, select_table_category, update_table_category, delete_table_category, select_table, select_table_category_page
+from app.models.table import create_table_catgory, select_table_category, update_table_category, delete_table_category, select_table, select_table_category_page, set_table_group
 from app.models import db
 
 
 @pos_bp.route('/tableList')
 def tableList():    
     return render_template('pos/table_list.html')
+
+
+@pos_bp.route('/set_group', methods=['GET', 'POST'])
+def set_group():
+    group_data = request.get_json()
+    
+    set_or_del = group_data['set_or_del']
+    group_id_list = group_data['group_id_list']
+    group_id = group_data['group_id']
+    group_color = group_data['group_color']
+
+    return set_table_group(set_or_del, group_id_list, group_id, group_color)
+
 
 @pos_bp.route('/get_table_page', methods=['GET'])
 def get_table_page():
@@ -47,10 +60,10 @@ def get_table_page():
                     'statusId' : 0,
                     'status' : '???',
                     'orderList' :  [],
-                    'isGroup' : 0,
-                    'groupId' : '',
-                    'groupNum' : '',
-                    'groupColor' : ''
+                    'isGroup' : table.is_group if table.is_group is not None else None,
+                    'groupId' : table.is_group if table.is_group is not None else None,
+                    'groupNum' : table.is_group if table.is_group is not None else None,
+                    'groupColor' : table.group_color if table.is_group is not None else None
                 })
 
             page_list.append({

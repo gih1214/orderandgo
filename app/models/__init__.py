@@ -176,6 +176,7 @@ class Order(db.Model):
     order_status_id = db.Column(db.Integer, db.ForeignKey('order_status.id'))
     menu_id = db.Column(db.Integer, db.ForeignKey('menu.id'))
     table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
+    order_list_id = db.Column(db.Integer, db.ForeignKey('table_order_list.id'))
 
     #def __repr__(self):
     #    return f'<Order {self.title}>'
@@ -185,7 +186,6 @@ class TableOrderList(db.Model):
     __tablename__ = 'table_order_list'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
-    ordered_id = db.Column(db.Integer, db.ForeignKey('order.id'))
     checkingin_at = db.Column(db.DateTime, nullable=False)
     checkingout_at = db.Column(db.DateTime, nullable=False)
 
