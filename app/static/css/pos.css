@@ -111,6 +111,11 @@ main section article .items{
 main section article .item{
   position: relative;
   overflow: hidden;
+  transition: all .25s;
+}
+main section article .item:hover {
+  border: 1px solid #1FAA9C;
+  background: #F3FAFA;
 }
 main section article .item .transparent_group_box,
 main section article .item .transparent_move_box {
@@ -123,11 +128,27 @@ main section article .item .transparent_move_box {
   height: 100%;
   background: rgba(0, 0, 0, 0);
 }
+main section article .item.select .transparent_group_box,
+main section article .item.select .transparent_move_box {
+  background: rgba(243, 250, 250, 0.80);
+}
+main section article .item .transparent_group_box i,
+main section article .item .transparent_move_box i{
+  display: none;
+}
+main section article .item.select .transparent_group_box i,
+main section article .item.select .transparent_move_box i{
+  display: block;
+}
 main section article.group .item .transparent_group_box{
   display: block;
 }
 main section article.move .item .transparent_move_box{
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  color: #1FAA9C;
 }
 main section article .item .item_grop_num {
   position: absolute;
@@ -167,6 +188,9 @@ main section article .item.active {
 }
 main section article .item.disabled {
   opacity: .5;
+}
+main section article .item.select{
+  border: 1.5px solid #1FAA9C;
 }
 main section article .item .title{
   width: 100%;
@@ -275,6 +299,11 @@ main section article .change_page_btn {
   font-size: 15px;
   color: #1FAA9C;
   transform: translateY(-50%);
+  transition: all .25s;
+}
+main section article .change_page_btn:hover{
+  background: #1FAA9C;
+  color: #fff;
 }
 main section article.hasPrevPage .prev_page_btn,
 main section article.hasNextPage .next_page_btn {

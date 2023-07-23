@@ -72,11 +72,11 @@ const changeTableCategory = (event, index) => {
 }
 
 const changeTableHtml = (tables) => {
-
+  console.log('changeTableHtml',tables)
   let html = '';
   tables.forEach((table, index)=>{
     html += `
-      <button class="table item" data-id="${table.tableId}" data-state="${table.statusId}" style="border:${table.groupId != 0 ? "1px solid " + table.groupColor : ""}"
+      <button class="table item ${table.select ? 'select' : ''}" data-id="${table.tableId}" data-state="${table.statusId}" style="border:${table.groupId != 0 ? "1px solid " + table.groupColor : ""}"
         onclick="clickTable(${table.tableId})">
         `
       if(table.isGroup != 0) {
@@ -86,8 +86,12 @@ const changeTableHtml = (tables) => {
 
       }
       html +=` 
-        <div class="transparent_group_box" onclick="clickTransparentGroupTable(event)"></div>
-        <div class="transparent_move_box" onclick="clickTransparentMoveTable(event)"></div>
+        <div class="transparent_group_box" onclick="clickTransparentGroupTable(event)">
+          <i class="ph-fill ph-check-fat"></i>
+        </div>
+        <div class="transparent_move_box" onclick="clickTransparentMoveTable(event)">
+          <i class="ph-fill ph-check-fat"></i>
+        </div>
         <div class="title">
           <h2>${table.table} <i class="ph-fill ph-bell-ringing"></i></h2>
           <div class="table_state">${table.statusId != 0 ? table.status : ''}</div>
@@ -271,14 +275,6 @@ const clickSetBtn = (event) => {
           <i class="ph ph-users-three"></i>
           <span>그룹</span>
         </button>
-        <button class="" onclick="clickZoningBtn(event)">
-          <i class="ph ph-squares-four"></i>
-          <span>구역 설정</span>
-        </button>
-        <button class="" onclick="clickSetTableBtn(event)">
-          <i class="ph ph-subtract-square"></i>
-          <span>테이블 설정</span>
-        </button>
       </div>
     </div>
     <div class="bottom"></div>
@@ -421,7 +417,6 @@ const clickTransparentMoveTable = (event) => {
   const curPage = Number(_table.dataset.page);
   const itemId = _target.dataset.id;
 
-  
   const targetData = 
     cachingData
       .find((category)=>category.categoryId == Number(curCategoryId))
@@ -432,15 +427,20 @@ const clickTransparentMoveTable = (event) => {
   if(targetStatusId != 0 && curCachingDataLen == 0) {
     // 첫번째 테이블 선택
     cachingSetTableData.push(targetData)
+    targetData['select'] = true;
+    const tables_html = changeTableHtml(cachingData
+      .find((category)=>category.categoryId == Number(curCategoryId))
+      .pageList[curPage].tableList
+    )
+    const _table = document.querySelector('main section article .items');
+    _table.innerHTML = tables_html;
   }else if(targetStatusId != 0 && curCachingDataLen != 0){
     if (targetData.tableId == cachingSetTableData[0].tableId) return
     // 테이블 합석
     console.log(`${cachingSetTableData[0].table}에서 ${targetData.table}(으)로 합석합니다.`)
-
+    delete cachingSetTableData[0].select;
 
     targetData.orderList = mergeOrderLists(cachingSetTableData[0], targetData).orderList;
-    
-    
     
     cachingSetTableData[0] = createEmptyTable(cachingSetTableData[0]);
 
@@ -456,6 +456,8 @@ const clickTransparentMoveTable = (event) => {
   }else if(targetStatusId == 0 && curCachingDataLen != 0){
     // 테이블 이동
     console.log(`${cachingSetTableData[0].table}에서 ${targetData.table}(으)로 이동합니다.`)
+    delete cachingSetTableData[0].select;
+
     for( key in targetData) {
       if(key != 'table' && key != 'tableId'){
         targetData[key] = JSON.parse(JSON.stringify(cachingSetTableData[0][key]));   
