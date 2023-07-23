@@ -1,6 +1,6 @@
 import json
 from flask import session
-from app.models import db, Menu, MenuOption
+from app.models import MainCategory, SubCategory, db, Menu, MenuOption
 
 # 메뉴 생성
 def create_menu(name, price, image, main_description, sub_description,
@@ -18,9 +18,18 @@ def create_menu_option(name, price, description, store_id):
     db.session.commit()
     return True
 
+# 메뉴 카테고리 조회 (SELECT ALL)
+def select_main_category(store_id):
+    item = MainCategory.query.filter(MainCategory.store_id == store_id).all()
+    if not item:
+        return '메인 메뉴 카테고리가 없습니다.'
+    return item
+
 # 메뉴 조회 (SELECT ALL)
-def select_menu(store_id):
-    item = Menu.query.filter(Menu.store_id == store_id).all()
+def select_menu(main_category_id):
+    item = Menu.query\
+        .filter(SubCategory.id == Menu.menu_category_id)\
+        .filter(SubCategory.main_category_id == main_category_id).all()
     if not item:
         return '없는 메뉴입니다.'
     return item

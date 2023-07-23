@@ -1,4 +1,5 @@
 from flask import render_template, jsonify, request
+from app.models.menu import select_main_category, select_menu
 from app.routes import pos_bp
 import json
 
@@ -91,46 +92,48 @@ def menuList(table_id):
 
 # 테이블 -> 메뉴리스트에 필요한 메뉴 데이터 (json)
 @pos_bp.route('/get_menu_list/<table_id>', methods=['GET'])
-def get_menu_list(store_id):
-    #menu_list = select_menu(1)
+def get_menu_list(table_id):
+    
     store_id = 1    # temp
     all_menu_list = []
-    '''
-    table_categories = select_table_category(store_id)
+    menu_categories = select_main_category(store_id) # 메인 카테고리 조회
 
-    # 메뉴 카테고리
-    for t in table_categories:
-        page_list = []
-        table_category_pages = select_table_category_page(t.id)
+    # 메인 카테고리별 메뉴 조회
+    for m in menu_categories:
+        #page_list = []
+        #menu_category_pages = select_menu_category_page(m.id)
         
-        for p in table_category_pages:
-            table_list = []
-            tables = select_table(p.id)
+        menu_list = []
+        menus = select_menu(m.id) # 카테고리별 메뉴 조회
 
-            for table in tables:
-                table_list.append({
-                    'tableId' : table.id,
-                    'table' : table.name,
-                    'statusId' : 0,
-                    'status' : '???',
-                    'orderList' :  [],
-                    'isGroup' : 0,
-                    'groupId' : '',
-                    'groupNum' : '',
-                    'groupColor' : ''
+        if menus == '없는 메뉴입니다.': # 카테고리 안에 메뉴가 없을 때
+            all_menu_list.append({
+                'categoryId' : m.id,
+                'category' : m.name,
+                'menuList' : []
+            })
+        else:
+            for menu in menus: # 메뉴 있을 때
+                menu_list.append({
+                    'menuId' : menu.id,
+                    'menu' : menu.name,
+                    'price' : menu.price,
+                    'optionList' :  []
                 })
 
-            page_list.append({
-                'page' : p.page,
-                'tableList' : table_list
-            })
+                '''
+                page_list.append({
+                    'page' : p.page,
+                    'tableList' : menu_list
+                })
+                '''
 
-        all_table_list.append({
-            'categoryId' : t.id,
-            'category' : t.category_name,
-            'pageList' : page_list
-        })
-    '''
+            all_menu_list.append({
+                'categoryId' : m.id,
+                'category' : m.name,
+                'menuList' : menu_list
+            })
+            print(all_menu_list)
 
     '''
     # JSON 파일 경로 설정
@@ -142,4 +145,4 @@ def get_menu_list(store_id):
     print(json_data)
     '''
     # JSON 데이터를 프론트에 반환
-    return jsonify(json_data)
+    return jsonify(all_menu_list)
