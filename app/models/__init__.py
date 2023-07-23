@@ -182,12 +182,19 @@ class Order(db.Model):
     #    return f'<Order {self.title}>'
 
 
+class OrderHasOption(db.Model):
+    __tablename__ = 'order_has_option'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
+    menu_option_id = db.Column(db.Integer, db.ForeignKey('menu_option.id'))
+
+
 class TableOrderList(db.Model):
     __tablename__ = 'table_order_list'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
-    checkingin_at = db.Column(db.DateTime, nullable=False)
-    checkingout_at = db.Column(db.DateTime, nullable=False)
+    checkingin_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    checkingout_at = db.Column(db.DateTime, index=True, nullable=False)
 
     #def __repr__(self):
     #    return f'<TableOrderList {self.title}>'
