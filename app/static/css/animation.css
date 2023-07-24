@@ -1,0 +1,18 @@
+@keyframes itemClickAnimation {
+  0% { 
+    background-color: inherit; 
+    border-color: inherit;
+  }
+  25% { 
+    background-color: #F3FAFA; 
+    border-color: #1FAA9C;
+  }
+  75%{
+    background-color: #F3FAFA; 
+    border-color: #1FAA9C;
+  }
+  100% { 
+    background-color: inherit; 
+    border-color: inherit;
+  }
+}

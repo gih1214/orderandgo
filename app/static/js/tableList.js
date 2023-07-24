@@ -72,11 +72,11 @@ const changeTableCategory = (event, index) => {
 }
 
 const changeTableHtml = (tables) => {
-
+  console.log('changeTableHtml',tables)
   let html = '';
   tables.forEach((table, index)=>{
     html += `
-      <button class="table item" data-id="${table.tableId}" data-state="${table.statusId}" style="border:${table.groupId != 0 ? "1px solid " + table.groupColor : ""}"
+      <button class="table item ${table.select ? 'select' : ''}" data-id="${table.tableId}" data-state="${table.statusId}" style="border:${table.groupId != 0 ? "1px solid " + table.groupColor : ""}"
         onclick="clickTable(${table.tableId})">
         `
       if(table.isGroup != 0) {
@@ -86,8 +86,12 @@ const changeTableHtml = (tables) => {
 
       }
       html +=` 
-        <div class="transparent_group_box" onclick="clickTransparentGroupTable(event)"></div>
-        <div class="transparent_move_box" onclick="clickTransparentMoveTable(event)"></div>
+        <div class="transparent_group_box" onclick="clickTransparentGroupTable(event)">
+          <i class="ph-fill ph-check-fat"></i>
+        </div>
+        <div class="transparent_move_box" onclick="clickTransparentMoveTable(event)">
+          <i class="ph-fill ph-check-fat"></i>
+        </div>
         <div class="title">
           <h2>${table.table} <i class="ph-fill ph-bell-ringing"></i></h2>
           <div class="table_state">${table.statusId != 0 ? table.status : ''}</div>
@@ -271,14 +275,6 @@ const clickSetBtn = (event) => {
           <i class="ph ph-users-three"></i>
           <span>그룹</span>
         </button>
-        <button class="" onclick="clickZoningBtn(event)">
-          <i class="ph ph-squares-four"></i>
-          <span>구역 설정</span>
-        </button>
-        <button class="" onclick="clickSetTableBtn(event)">
-          <i class="ph ph-subtract-square"></i>
-          <span>테이블 설정</span>
-        </button>
       </div>
     </div>
     <div class="bottom"></div>
@@ -413,6 +409,7 @@ const clickSetGroupSaveBtn = (event) => {
 
 // 테이블 이동/합석 환경에서 테이블 클릭 시
 const cachingSetTableData = []
+const tableMoveList = [];
 const clickTransparentMoveTable = (event) => {
   event.stopPropagation();
   const _target = event.currentTarget.closest('.item');
@@ -421,7 +418,6 @@ const clickTransparentMoveTable = (event) => {
   const curPage = Number(_table.dataset.page);
   const itemId = _target.dataset.id;
 
-  
   const targetData = 
     cachingData
       .find((category)=>category.categoryId == Number(curCategoryId))
@@ -432,15 +428,25 @@ const clickTransparentMoveTable = (event) => {
   if(targetStatusId != 0 && curCachingDataLen == 0) {
     // 첫번째 테이블 선택
     cachingSetTableData.push(targetData)
+    targetData['select'] = true;
+    const tables_html = changeTableHtml(cachingData
+      .find((category)=>category.categoryId == Number(curCategoryId))
+      .pageList[curPage].tableList
+    )
+    const _table = document.querySelector('main section article .items');
+    _table.innerHTML = tables_html;
   }else if(targetStatusId != 0 && curCachingDataLen != 0){
     if (targetData.tableId == cachingSetTableData[0].tableId) return
     // 테이블 합석
+    console.log(cachingSetTableData[0],targetData)
+    tableMoveList.push({
+      start_table_id : cachingSetTableData[0].tableId,
+      end_table_id : targetData.tableId,
+    })
     console.log(`${cachingSetTableData[0].table}에서 ${targetData.table}(으)로 합석합니다.`)
-
+    delete cachingSetTableData[0].select;
 
     targetData.orderList = mergeOrderLists(cachingSetTableData[0], targetData).orderList;
-    
-    
     
     cachingSetTableData[0] = createEmptyTable(cachingSetTableData[0]);
 
@@ -454,8 +460,15 @@ const clickTransparentMoveTable = (event) => {
     // 초기화
     cachingSetTableData.length = 0
   }else if(targetStatusId == 0 && curCachingDataLen != 0){
+    console.log(cachingSetTableData[0],targetData)
+    tableMoveList.push({
+      start_table_id : cachingSetTableData[0].tableId,
+      end_table_id : targetData.tableId,
+    })
     // 테이블 이동
     console.log(`${cachingSetTableData[0].table}에서 ${targetData.table}(으)로 이동합니다.`)
+    delete cachingSetTableData[0].select;
+
     for( key in targetData) {
       if(key != 'table' && key != 'tableId'){
         targetData[key] = JSON.parse(JSON.stringify(cachingSetTableData[0][key]));   
@@ -507,7 +520,7 @@ function mergeOrderLists(existingData, newData) {
 // 이동/합석 취소 버튼 클릭 시
 const clickCombineMoveCancelBtn = (event) => {
   changeStyleOnSet();
-
+  tableMoveList.length=0;
   const curCategoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
   const _table = document.querySelector('main section article .items');
   const curPage = _table.dataset.page;
@@ -525,9 +538,40 @@ const clickCombineMoveCancelBtn = (event) => {
 const clickCombineMoveSaveBtn = (event) => {
   changeStyleOnSet();
   // 백으로 저장 api 호출하기
-  tableData = JSON.parse(JSON.stringify(cachingData));
+  const data = setMoveTableList(tableMoveList)
+  console.log(data);
+  tableData = JSON.parse(JSON.stringify(data));
   cachingData = null;
-  console.log(tableData)
+
+  // 테이블 이동/합석 내역 초기화
+  tableMoveList.length=0;
+}
+
+// 테이블 이동/합석 내역 데이터 정리
+const setMoveTableList = (inputList) => {
+  let resultList = [];
+  for (let inputIndex = 0; inputIndex < inputList.length; inputIndex++) {
+    const current = inputList[inputIndex];
+    let curStartList = [current.start_table_id];
+  
+    for (let resultIndex = 0; resultIndex < resultList.length; resultIndex++) {
+      const previous = resultList[resultIndex];
+      if (current.start_table_id === previous.end_table_id || previous.end_table_id === current.end_table_id) {
+        const previousStartList = previous.start_table_id;
+        curStartList = [...curStartList, ...previousStartList];
+        delete resultList[resultIndex].end_table_id
+      }
+    }
+  
+    const dataObject = { start_table_id: curStartList, end_table_id: current.end_table_id }
+    if (dataObject.start_table_id.includes(dataObject.end_table_id)) {
+      dataObject.start_table_id = dataObject.start_table_id.filter((value) => value !== dataObject.end_table_id);
+    }
+    
+    resultList.push(dataObject);
+  }
+  return resultList = resultList.filter(item => item.hasOwnProperty('end_table_id'));
+  
 }
 
 // 빈 테이블 만들기

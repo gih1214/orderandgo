@@ -244,6 +244,7 @@ const clickBasketMenu = (event) => {
 
 // 장바구니 - 클릭 시
 const minusBasketMenu = () => {
+  if(basket.length == 0) return;
   const target = document.querySelector('.basket .active');
   const targetType = target.dataset.type;
   const pargetEl = target.closest('li').querySelector('[data-type="menu"]')
@@ -281,11 +282,14 @@ const minusBasketMenu = () => {
     }
   }
   changeBasketHtml(basket)
-  maintainActive(menuIndex, optionIndex);
+  if (basket.length !== 0) {
+    maintainActive(menuIndex, optionIndex);
+  }
 }
 
 // 장바구니 + 클릭 시
 const plusBasketMenu = () => {
+  if(basket.length == 0) return;
   const target = document.querySelector('.basket .active');
   const targetType = target.dataset.type;
   const pargetEl = target.closest('li').querySelector('[data-type="menu"]')
@@ -321,16 +325,33 @@ const plusBasketMenu = () => {
 
 // 장바구니 클릭 상태 유지
 const maintainActive = (menuIndex, optionIndex) => {
-  const menuElement = document.querySelectorAll('.basket li')[menuIndex];
-  const targetElement = 
-    optionIndex !== undefined && optionIndex !== -1
-      ? menuElement.querySelectorAll('[data-type="menu_option"]')[optionIndex]
-      : menuElement.querySelector('[data-type="menu"]');
+  const basketItems = document.querySelectorAll('.basket li');
+  const basketLength = basketItems.length;
+  
+  if (basketLength === 0) return;
+  
+  let menuElement = basketItems[Math.min(menuIndex, basketLength - 1)];
+  const menuOptions = menuElement.querySelectorAll('[data-type="menu_option"]');
+  const menuOptionLength = menuOptions.length;
+  
+  let targetElement = optionIndex !== undefined && optionIndex !== -1
+    ? menuOptions[Math.min(optionIndex, menuOptionLength - 1)]
+    : menuElement.querySelector('[data-type="menu"]');
+  
+  if (optionIndex === undefined || !menuOptions[optionIndex]) {
+    targetElement = menuOptionLength === 0
+      ? menuElement.querySelector('[data-type="menu"]')
+      : menuOptions[Math.max(menuOptionLength - 1, 0)];
+  }
+  
+      
+  
   targetElement.classList.add('active');
 }
 
 // 장바구니 삭제 클릭 시
 const deleteBasketMenu = () => {
+  if(basket.length == 0) return;
   const target = document.querySelector('.basket .active');
   const targetType = target.dataset.type;
   const pargetEl = target.closest('li').querySelector('[data-type="menu"]')
@@ -353,4 +374,8 @@ const deleteBasketMenu = () => {
     }
   }
   changeBasketHtml(basket)
+  let optionIndex = undefined;
+
+  maintainActive(menuIndex, optionIndex);
+
 }
