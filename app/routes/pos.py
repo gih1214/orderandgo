@@ -15,14 +15,21 @@ def tableList():
 
 @pos_bp.route('/set_group', methods=['GET', 'POST'])
 def set_group():
-    group_data = request.get_json()
+    sample_data = [
+        {
+            'table_id':1,
+            'group_id':None,
+            'group_color':None
+        },
+        {
+            'table_id':2,
+            'group_id':1,
+            'group_color':'fff'
+        },
+    ]
+    # group_data = request.get_json()
     
-    set_or_del = group_data['set_or_del']
-    group_id_list = group_data['group_id_list']
-    group_id = group_data['group_id']
-    group_color = group_data['group_color']
-
-    return set_table_group(set_or_del, group_id_list, group_id, group_color)
+    return set_table_group(sample_data)
 
 
 @pos_bp.route('/get_table_page', methods=['GET'])

@@ -127,22 +127,15 @@ def delete_table(table_id):
     return True
 
 
-# 테이블 그룹 설정/취소
-def set_table_group(set_or_del, group_id_list, group_id, group_color):
-    table_group = [1,2]   # temp
-    # make_or_del은 make or del로 받음. 설정은 make, 취소는 del
-    for t in group_id_list:
-        item = Table.query.filter(Table.id == t).first()
+# 테이블 그룹 설정
+def set_table_group(table_list):
+    for t in table_list:
+        item = db.session.query(Table).filter(Table.id == t['table_id']).first()
         if not item:
             return jsonify({'message': 'Not found table id'}), 400
         
-        if set_or_del == 'set':
-            item['is_group'] = group_id
-            item['group_color'] = group_color
-            session.commit()
-        elif set_or_del == 'del':
-            item['is_group'] = None
-            item['group_color'] = None
-            session.commit()
-    
+        item['is_group'] = t['group_id']
+        item['group_color'] = t['group_color']
+        session.commit()
+
     return jsonify({'message': 'User updated successfully'}), 200  
