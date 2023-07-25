@@ -4,7 +4,7 @@ from app.routes import pos_bp
 import json
 
 from app.routes import pos_bp
-from app.models.table import create_table_catgory, select_table_category, update_table_category, delete_table_category, select_table, select_table_category_page, set_table_group
+from app.models.table import create_table_catgory, move_table, select_table_category, update_table_category, delete_table_category, select_table, select_table_category_page, set_table_group
 from app.models import db
 
 
@@ -82,6 +82,7 @@ def get_table_page():
     # JSON 데이터를 프론트에 반환
     return jsonify(all_table_list)
     '''
+
 # 테이블 -> 메뉴리스트 페이지
 @pos_bp.route('/menuList/<table_id>', methods=['GET'])
 def menuList(table_id): 
@@ -144,3 +145,15 @@ def get_menu_list(table_id):
 
     # JSON 데이터를 프론트에 반환
     # return jsonify(all_menu_list)
+
+# 테이블 이동/합석
+@pos_bp.route('/set_table/<store_id>', methods=['PUT'])
+def set_table_list(store_id):
+    table_data = request.get_json()
+    end_id = table_data['end_id']
+    start_id = table_data['start_id'] # end_id로 이동할 테이블
+    set_table = move_table(end_id, start_id)
+    response = jsonify({'message': 'Success'})
+    response.status_code = 200
+    print('Received JSON data:', set_table)
+    return response

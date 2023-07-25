@@ -1,6 +1,9 @@
 from flask import session, jsonify
-from app.models import db, Table, TableCategory, TableCategoryPage
+from app.models import Order, TableOrderList, db, Table, TableCategory, TableCategoryPage
 
+#################
+# 테이블 카테고리
+#################
 
 # 테이블 카테고리 페이지 생성
 def create_table_catgory_page(table_category_id, page):
@@ -60,6 +63,10 @@ def delete_table_category(table_category_id):
     return True
 
 
+#########
+# 테이블
+#########
+
 # 테이블 생성
 def create_table(data):
     item = Table(data['name'], data['number'], data['seat_count'], data['table_category'], data['x_axis'], data['y_axis'], data['page'], data['is_group'])
@@ -75,6 +82,25 @@ def select_table(category_page_id):
     if not item:
         return '잘못됨'
     return item
+
+# 테이블 이동/합석
+def move_table(end_id, start_id):
+    #print('이동하고픈 테이블 : ', start_id)
+    #print('가만히 있는 테이블 : ', end_id)
+    for s in start_id:
+        # order 테이블에 table 번호 변경
+        order_table = Order.query.filter(Order.table_id == s).update({'table_id': end_id})\
+        # table_order_list 테이블에 table 번호 변경
+        list_table = TableOrderList.query.filter(TableOrderList.table_id == s).update({'table_id': end_id})
+
+        if not order_table:
+            return '없는 정보입니다.'
+        elif not list_table:
+            return '없는 정보입니다.'
+        
+    db.session.commit()
+    print('테이블 이동/합석 완료')
+    return True
 
 # 테이블 수정
 def update_table(table_id, change_dict):
@@ -120,5 +146,3 @@ def set_table_group(set_or_del, group_id_list, group_id, group_color):
             session.commit()
     
     return jsonify({'message': 'User updated successfully'}), 200  
-
-
