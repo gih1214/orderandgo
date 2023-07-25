@@ -1,5 +1,6 @@
 from flask import render_template, jsonify, request
 from app.models.menu import select_main_category, select_menu
+from app.models.order import find_order_list, find_order_option_list
 from app.routes import pos_bp
 import json
 
@@ -35,7 +36,7 @@ def set_group():
 @pos_bp.route('/get_table_page', methods=['GET'])
 def get_table_page():
     print('##########호출됨')
-
+    '''
     # JSON 파일 경로 설정
     json_file_path = 'app/static/json/tableList.json'
 
@@ -60,12 +61,40 @@ def get_table_page():
             tables = select_table(p.id)
 
             for table in tables:
+                # 주문 리스트 출력
+                order_list_items = find_order_list(table.id)
+                print("@#$@#$@#$#@$",find_order_list)
+                
+                order_list = []
+                for o in order_list_items:
+                    
+                    # 주문 옵션 리스트 출력
+                    order_option_items = find_order_option_list(o.order_id)
+
+                    option_list = []
+                    for oo in order_option_items:
+                        option_list.append({
+                            'optionId':oo.id,
+                            'option':oo.name,
+                            'price':oo.price,
+                            'count':1
+                        })
+
+
+                    order_list.append({
+                        "menuId" : o.id,
+                        "menu" : o.name,
+                        "price" : o.price,
+                        "count" : 1,
+                        "optionList" : option_list             
+                    })
+
                 table_list.append({
                     'tableId' : table.id,
                     'table' : table.name,
                     'statusId' : 0,
                     'status' : '???',
-                    'orderList' :  [],
+                    'orderList' :  order_list,
                     'isGroup' : table.is_group if table.is_group is not None else None,
                     'groupId' : table.is_group if table.is_group is not None else None,
                     'groupNum' : table.is_group if table.is_group is not None else None,
@@ -84,11 +113,11 @@ def get_table_page():
         })
 
 
-        
+    print("@#$", all_table_list)
 
     # JSON 데이터를 프론트에 반환
     return jsonify(all_table_list)
-    '''
+
 
 # 테이블 -> 메뉴리스트 페이지
 @pos_bp.route('/menuList/<table_id>', methods=['GET'])

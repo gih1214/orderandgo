@@ -1,5 +1,5 @@
 from flask import session, jsonify
-from app.models import db, Table, TableCategory, TableCategoryPage, Order, TableOrderList, Menu, OrderHasOption
+from app.models import db, Table, TableCategory, TableCategoryPage, Order, TableOrderList, Menu, OrderHasOption, MenuOption
 
 
 # 주문하기 클릭 시
@@ -31,9 +31,10 @@ def make_order(table_id, order_list):
     return True
     
 
-# 결제할 리스트 출력
-def payment_list(table_id):
-    items = db.session.query(Order)\
+# 주문만 출력
+def find_order_list(table_id):
+    items = db.session.query(Menu.id, Menu.name, Menu.price, Order.id.label('order_id'))\
+                    .join(Order, Order.menu_id == Menu.id)\
                     .join(TableOrderList, TableOrderList.id == Order.order_list_id)\
                     .join(Table, Table.id == TableOrderList.table_id)\
                     .filter(TableOrderList.checkingout_at.is_(None), Table.id == table_id)\
@@ -41,3 +42,15 @@ def payment_list(table_id):
     if items is None:
         return "잘못됨"
     return items
+
+
+# 주문 옵션 출력
+def find_order_option_list(order_id):
+    items = db.session.query(MenuOption)\
+                    .join(OrderHasOption, OrderHasOption.menu_option_id == MenuOption.id)\
+                    .join(Order, Order.id == OrderHasOption.order_id)\
+                    .filter(Order.id == order_id)\
+                    .all()
+    if items is None:
+        return "잘못됨"
+    return items    

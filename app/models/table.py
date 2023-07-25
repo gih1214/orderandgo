@@ -77,7 +77,6 @@ def create_table(data):
 
 # 테이블 조회
 def select_table(category_page_id):
-    print("@#$",category_page_id)
     item = Table.query.filter(Table.category_page_id == category_page_id).all()
     if not item:
         return '잘못됨'
@@ -112,7 +111,7 @@ def update_table(table_id, change_dict):
     for c in change_dict.keys():
         if c in change_list:
             item[c] = change_dict[c]
-            session.commit()
+            db.session.commit()
     return True
 
 
@@ -122,8 +121,8 @@ def delete_table(table_id):
     if not item:
         return '잘못됨'
     
-    session.delete(item)
-    session.commit()
+    db.session.delete(item)
+    db.session.commit()
     return True
 
 
@@ -134,8 +133,8 @@ def set_table_group(table_list):
         if not item:
             return jsonify({'message': 'Not found table id'}), 400
         
-        item['is_group'] = t['group_id']
-        item['group_color'] = t['group_color']
-        session.commit()
+        item.is_group = t['group_id']
+        item.group_color = t['group_color']
+        db.session.commit()
 
     return jsonify({'message': 'User updated successfully'}), 200  

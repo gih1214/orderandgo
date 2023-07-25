@@ -97,7 +97,7 @@ class Table(db.Model):
     seat_count = db.Column(db.Integer, nullable=True)
     order = db.Column(db.Integer, nullable=False)
     is_group = db.Column(db.Integer, nullable=True)
-    group_color = db.Column(db.String(50), nullable=False)
+    group_color = db.Column(db.String(50), nullable=True)
     category_page_id = db.Column(db.Integer, db.ForeignKey('table_category_page.id'))
 
     #def __repr__(self):
@@ -194,7 +194,7 @@ class TableOrderList(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
     checkingin_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    checkingout_at = db.Column(db.DateTime, index=True, nullable=False)
+    checkingout_at = db.Column(db.DateTime, index=True, nullable=True)
 
     #def __repr__(self):
     #    return f'<TableOrderList {self.title}>'
