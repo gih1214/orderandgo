@@ -3,7 +3,6 @@ from app.routes import order_bp
 
 from app.models.order import make_order
 
-
 # 주문하기 클릭
 @order_bp.route('/', methods=['POST'])
 def menu_order():
@@ -11,6 +10,16 @@ def menu_order():
     sample_data = {
         'table_id':1,
         'order_list':[
+            {
+                "menu_id" : 5,
+                # "count" : 1,  # cnt없이 2개더라도 다 따로 보내쥬기,,!
+                "option_list" : [1,1,2]  # 옵션 번호만
+            },
+            {
+                "menu_id" : 5,
+                # "count" : 1,  # cnt없이 2개더라도 다 따로 보내쥬기,,!
+                "option_list" : [1,2]  # 옵션 번호만
+            },
             {
                 "menu_id" : 5,
                 # "count" : 1,  # cnt없이 2개더라도 다 따로 보내쥬기,,!

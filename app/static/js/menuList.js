@@ -1,6 +1,7 @@
-const lastPath = window.location.href.split('/').pop();
-
 let menuData;
+let cachingData = null;
+let basket = new Array;
+
 fetch(`/pos/get_menu_list/${lastPath}`, {
   method: 'GET',
 })
@@ -19,18 +20,26 @@ const createHtml = (menuPageData) => {
   const _menuCatgory = document.querySelector('main section nav ul');
   const _menu = document.querySelector('main section article .items');
   let nav_html = '';
-  menuPageData.forEach((data, index)=>{
+  menuPageData.forEach(({categoryId, category, pageList}, index)=>{
+    
     nav_html += `
-      <li data-id="${data.categoryId}" data-state="${index == 0 ? 'active': ''}">
-        <button onclick="changeMenuCategory(event, ${index})">${data.category}</button>
+      <li data-id="${categoryId}" data-state="${index == 0 ? 'active': ''}">
+        <button onclick="changeMenuCategory(event, ${index})">${category}</button>
       </li>
     `
     _menuCatgory.innerHTML =  nav_html;
     if(index != 0) return;
-
-    const menus = data.menuList;
+    const PAGE_INDEX = 0;
+    const menus = pageList[PAGE_INDEX].menuList;
     const menus_html = changeMenuHtml(menus);
     _menu.innerHTML = menus_html;
+    _menu.setAttribute('data-page', PAGE_INDEX);
+    createPageNationBtnHtml();
+    const _article = document.querySelector('main section article');
+    const curCategoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
+    const pageLen = menuData.find((category)=>category.categoryId == Number(curCategoryId)).pageList.length;
+    if(0 < PAGE_INDEX){_article.classList.add('hasPrevPage')};
+    if(PAGE_INDEX < pageLen-1){_article.classList.add('hasNextPage')};
   })
 }
 
@@ -43,12 +52,29 @@ const changeMenuCategory = (event, index) => {
   const _menu = document.querySelector('main section article .items');
 
   _li.dataset.state = 'active'
-  const menus_html = changeMenuHtml(menuData[index].menuList);
+  const PAGE_INDEX = 0;
+  let menus_html
+  if(cachingData != null) {
+    menus_html = changeMenuHtml(cachingData[index].pageList[PAGE_INDEX].menuList);
+  }else {
+    menus_html = changeMenuHtml(menuData[index].pageList[PAGE_INDEX].menuList);  
+  }
   _menu.innerHTML = menus_html;
+  _menu.setAttribute('data-page', PAGE_INDEX);
+
+  const _article = document.querySelector('main section article');
+  _article.classList.remove('hasNextPage');
+  _article.classList.remove('hasPrevPage');
+
+
+  const curCategoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
+  const pageLen = menuData.find((category)=>category.categoryId == Number(curCategoryId)).pageList.length;
+  if(PAGE_INDEX < pageLen-1){_article.classList.add('hasNextPage')};
 }
 
 // 메뉴 html 변경
 const changeMenuHtml = (menus) => {
+  console.log(menus)
   let html = '';
   menus.forEach((menu, index)=>{
     html += `
@@ -66,8 +92,9 @@ const changeMenuHtml = (menus) => {
 // 메뉴 클릭 시
 const clickMenu = (event) => {
   const categoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
+  const page = document.querySelector('main section article .items').dataset.page;
   const menuId = event.currentTarget.dataset.id;
-  const menu = getMenuData(menuData, categoryId, menuId);
+  const menu = getMenuData(menuData, categoryId, page, menuId);
   const _optionHtml = document.querySelector('#container.order main section aside');
   const __menu = document.querySelectorAll('main section article .item');
 
@@ -109,15 +136,17 @@ const clickMenu = (event) => {
 
 }
 
+
+
 // 카테고리id, 메뉴id 로 메뉴 찾기
-const getMenuData = (data, categoryId, menuId) => {
-  const category = data.find(item => item.categoryId == categoryId)?.menuList;
-  return category?.find(item => item.menuId == menuId) || null;
+const getMenuData = (data, categoryId, page, menuId) => {
+  const category = data.find(item => Number(item.categoryId) == Number(categoryId)).pageList[page]?.menuList;
+  return category?.find(item => Number(item.menuId) == Number(menuId)) || null;
 };
 
 // 카테고리id, 메뉴id, 옵션id 로 옵션 찾기
-const getMenuOptionData = (data, categoryId, menuId, optionId) => {
-  const category = data.find(item => item.categoryId == categoryId)?.menuList;
+const getMenuOptionData = (data, categoryId, page, menuId, optionId) => {
+  const category = data.find(item => item.categoryId == categoryId).pageList[page]?.menuList;
   const menu = category?.find(item => item.menuId == menuId);
   const option = menu?.optionList.find(option => option.optionId == optionId);
   return option || null;
@@ -161,9 +190,10 @@ const resetMenuBackground = (__menu) => {
 // 메뉴 옵션 클릭 시
 const clickMenuOption = (event) => {
   const categoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
+  const page = document.querySelector('main section article .items').dataset.page;
   const menuId = document.querySelector('main section article .item.active').dataset.id;
   const optionId = event.currentTarget.dataset.id;
-  const option = getMenuOptionData(menuData, categoryId, menuId, optionId);
+  const option = getMenuOptionData(menuData, categoryId, page, menuId, optionId);
   let optionIndex = undefined;
   basket.forEach((data)=>{
     if(data.id == menuId){
@@ -194,7 +224,7 @@ const clickMenuOption = (event) => {
   maintainActive(menuIndex, optionIndex);
 }
 
-let basket = new Array;
+
 
 // 장바구니 html 변경
 const changeBasketHtml = (datas) => {

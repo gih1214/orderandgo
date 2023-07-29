@@ -1,4 +1,5 @@
 let tableData;
+let cachingData = null;
 fetch('/pos/get_table_page', {
   method: 'GET',
 })
@@ -26,18 +27,18 @@ const createHtml = (tablePageData) => {
     _tableCategory.innerHTML =  nav_html;
     if(index != 0) return;
 
-    const pageIndex = 0;
-    const tables = data.pageList[pageIndex].tableList;
+    const PAGE_INDEX = 0;
+    const tables = data.pageList[PAGE_INDEX].tableList;
     const tables_html = changeTableHtml(tables);
     _table.innerHTML = tables_html;
 
-    _table.setAttribute('data-page', pageIndex);
+    _table.setAttribute('data-page', PAGE_INDEX);
     createPageNationBtnHtml();
     const _article = document.querySelector('main section article');
     const curCategoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
     const pageLen = tableData.find((category)=>category.categoryId == Number(curCategoryId)).pageList.length;
-    if(0 < pageIndex){_article.classList.add('hasPrevPage')};
-    if(pageIndex < pageLen-1){_article.classList.add('hasNextPage')};
+    if(0 < PAGE_INDEX){_article.classList.add('hasPrevPage')};
+    if(PAGE_INDEX < pageLen-1){_article.classList.add('hasNextPage')};
   })
 }
 
@@ -50,15 +51,15 @@ const changeTableCategory = (event, index) => {
   const _table = document.querySelector('main section article .items');
 
   _li.dataset.state = 'active'
-  const pageIndex = 0;
+  const PAGE_INDEX = 0;
   let tables_html
   if(cachingData != null) {
-    tables_html = changeTableHtml(cachingData[index].pageList[pageIndex].tableList);
+    tables_html = changeTableHtml(cachingData[index].pageList[PAGE_INDEX].tableList);
   }else {
-    tables_html = changeTableHtml(tableData[index].pageList[pageIndex].tableList);  
+    tables_html = changeTableHtml(tableData[index].pageList[PAGE_INDEX].tableList);  
   }
   _table.innerHTML = tables_html;
-  _table.setAttribute('data-page', pageIndex);
+  _table.setAttribute('data-page', PAGE_INDEX);
 
   const _article = document.querySelector('main section article');
   _article.classList.remove('hasNextPage');
@@ -67,7 +68,7 @@ const changeTableCategory = (event, index) => {
 
   const curCategoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
   const pageLen = tableData.find((category)=>category.categoryId == Number(curCategoryId)).pageList.length;
-  if(pageIndex < pageLen-1){_article.classList.add('hasNextPage')};
+  if(PAGE_INDEX < pageLen-1){_article.classList.add('hasNextPage')};
 
 }
 
@@ -128,69 +129,31 @@ const changeTableHtml = (tables) => {
   return html;
 }
 
-// 페이지 변경 버튼 html 만들기 
-const createPageNationBtnHtml = (event) => {
-  console.log('화살표 만듬')
-  const _article = document.querySelector('main section article');
-  let html = `
-  <button class="change_page_btn prev_page_btn" onclick="clickChagePageBtn(event, 'prev')">
-    <i class="ph ph-caret-left"></i>
-  </button>
-  <button class="change_page_btn next_page_btn" onclick="clickChagePageBtn(event, 'next')">
-    <i class="ph ph-caret-right"></i>
-  </button>
-  `
-  _article.insertAdjacentHTML('beforeend',html)
-}
-// 페이지 변경 버튼 클릭 시
-const clickChagePageBtn = (event, type) => {
-  const _article = document.querySelector('main section article')
-  const _table = document.querySelector('main section article .items');
+// // 페이지 변경 버튼 html 만들기 
+// const createPageNationBtnHtml = (event) => {
+//   console.log('화살표 만듬')
+//   const _article = document.querySelector('main section article');
+//   let html = `
+//   <button class="change_page_btn prev_page_btn" onclick="clickChagePageBtn(event, 'prev')">
+//     <i class="ph ph-caret-left"></i>
+//   </button>
+//   <button class="change_page_btn next_page_btn" onclick="clickChagePageBtn(event, 'next')">
+//     <i class="ph ph-caret-right"></i>
+//   </button>
+//   `
+//   _article.insertAdjacentHTML('beforeend',html)
+// }
 
-  const curPageIndex = Number(_table.dataset.page);
-  const curCategoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
-  let pageLen;
-  if(cachingData != null) {
-    pageLen = cachingData.find((category)=>category.categoryId == Number(curCategoryId)).pageList.length;
-  }else {
-    pageLen = tableData.find((category)=>category.categoryId == Number(curCategoryId)).pageList.length;
-  }
 
-  
-  let newPageIndex
-  console.log(type, curPageIndex)
-  if(type == 'prev' && curPageIndex > 0){
-    newPageIndex = curPageIndex - 1;
-  }
-  if(type == 'next' && curPageIndex < pageLen-1){
-    newPageIndex = curPageIndex + 1;
-  }
-  if(newPageIndex == undefined) return;
-  let targetData;
-  if(cachingData != null) {
-    targetData = cachingData.find((category)=>category.categoryId == Number(curCategoryId)).pageList[newPageIndex].tableList
-  }else {
-    targetData = tableData.find((category)=>category.categoryId == Number(curCategoryId)).pageList[newPageIndex].tableList
-  }
-  
-  const tables_html = changeTableHtml(targetData);
-  _table.innerHTML = tables_html; 
-  _table.setAttribute('data-page', newPageIndex);
-  
-  _article.classList.remove('hasNextPage');
-  _article.classList.remove('hasPrevPage');
-
-  if(0 < newPageIndex){_article.classList.add('hasPrevPage')};
-  if(newPageIndex < pageLen-1){_article.classList.add('hasNextPage')};
-}
 
 function clickTable(table_id){
   console.log('클릭함')
   window.location.href=`/pos/menuList/${table_id}`
 }
 
+
+
 // 테이블 그룹지정 버튼 클릭 시
-let cachingData = null;
 const clickGroupBtn = (event) => {
   const asideHtml = 
     `
