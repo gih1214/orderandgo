@@ -452,6 +452,9 @@ main section > aside .custom_btns button{
   display: flex;
   flex-flow: column;
   flex: 1;
+  max-height: calc(100vh - 90px - 184px - 16px);
+  height: 100%;
+  overflow: auto;
 }
 .basket_container .basket li {
   display: flex;
@@ -558,10 +561,13 @@ main section > aside .custom_btns button{
   background: #1FAA9C;
   color: #FFF;
 }
-.basket_container .bottom ul a{
+.basket_container .bottom ul a,
+.basket_container .bottom ul button
+{
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   height: 50px;
   padding: 8px 20px;
   

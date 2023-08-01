@@ -1,5 +1,10 @@
 const lastPath = window.location.href.split('/').pop();
 
+// 깊은 복사
+function deepCopy(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
 // 모달 배경 및 닫기 클릭 시 모달 닫기
 window.onclick = function (event) {
   if (event.target.id == 'modal' || event.target.closest('.close') != undefined) {

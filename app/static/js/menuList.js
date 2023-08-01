@@ -1,7 +1,8 @@
 let menuData;
 let cachingData = null;
 let basket = new Array;
-
+let currentMenu = null;
+let menuAllData = [];
 fetch(`/pos/get_menu_list/${lastPath}`, {
   method: 'GET',
 })
@@ -89,6 +90,37 @@ const changeMenuHtml = (menus) => {
   return html;
 }
 
+// 메뉴 올 데이터를 이용해서 장바구니 데이터로 만들기
+const setBasketData = (menus) => {
+  const transformedData = [];
+  const tempData = {};
+
+  menus.forEach(item => {
+    const { masterName, id, name, count, price, options } = item;
+    if (tempData[masterName]) {
+      tempData[masterName].length++;
+    } else {
+      tempData[masterName] = {
+        masterName,
+        length: 1,
+        data: {
+          id,
+          name,
+          count,
+          price,
+          options
+        }
+      };
+    }
+  });
+
+  for (const key in tempData) {
+    transformedData.push(tempData[key]);
+  }
+
+  return transformedData;
+}
+
 // 메뉴 클릭 시
 const clickMenu = (event) => {
   const categoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
@@ -102,38 +134,57 @@ const clickMenu = (event) => {
 
   let hasMenu = false;
 
-  basket.forEach((data)=>{
-    if(data.id == menu.menuId){
-      data.count += 1;
-      data.price += data.price;
-      hasMenu = true;
-    }
-  })
-
-  if(!hasMenu){
-    let newMenu = {
-      id: menu.menuId,
-      name: menu.menu,
-      price: menu.price,
-      options: [],
-      count: 1
-    }
-    basket.push(newMenu)
+  currentMenu = {
+    id: menu.menuId,
+    name: menu.menu,
+    price: menu.price,
+    count: 1,
+    options: [],
   }
-  
+  currentMenu.masterName = setMasterName(currentMenu);
+
+  menuAllData.push(currentMenu);
+  console.log('menuAllData,',menuAllData)
+  changeBasketHtml(setBasketData(menuAllData))
+  // 메뉴 옵션 HTML 토글
   if(menu.optionList.length != 0){
     showMenuOptionHtml(menu.optionList)
     _optionHtml.classList.add('active');
     setMenuDisabled(__menu, event.currentTarget)
   }else {
     _optionHtml.classList.remove('active');
-
   }
-  console.log(basket)
-  changeBasketHtml(basket)
-  const menuIndex = basket.findIndex(menu => menu.id == menuId);
-  maintainActive(menuIndex, undefined);
 
+  // basket.forEach((data)=>{
+  //   if(data.id == menu.menuId){
+  //     data.count += 1;
+  //     data.price += data.price;
+  //     hasMenu = true;
+  //   }
+  // })
+
+  // if(!hasMenu){
+  //   let newMenu = {
+  //     id: menu.menuId,
+  //     name: menu.menu,
+  //     price: menu.price,
+  //     options: [],
+  //     count: 1
+  //   }
+  //   basket.push(newMenu)
+  // }
+  
+  // if(menu.optionList.length != 0){
+  //   showMenuOptionHtml(menu.optionList)
+  //   _optionHtml.classList.add('active');
+  //   setMenuDisabled(__menu, event.currentTarget)
+  // }else {
+  //   _optionHtml.classList.remove('active');
+
+  // }
+  // changeBasketHtml(basket)
+  // const menuIndex = basket.findIndex(menu => menu.id == menuId);
+  // maintainActive(menuIndex, undefined);
 }
 
 
@@ -187,6 +238,17 @@ const resetMenuBackground = (__menu) => {
   })
 }
 
+// 메뉴 마스터 네임 만들기
+const setMasterName = (menu) => {
+  let masterName = '';
+  masterName = `${menu.id}_${menu.count}`;
+  menu?.options.sort((a, b)=>{return b - a});
+  menu?.options.forEach((option)=>{
+    masterName += `_${option.id}_${option.count}`
+  })
+  return masterName
+}
+
 // 메뉴 옵션 클릭 시
 const clickMenuOption = (event) => {
   const categoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
@@ -195,54 +257,87 @@ const clickMenuOption = (event) => {
   const optionId = event.currentTarget.dataset.id;
   const option = getMenuOptionData(menuData, categoryId, page, menuId, optionId);
   let optionIndex = undefined;
-  basket.forEach((data)=>{
-    if(data.id == menuId){
-      let hasMenu = false;
-      data.options.forEach((optionData, index)=>{
-        if(optionData.id == option.optionId){
-          optionData.count += 1;
-          optionData.price += optionData.price;
-          hasMenu = true;
-          optionIndex = index;
-        } 
-      })
-
-      if(!hasMenu) {
-        const newOption = {
-          id: option.optionId,
-          name: option.option,
-          price: option.price,
-          count: 1
-        };
-        data.options.push(newOption)
-        optionIndex = (data.options.length -1)
-      }
+  const newOption = {
+    id: option.optionId,
+    name: option.option,
+    price: option.price,
+    count: 1,
+  }
+  let isHas = false;
+  currentMenu = menuAllData[menuAllData.length-1]
+  currentMenu.options.forEach((option)=>{
+    if(option.id == newOption.id){
+      console.log('이미 있는 옵션입니다.')
+      option.count = option.count + 1; 
+      isHas = true;
     }
   })
-  changeBasketHtml(basket)
-  const menuIndex = basket.findIndex(menu => menu.id == menuId);
-  maintainActive(menuIndex, optionIndex);
+  if(!isHas || currentMenu.length == 0){
+    currentMenu.options.push(newOption)
+  }
+  currentMenu.masterName = setMasterName(currentMenu);
+  console.log('menuAllData,',menuAllData)
+  changeBasketHtml(setBasketData(menuAllData))
+  // basket.forEach((data)=>{
+  //   if(data.id == menuId){
+  //     let hasMenu = false;
+  //     data.options.forEach((optionData, index)=>{
+  //       if(optionData.id == option.optionId){
+  //         optionData.count += 1;
+  //         optionData.price += optionData.price;
+  //         hasMenu = true;
+  //         optionIndex = index;
+  //       } 
+  //     })
+  //     const isOptionIndex = currentMenu.options.indexOf(option.optionId);
+  //     if (isOptionIndex !== -1) {
+  //       console.log('이미 안에 있음');
+  //       currentMenu.options.splice(isOptionIndex, 1);
+  //     }else {
+  //       currentMenu.options.push(option.optionId);
+  //       currentMenu.options.sort(function(a, b) { return a - b });
+        
+  //     }
+  //     console.log('currentMenu, ',currentMenu)
+  //     console.log('basket,',basket)
+      
+  //     if(!hasMenu) {
+  //       const newOption = {
+  //         id: option.optionId,
+  //         name: option.option,
+  //         price: option.price,
+  //         count: 1
+  //       };
+  //       data.options.push(newOption)
+  //       optionIndex = (data.options.length -1)
+  //     }
+  //   }
+  // })
+  // changeBasketHtml(basket)
+  // const menuIndex = basket.findIndex(menu => menu.id == menuId);
+  // maintainActive(menuIndex, optionIndex);
 }
 
 
 
 // 장바구니 html 변경
 const changeBasketHtml = (datas) => {
+  console.log(datas)
   const _basket = document.querySelector('main aside .basket');
   const _totalPrice = document.querySelector('main aside .total_price .price');
   html = ``;
   let totalPrice = 0;
-  datas.forEach((data)=>{
+  datas.forEach(({data, length})=>{
     totalPrice += data.price
     html += `
       <li>
         <div data-id="${data.id}" data-type="menu" class="menu" onclick="clickBasketMenu(event)">
           <h2>${data.name}</h2>
-          <span>${data.count}</span>
+          <span>${data.count * length}</span>
           <span class="price">${data.price}원</span>
         </div>
         `
-        data.options.forEach((option)=>{
+        data?.options?.forEach((option)=>{
           totalPrice += option.price
           html +=`
           <div data-id="${option.id}" data-type="menu_option" class="menu_option" onclick="clickBasketMenu(event)">
@@ -408,4 +503,52 @@ const deleteBasketMenu = () => {
 
   maintainActive(menuIndex, optionIndex);
 
+}
+
+// 주문하기 용 데이터 만들기
+function transformData(inputData) {
+  const transformedData = [];
+
+  inputData.forEach(item => {
+    const { id, options } = item;
+    const optionIds = options.map(option => option.id);
+    const optionCount = options.map(option => option.count);
+
+    const newOptions = [];
+    optionIds.forEach((optionId, index) => {
+      for (let i = 0; i < optionCount[index]; i++) {
+        newOptions.push(optionId);
+      }
+    });
+
+    transformedData.push({
+      menu_id: id,
+      option_list: newOptions
+    });
+  });
+
+  return transformedData;
+}
+
+const clickOrder = (event) => {
+  const data = {
+    table_id : lastPath,
+    order_list : transformData(deepCopy(menuAllData))
+  }
+  fetch(`/order`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(data => {
+    // 받은 데이터 처리
+    console.log(data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+  
 }
