@@ -35,21 +35,64 @@ def set_group():
 
 @pos_bp.route('/get_table_page', methods=['GET'])
 def get_table_page():
-    print('##########호출됨')
-    # JSON 파일 경로 설정
-    json_file_path = 'app/static/json/tableList.json'
 
-    # JSON 파일 로드
-    with open(json_file_path, 'r', encoding='UTF-8') as file:
-        json_data = json.load(file)
+    # # JSON 파일 경로 설정
+    # json_file_path = 'app/static/json/tableList.json'
 
-    # JSON 데이터를 프론트에 반환
-    return jsonify(json_data)
+    # # JSON 파일 로드
+    # with open(json_file_path, 'r', encoding='UTF-8') as file:
+    #     json_data = json.load(file)
+
+    # # JSON 데이터를 프론트에 반환
+    # return jsonify(json_data)
 
 
-    # store_id = 1    # temp
-    # all_table_list = []
-    # table_categories = select_table_category(store_id)
+    store_id = 1    # temp
+    all_table_list = []
+    table_categories = select_table_category(store_id)
+    
+    for t in table_categories:
+        category_name = t.category_name
+        category_id = t.id
+        tables = select_table(category_id)
+        sorted_tables = sorted(tables, key=lambda table: (table.page, table.position))
+        
+        def sort_table(table):
+            return {
+                "tableId": table.id, 
+                "table": table.name,
+                "statusId": 0,
+                "status": "",
+                "orderList" : [],
+            }
+
+        print(sorted_tables)
+        # 페이지별로 그룹화
+        page_list = [];
+        current_page = None
+        for table in sorted_tables:
+            if table.page != current_page:
+                current_page = table.page
+                page_list.append({
+                    "page": current_page, 
+                    "tableList": [sort_table(table)]
+                })
+            else:
+                page_list[-1]["tableList"].append(sort_table(table))
+
+        print(page_list)
+            
+        all_table_list.append({
+            "categoryId" : category_id,
+            "category" : category_name,
+            "pageList" : page_list
+        })
+        
+        
+    print(all_table_list)
+        
+
+    return jsonify(all_table_list)
 
     # # 테이블 카테고리
     # for t in table_categories:
@@ -129,58 +172,60 @@ def menuList(table_id):
 @pos_bp.route('/get_menu_list/<table_id>', methods=['GET'])
 def get_menu_list(table_id):
     
-    # store_id = 1    # temp
-    # all_menu_list = []
-    # menu_categories = select_main_category(store_id) # 메인 카테고리 조회
-
-    # # 메인 카테고리별 메뉴 조회
-    # for m in menu_categories:
-    #     #page_list = []
-    #     #menu_category_pages = select_menu_category_page(m.id)
+    store_id = 1    # temp
+    all_menu_list = []
+    menu_categories = select_main_category(store_id) # 메인 카테고리 조회
+    print('menu_categories,',menu_categories)
+    # 메인 카테고리별 메뉴 조회
+    for m in menu_categories:
+        # page_list = []
+        # menu_category_pages = select_menu_category_page(m.id)
         
-    #     menu_list = []
-    #     menus = select_menu(m.id) # 카테고리별 메뉴 조회
-
-    #     if menus == '없는 메뉴입니다.': # 카테고리 안에 메뉴가 없을 때
-    #         all_menu_list.append({
-    #             'categoryId' : m.id,
-    #             'category' : m.name,
-    #             'menuList' : []
-    #         })
-    #     else:
-    #         for menu in menus: # 메뉴 있을 때
-    #             menu_list.append({
-    #                 'menuId' : menu.id,
-    #                 'menu' : menu.name,
-    #                 'price' : menu.price,
-    #                 'optionList' :  []
-    #             })
-
-    #             '''
-    #             page_list.append({
-    #                 'page' : p.page,
-    #                 'tableList' : menu_list
-    #             })
-    #             '''
-
-    #         all_menu_list.append({
-    #             'categoryId' : m.id,
-    #             'category' : m.name,
-    #             'menuList' : menu_list
-    #         })
-    #         print(all_menu_list)
-
-    # JSON 파일 경로 설정
-    json_file_path = 'app/static/json/menuList.json'
+        print(m.name)
         
-    # JSON 파일 로드
-    with open(json_file_path, 'r', encoding='UTF-8') as file:
-        json_data = json.load(file)
-    print(json_data)
-    return jsonify(json_data)
+        menu_list = []
+        menus = select_menu(m.id) # 카테고리별 메뉴 조회
+        print(menus)
+        if menus == '없는 메뉴입니다.': # 카테고리 안에 메뉴가 없을 때
+            all_menu_list.append({
+                'categoryId' : m.id,
+                'category' : m.name,
+                'menuList' : []
+            })
+        else:
+            for menu in menus: # 메뉴 있을 때
+                menu_list.append({
+                    'menuId' : menu.id,
+                    'menu' : menu.name,
+                    'price' : menu.price,
+                    'optionList' :  []
+                })
+
+                '''
+                page_list.append({
+                    'page' : p.page,
+                    'tableList' : menu_list
+                })
+                '''
+
+            all_menu_list.append({
+                'categoryId' : m.id,
+                'category' : m.name,
+                'menuList' : menu_list
+            })
+            print(all_menu_list)
+
+    # # JSON 파일 경로 설정
+    # json_file_path = 'app/static/json/menuList.json'
+        
+    # # JSON 파일 로드
+    # with open(json_file_path, 'r', encoding='UTF-8') as file:
+    #     json_data = json.load(file)
+    # print(json_data)
+    # return jsonify(json_data)
 
     # JSON 데이터를 프론트에 반환
-    # return jsonify(all_menu_list)
+    return jsonify(all_menu_list)
 
 # 테이블 이동/합석
 @pos_bp.route('/set_table/<store_id>', methods=['PUT'])

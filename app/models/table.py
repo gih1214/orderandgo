@@ -1,5 +1,7 @@
 from flask import session, jsonify
-from app.models import Order, TableOrderList, db, Table, TableCategory, TableCategoryPage
+# TableCategory 수정한 것
+# from app.models import Order, TableOrderList, db, Table, TableCategory, TableCategoryPage
+from app.models import Order, TableOrderList, db, Table, TableCategory
 
 #################
 # 테이블 카테고리
@@ -7,18 +9,22 @@ from app.models import Order, TableOrderList, db, Table, TableCategory, TableCat
 
 # 테이블 카테고리 페이지 생성
 def create_table_catgory_page(table_category_id, page):
-    table_category_page_item = TableCategoryPage(table_category_id, page)
-    db.session.add(table_category_page_item)
-    db.session.commit()
-    db.session.refresh(table_category_page_item)
+    # TableCategory 수정한 것
+    # table_category_page_item = TableCategoryPage(table_category_id, page)
+    # db.session.add(table_category_page_item)
+    # db.session.commit()
+    # db.session.refresh(table_category_page_item)
+    return '수정해야함'
 
 
 # 테이블 카테고리 페이지 조회
 def select_table_category_page(table_category_id):
-    item = TableCategoryPage.query.filter(TableCategoryPage.table_category_id == table_category_id).all()
-    if not item:
-        return '잘못됨'
-    return item
+    # TableCategory 수정한 것
+    # item = TableCategoryPage.query.filter(TableCategoryPage.table_category_id == table_category_id).all()
+    # if not item:
+    #     return '잘못됨'
+    # return item
+    return '수정해야함'
 
 
 # 테이블 카테고리 생성
@@ -76,11 +82,16 @@ def create_table(data):
     return item
 
 # 테이블 조회
-def select_table(category_page_id):
-    item = Table.query.filter(Table.category_page_id == category_page_id).all()
+def select_table(table_category_id):
+    item = Table.query.filter(Table.table_category_id == table_category_id).all()
     if not item:
         return '잘못됨'
     return item
+# def select_table(category_page_id):
+#     item = Table.query.filter(Table.category_page_id == category_page_id).all()
+#     if not item:
+#         return '잘못됨'
+#     return item
 
 # 테이블 이동/합석
 def move_table(end_id, start_id):

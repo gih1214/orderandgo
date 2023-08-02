@@ -1,5 +1,7 @@
 from flask import session, jsonify
-from app.models import db, Table, TableCategory, TableCategoryPage, Order, TableOrderList, Menu, OrderHasOption, MenuOption
+# TableCategory 수정한 것
+# from app.models import db, Table, TableCategory, TableCategoryPage, Order, TableOrderList, Menu, OrderHasOption, MenuOption
+from app.models import db, Table, TableCategory, Order, TableOrderList, Menu, OrderHasOption, MenuOption
 
 
 # 주문하기 클릭 시

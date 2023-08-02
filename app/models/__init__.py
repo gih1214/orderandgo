@@ -82,11 +82,11 @@ class TableCategory(db.Model):
     #    return f'<TableCategory {self.title}>'
 
 
-class TableCategoryPage(db.Model):
-    __tablename__ ='table_category_page'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    table_category_id = db.Column(db.Integer, db.ForeignKey('table_category.id'))
-    page = db.Column(db.Integer, nullable=False)
+# class TableCategoryPage(db.Model):
+#     __tablename__ ='table_category_page'
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     table_category_id = db.Column(db.Integer, db.ForeignKey('table_category.id'))
+#     page = db.Column(db.Integer, nullable=False)
 
 
 class Table(db.Model):
@@ -98,7 +98,10 @@ class Table(db.Model):
     order = db.Column(db.Integer, nullable=False)
     is_group = db.Column(db.Integer, nullable=True)
     group_color = db.Column(db.String(50), nullable=True)
-    category_page_id = db.Column(db.Integer, db.ForeignKey('table_category_page.id'))
+    table_category_id = db.Column(db.Integer, db.ForeignKey('table_category.id'))
+    page = db.Column(db.Integer, nullable=True)
+    position = db.Column(db.Integer, nullable=True)
+    # category_page_id = db.Column(db.Integer, db.ForeignKey('table_category_page.id'))
 
     #def __repr__(self):
     #    return f'<Table {self.title}>'
@@ -130,6 +133,8 @@ class MenuOption(db.Model):
     name = db.Column(db.String(150), nullable=False)
     price = db.Column(db.Integer, nullable=False)
     description = db.Column(db.Text, nullable=True)
+    page = db.Column(db.Integer, nullable=True)
+    position = db.Column(db.Integer, nullable=True)
     menu_id = db.Column(db.Integer, db.ForeignKey('menu.id'))
 
     #def __repr__(self):
@@ -147,8 +152,9 @@ class Menu(db.Model):
     is_soldout = db.Column(db.Boolean, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
+    page = db.Column(db.Integer, nullable=True)
+    position = db.Column(db.Integer, nullable=True)
     menu_category_id = db.Column(db.Integer, db.ForeignKey('sub_category.id'))
-
     #def __repr__(self):
     #    return f'<Menu {self.title}>'
 
