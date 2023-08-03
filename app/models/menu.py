@@ -12,11 +12,24 @@ def create_menu(name, price, image, main_description, sub_description,
     return True
 
 # 메뉴 옵션 생성
-def create_menu_option(name, price, description, store_id):
-    menu_option = MenuOption(name=name, price=price, description=description, store_id=store_id)
+def create_menu_option(name, price, description, store_id, menu_id):
+    menu_option = MenuOption(
+        name=name, 
+        price=price, 
+        description=description, 
+        store_id=store_id, 
+        menu_id=menu_id
+    )
     db.session.add(menu_option)
     db.session.commit()
     return True
+
+# 메뉴 옵션 조회
+def select_menu_option(menu_id):
+    item = MenuOption.query.filter(MenuOption.menu_id == menu_id).all()
+    if not item:
+        return '메뉴 옵션이 없습니다.'
+    return item
 
 # 메뉴 카테고리 조회 (SELECT ALL)
 def select_main_category(store_id):

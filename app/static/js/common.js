@@ -108,3 +108,26 @@ const clickChagePageBtn = (event, type) => {
   if(0 < newPageIndex){_article.classList.add('hasPrevPage')};
   if(newPageIndex < pageLen-1){_article.classList.add('hasNextPage')};
 }
+
+const groupColors = [
+  { num: 1, color: '#17C7FF' },
+  { num: 2, color: '#A561FF' },
+  { num: 3, color: '#FF61EF' },
+  { num: 4, color: '#FD7043' },
+  { num: 5, color: '#63E100' },
+  { num: 6, color: '#FF8B02' },
+  { num: 7, color: '#2779F4' },
+  { num: 8, color: '#6D4BF1' },
+  { num: 9, color: '#FFB803' },
+  { num: 10, color: '#19CF41' },
+  { num: 11, color: '#E81CEC' },
+  { num: 12, color: '#18ABD9' },
+  { num: 13, color: '#CCB809' },
+  { num: 14, color: '#66B12A' },
+  { num: 15, color: '#442D9F' },
+  { num: 16, color: '#B6680C' },
+  { num: 17, color: '#E34400' },
+  { num: 18, color: '#5F6BDD' },
+  { num: 19, color: '#2D9B66' },
+  { num: 20, color: '#373579' }
+]

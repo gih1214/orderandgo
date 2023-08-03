@@ -163,19 +163,22 @@ const clickGroupBtn = (event) => {
         <span>그룹 1</span>
         <i class="ph ph-caret-up"></i>
       </button>
-
       <ul class="dropdown-list">
-        <li data-value="1" data-text="그룹 1" class="" onclick="clickCurGroupNum(event)">
-          <div>1</div>
-          <span>그룹 1</span>
+      ${ groupColors.map(({num, color})=>`
+        <li data-value="${num}" data-text="그룹 ${num}" class="" data-color="${color}" onclick="clickCurGroupNum(event)">
+          <div style="background: ${color}">${num}</div>
+          <span>그룹 ${num}</span>
           <button onclick="clickGroupDeleteBtn(event)">
             <i class="ph ph-trash"></i>
           </button>
         </li>
+      `).join('')}
+        <!-- 
         <button data-value="" data-text="그룹 추가" onclick="clickAddGroupList(event)">
           <i class="ph ph-plus"></i>
           <span>그룹 추가</span>
         </button>
+        -->
       </ul>
     </div>
     <div class="right custom_btns">
@@ -275,13 +278,27 @@ const clickGroupDeleteBtn = (event) =>{
   const _targetGroup = _target.closest('li');
   const value = _targetGroup.dataset.value;
   const __groupEls = document.querySelectorAll('.item_grop_num');
+
+  // 캐싱 데이터에서 선택 그룹 데이터 삭제
+  cachingData.forEach((categoryData)=>{
+    categoryData.pageList.forEach((pageData)=>{
+      pageData.tableList.forEach((table)=>{
+        if(Number(table.groupId) == Number(value)){
+          table.groupColor = '';
+          table.groupId = '';
+          table.isGroup = 0;
+        }
+      })
+    })
+  })
+
+  // 현재 화면에서 해당 그룹 스타일 변경
   __groupEls.forEach((item)=>{
     if(item.textContent == value){
       item.closest('.item').style.border = '';
       item.remove();
     }
   });
-  _targetGroup.remove();
 }
 
 // 그룹 셀릭트 박스에서 현재 그룹 변경 클릭 시
@@ -289,8 +306,10 @@ const clickCurGroupNum = (event) => {
   const _target = event.currentTarget;
   const _dropDwonList = _target.closest('.dropdown-list');
   const groupNum = _target.dataset.value;
+  const groupColor = _target.dataset.color;
   const _dropDownBtn = document.querySelector('.selete_box_group .btn-dropdown')
   _dropDownBtn.querySelector('div').innerHTML = groupNum;
+  _dropDownBtn.querySelector('div').style.background = groupColor;
   _dropDownBtn.querySelector('span').innerHTML = '그룹 ' + groupNum;
 
   _dropDownBtn.dataset.value = groupNum;
@@ -323,9 +342,9 @@ const clickTransparentGroupTable = (event) => {
       .find((table)=>table.tableId == Number(itemId))
 
   if (targetData.isGroup == 1 && targetData.groupId == Number(value)) {
-    targetData.groupColor = '';
-    targetData.groupId = '';
-    targetData.groupNum = '';
+    targetData.groupColor = undefined;
+    targetData.groupId = undefined;
+    targetData.groupNum = undefined;
     targetData.isGroup = 0;
   } else {
     targetData.groupColor = backgroundColor;
@@ -366,7 +385,34 @@ const clickSetGroupCancelBtn = (event) => {
 const clickSetGroupSaveBtn = (event) => {
   changeStyleOnSet()
   // 백으로 저장 api 호출하기
+  const group_data = [];
   tableData = JSON.parse(JSON.stringify(cachingData));
+  tableData.forEach((categoryData, index) => {
+    categoryData.pageList.forEach((pageData, index)=>{
+      pageData.tableList.forEach((table)=>{
+        group_data.push({
+          'table_id': table.tableId,
+          'group_id': table.groupId == undefined ? null : table.groupId,
+          'group_color':table.groupColor == undefined ? null : table.groupColor
+        })
+      })
+    })
+  })
+  fetch('/pos/set_group', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(group_data)
+  })
+  .then(response => response.json())
+  .then(data => {
+    // 받은 데이터 처리
+    console.log(data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
   cachingData = null;
 }
 
@@ -502,10 +548,25 @@ const clickCombineMoveSaveBtn = (event) => {
   changeStyleOnSet();
   // 백으로 저장 api 호출하기
   const data = setMoveTableList(tableMoveList)
-  console.log(data);
   tableData = JSON.parse(JSON.stringify(data));
+  console.log(tableData)
+  fetch(`/pos/set_table`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(tableData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    // 받은 데이터 처리
+    console.log(data);
+    // window.location.href = '/pos/tableList'
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
   cachingData = null;
-
   // 테이블 이동/합석 내역 초기화
   tableMoveList.length=0;
 }

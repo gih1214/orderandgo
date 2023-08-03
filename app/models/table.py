@@ -7,25 +7,6 @@ from app.models import Order, TableOrderList, db, Table, TableCategory
 # 테이블 카테고리
 #################
 
-# 테이블 카테고리 페이지 생성
-def create_table_catgory_page(table_category_id, page):
-    # TableCategory 수정한 것
-    # table_category_page_item = TableCategoryPage(table_category_id, page)
-    # db.session.add(table_category_page_item)
-    # db.session.commit()
-    # db.session.refresh(table_category_page_item)
-    return '수정해야함'
-
-
-# 테이블 카테고리 페이지 조회
-def select_table_category_page(table_category_id):
-    # TableCategory 수정한 것
-    # item = TableCategoryPage.query.filter(TableCategoryPage.table_category_id == table_category_id).all()
-    # if not item:
-    #     return '잘못됨'
-    # return item
-    return '수정해야함'
-
 
 # 테이블 카테고리 생성
 def create_table_catgory(data):
@@ -33,9 +14,6 @@ def create_table_catgory(data):
     db.session.add(table_category_item)
     db.session.commit()
     db.session.refresh(table_category_item)
-
-    # 테이블 카테고리 만들 때 자동으로 테이블 카테고리 페이지(1페이지로) 생성
-    create_table_catgory_page(table_category_item.id, 1)
 
     return table_category_item
 
@@ -87,11 +65,6 @@ def select_table(table_category_id):
     if not item:
         return '잘못됨'
     return item
-# def select_table(category_page_id):
-#     item = Table.query.filter(Table.category_page_id == category_page_id).all()
-#     if not item:
-#         return '잘못됨'
-#     return item
 
 # 테이블 이동/합석
 def move_table(end_id, start_id):

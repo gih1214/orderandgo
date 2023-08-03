@@ -535,6 +535,7 @@ const clickOrder = (event) => {
     table_id : lastPath,
     order_list : transformData(deepCopy(menuAllData))
   }
+  console.log('data,', data)
   fetch(`/order`, {
     method: 'POST',
     headers: {
@@ -546,6 +547,7 @@ const clickOrder = (event) => {
   .then(data => {
     // 받은 데이터 처리
     console.log(data);
+    // window.location.href = '/pos/tableList'
   })
   .catch(error => {
     console.error('Error:', error);
