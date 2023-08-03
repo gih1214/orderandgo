@@ -175,45 +175,88 @@ def get_menu_list(table_id):
     store_id = 1    # temp
     all_menu_list = []
     menu_categories = select_main_category(store_id) # 메인 카테고리 조회
-    print('menu_categories,',menu_categories)
-    # 메인 카테고리별 메뉴 조회
-    for m in menu_categories:
-        # page_list = []
-        # menu_category_pages = select_menu_category_page(m.id)
+    
+    for t in menu_categories:
+        category_name = t.name
+        category_id = t.id
+        menus = select_menu(category_id)
+        sorted_menus = sorted(menus, key=lambda menu: (menu.page, menu.position))
         
-        print(m.name)
-        
-        menu_list = []
-        menus = select_menu(m.id) # 카테고리별 메뉴 조회
-        print(menus)
-        if menus == '없는 메뉴입니다.': # 카테고리 안에 메뉴가 없을 때
-            all_menu_list.append({
-                'categoryId' : m.id,
-                'category' : m.name,
-                'menuList' : []
-            })
-        else:
-            for menu in menus: # 메뉴 있을 때
-                menu_list.append({
-                    'menuId' : menu.id,
-                    'menu' : menu.name,
-                    'price' : menu.price,
-                    'optionList' :  []
-                })
+        def sort_menu(menu):
+            return {
+                "menuId": menu.id, 
+                "menu": menu.name,
+                "price": menu.price
+            }
 
-                '''
+        print('sorted_menus,',sorted_menus)
+        # 페이지별로 그룹화
+        page_list = [];
+        current_page = None
+        for menu in sorted_menus:
+            if menu.page != current_page:
+                current_page = menu.page
                 page_list.append({
-                    'page' : p.page,
-                    'tableList' : menu_list
+                    "page": current_page, 
+                    "menuList": [sort_menu(menu)]
                 })
-                '''
+            else:
+                page_list[-1]["menuList"].append(sort_menu(menu))
 
-            all_menu_list.append({
-                'categoryId' : m.id,
-                'category' : m.name,
-                'menuList' : menu_list
-            })
-            print(all_menu_list)
+        print(page_list)
+            
+        all_menu_list.append({
+            "categoryId" : category_id,
+            "category" : category_name,
+            "pageList" : page_list
+        })
+        
+        
+    print(all_menu_list)
+    
+
+    return jsonify(all_menu_list)
+
+    
+    
+    # 메인 카테고리별 메뉴 조회
+    # for m in menu_categories:
+    #     # page_list = []
+    #     # menu_category_pages = select_menu_category_page(m.id)
+        
+    #     print('m.name',m.name)
+        
+    #     menu_list = []
+    #     menus = select_menu(m.id) # 카테고리별 메뉴 조회
+    #     print(menus)
+    #     if menus == '없는 메뉴입니다.': # 카테고리 안에 메뉴가 없을 때
+    #         all_menu_list.append({
+    #             'categoryId' : m.id,
+    #             'category' : m.name,
+    #             'menuList' : []
+    #         })
+    #     else:
+    #         for menu in menus: # 메뉴 있을 때
+    #             menu_list.append({
+    #                 'menuId' : menu.id,
+    #                 'menu' : menu.name,
+    #                 'price' : menu.price,
+    #                 'optionList' :  []
+    #             })
+
+    #             '''
+    #             page_list.append({
+    #                 'page' : p.page,
+    #                 'tableList' : menu_list
+    #             })
+    #             '''
+
+    #         all_menu_list.append({
+    #             'categoryId' : m.id,
+    #             'category' : m.name,
+    #             'menuList' : menu_list
+    #         })
+    #         print(all_menu_list)
 
     # # JSON 파일 경로 설정
     # json_file_path = 'app/static/json/menuList.json'
@@ -224,8 +267,8 @@ def get_menu_list(table_id):
     # print(json_data)
     # return jsonify(json_data)
 
-    # JSON 데이터를 프론트에 반환
-    return jsonify(all_menu_list)
+    # # JSON 데이터를 프론트에 반환
+    # return jsonify(all_menu_list)
 
 # 테이블 이동/합석
 @pos_bp.route('/set_table/<store_id>', methods=['PUT'])
