@@ -93,9 +93,11 @@ class Table(db.Model):
     __tablename__ = 'table'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(150), nullable=True)
-    number = db.Column(db.Integer, nullable=True)
     seat_count = db.Column(db.Integer, nullable=True)
-    order = db.Column(db.Integer, nullable=False)
+    
+    # number = db.Column(db.Integer, nullable=True)
+    # order = db.Column(db.Integer, nullable=True)
+    
     is_group = db.Column(db.Integer, nullable=True)
     group_color = db.Column(db.String(50), nullable=True)
     table_category_id = db.Column(db.Integer, db.ForeignKey('table_category.id'))
@@ -146,14 +148,14 @@ class Menu(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(150), nullable=False)
     price = db.Column(db.Integer, nullable=False)
-    image = db.Column(db.String(150), nullable=False)
+    image = db.Column(db.String(150), nullable=True)
     main_description = db.Column(db.Text, nullable=True)
     sub_description = db.Column(db.Text, nullable=True)
     is_soldout = db.Column(db.Boolean, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
-    store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
     page = db.Column(db.Integer, nullable=True)
     position = db.Column(db.Integer, nullable=True)
+    store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
     menu_category_id = db.Column(db.Integer, db.ForeignKey('sub_category.id'))
     #def __repr__(self):
     #    return f'<Menu {self.title}>'
