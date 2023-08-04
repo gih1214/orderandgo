@@ -7,12 +7,46 @@ fetch('/pos/get_table_page', {
 .then(data => {
   // 받은 데이터 처리
   console.log(data);
-  tableData = data;
-  createHtml(data);
+  
+  tableData = setInitFetchData(data);
+  createHtml(tableData);
 })
 .catch(error => {
   console.error('Error:', error);
 });
+
+// 초기 오더 리스트 재 정렬
+const setInitFetchData = (categorys) => {
+  let data = JSON.parse(JSON.stringify(categorys));
+  data.forEach((category)=>{
+    category.pageList.forEach((page)=>{
+      page.tableList.forEach((table)=>{
+        const mergedOrders = mergeOrders(table.orderList);
+        table.orderList = mergedOrders;
+      })
+    })
+  })
+  return data
+}
+
+// 메뉴 리스트 머지 
+function mergeOrders(orders) {
+  const mergedOrders = [];
+  const orderMap = {};
+
+  orders.forEach((order) => {
+    const { menuId } = order;
+    if (!orderMap[menuId]) {
+      orderMap[menuId] = { ...order };
+      mergedOrders.push(orderMap[menuId]);
+    } else {
+      orderMap[menuId].count += order.count;
+      orderMap[menuId].optionList.push(...order.optionList);
+    }
+  });
+
+  return mergedOrders;
+}
 
 const createHtml = (tablePageData) => {
   const _tableCategory = document.querySelector('main section nav ul');

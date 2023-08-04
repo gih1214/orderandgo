@@ -1,6 +1,6 @@
 from flask import render_template, jsonify, request
-from app.models.menu import select_main_category, select_menu, select_menu_option
-from app.models.order import find_order_list, find_order_option_list
+from app.models.menu import select_main_category, select_menu_all, select_menu, select_menu_option, select_menu_option_all
+from app.models.order import find_order_list, find_order_option_list, get_orders_by_store_id
 from app.routes import pos_bp
 import json
 
@@ -30,6 +30,22 @@ def set_group():
 @pos_bp.route('/get_table_page', methods=['GET'])
 def get_table_page():
     store_id = 1    # temp
+    
+    # 실행할 코드
+    orders = get_orders_by_store_id(store_id)
+
+    # # 가져온 데이터 사용 예시
+    # for order in orders:
+    #     print(order.id, order.ordered_at, order.menu_id, order.table_id, order.menu_options)
+    
+    # table_id를 기준으로 중복 제거하여 딕셔너리로 구성
+    orders_by_table = {}
+    for order in orders:
+        table_id = order.table_id
+        if table_id not in orders_by_table:
+            orders_by_table[table_id] = []
+        orders_by_table[table_id].append(order)
+    
     all_table_list = []
     table_categories = select_table_category(store_id)
     
@@ -40,14 +56,51 @@ def get_table_page():
         sorted_tables = sorted(tables, key=lambda table: (table.page, table.position))
         
         def sort_table(table):
+            print('table,',table)
             
-            return {
-                "tableId": table.id, 
-                "table": table.name,
-                "statusId": 0,
-                "status": "",
-                "orderList" : [],
-            }
+            if table.id in dict(orders_by_table):
+                # print("있음")
+                orders = orders_by_table[table.id]
+                statusId = 1
+                orderList = []
+                for order in orders:
+                    
+                    optionList = [];
+                    options = json.loads(order.menu_options) if order.menu_options else []
+                    for option_data in options:
+                        option = select_menu_option(option_data['id'])[0]
+                        optionList.append({
+                            "optionId" : option.id,
+                            "option" : option.name,
+                            "price" : option.price,
+                            "count" : option_data['count']
+                        })
+                    menu = select_menu(order.menu_id)[0]
+                    orderList.append({
+                        "menuId" : order.menu_id,
+                        "menu" : menu.name,
+                        "price" : menu.price,
+                        "count" : 1,
+                        "optionList" : optionList
+                    })
+                    if order.order_status_id == 2:
+                        statusId = 2
+                return {
+                    "tableId": table.id, 
+                    "table": table.name,
+                    "statusId": statusId,
+                    "status": "",
+                    "orderList" : orderList,
+                }
+            else :
+                # print("없음")
+                return {
+                    "tableId": table.id, 
+                    "table": table.name,
+                    "statusId": 0,
+                    "status": "",
+                    "orderList" : [],
+                }
 
         # 페이지별로 그룹화
         page_list = [];
@@ -98,7 +151,7 @@ def get_menu_list(table_id):
     for t in menu_categories:
         category_name = t.name
         category_id = t.id
-        menus = select_menu(category_id)
+        menus = select_menu_all(category_id)
         sorted_menus = sorted(menus, key=lambda menu: (menu.page, menu.position))
         
         def sort_menu(menu):

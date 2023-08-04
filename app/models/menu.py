@@ -24,8 +24,15 @@ def create_menu_option(name, price, description, store_id, menu_id):
     db.session.commit()
     return True
 
+# 메뉴 옵션 조회 (SELECT ID)
+def select_menu_option(option_id):
+    item = MenuOption.query.filter(MenuOption.id == option_id).all()
+    if not item:
+        return '메뉴 옵션이 없습니다.'
+    return item
+
 # 메뉴 옵션 조회
-def select_menu_option(menu_id):
+def select_menu_option_all(menu_id):
     item = MenuOption.query.filter(MenuOption.menu_id == menu_id).all()
     if not item:
         return '메뉴 옵션이 없습니다.'
@@ -38,8 +45,16 @@ def select_main_category(store_id):
         return '메인 메뉴 카테고리가 없습니다.'
     return item
 
+# 메뉴 조회 (SELECT ID)
+def select_menu(menu_id):
+    item = Menu.query\
+        .filter(Menu.id == menu_id).all()
+    if not item:
+        return '없는 메뉴입니다.'
+    return item
+
 # 메뉴 조회 (SELECT ALL)
-def select_menu(main_category_id):
+def select_menu_all(main_category_id):
     item = Menu.query\
         .filter(SubCategory.id == Menu.menu_category_id)\
         .filter(SubCategory.main_category_id == main_category_id).all()

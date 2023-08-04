@@ -1,34 +1,58 @@
+import json
 from flask import session, jsonify
-# TableCategory 수정한 것
-# from app.models import db, Table, TableCategory, TableCategoryPage, Order, TableOrderList, Menu, OrderHasOption, MenuOption
-from app.models import db, Table, TableCategory, Order, TableOrderList, Menu, OrderHasOption, MenuOption
+from sqlalchemy import and_
+from app.models import db, Table, TableCategory, Order, TableOrderList, Menu, MenuOption
 
+# Store 전체 주문 내역 조회
+def get_orders_by_store_id(store_id):
+    # TableOrderList 테이블에서 store_id가 일치하고 checkingout_at 값이 없는 레코드들의 id 값을 조회
+    table_order_ids = db.session.query(TableOrderList.id).filter(
+        and_(
+            TableOrderList.store_id == store_id,
+            TableOrderList.checkingout_at == None
+        )
+    ).all()
+
+    # 조회한 id 값을 이용하여 Order 테이블에서 해당하는 데이터들을 가져옴
+    orders = db.session.query(Order).filter(
+        Order.order_list_id.in_([item[0] for item in table_order_ids])
+    ).all()
+
+    return orders
 
 # 주문하기 클릭 시
-def make_order(table_id, order_list):
-    table_order_list_item = db.session.query(TableOrderList)\
-                                    .filter(TableOrderList.table_id == table_id)\
-                                    .filter(TableOrderList.checkingout_at.is_(None))\
-                                    .first()
+def make_order(store_id, table_id, order_list):
     
+    # 현재 이용중인 TableOrderList를 가져옴
+    table_order_list_item = db.session\
+        .query(TableOrderList)\
+        .filter(TableOrderList.table_id == table_id)\
+        .filter(TableOrderList.checkingout_at.is_(None))\
+        .first()
+        
     # table_order_list_item이 None이면 첫 주문
     if table_order_list_item is None:
-        table_order_list_item = TableOrderList(table_id=table_id)
+        table_order_list_item = TableOrderList(table_id=table_id, store_id=store_id)
         db.session.add(table_order_list_item)
         db.session.commit()
-
+        
     for o in order_list:
+        option_data = []
+        for option in o['options']:
+            option_data.append({
+                'id': option['id'],
+                'count': option['count']
+            })
         # order_status_id는 임의로 1로 함. temp
-        order_item = Order(order_status_id=1, menu_id=o['menu_id'], table_id=table_id, order_list_id=table_order_list_item.id)
+        order_item = Order(
+            order_status_id = 1, 
+            menu_id = o['id'], 
+            table_id = table_id, 
+            order_list_id = table_order_list_item.id,
+            menu_options = json.dumps(option_data)
+        )
         db.session.add(order_item)
         db.session.commit()
-
-        # 옵션이 있으면 옵션 추가
-        if len(o['option_list']) > 0:
-            for oo in o['option_list']:
-                option_order_item = OrderHasOption(order_id=order_item.id, menu_option_id=oo)
-                db.session.add(option_order_item)
-                db.session.commit()
 
     return True
     

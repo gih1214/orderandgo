@@ -1,6 +1,4 @@
 from flask import session, jsonify
-# TableCategory 수정한 것
-# from app.models import Order, TableOrderList, db, Table, TableCategory, TableCategoryPage
 from app.models import Order, TableOrderList, db, Table, TableCategory
 
 #################

@@ -505,35 +505,37 @@ const deleteBasketMenu = () => {
 
 }
 
-// 주문하기 용 데이터 만들기
-function transformData(inputData) {
-  const transformedData = [];
+// // 주문하기 용 데이터 만들기
+// function transformData(inputData) {
+//   const transformedData = [];
 
-  inputData.forEach(item => {
-    const { id, options } = item;
-    const optionIds = options.map(option => option.id);
-    const optionCount = options.map(option => option.count);
+//   inputData.forEach(item => {
+//     const { id, options } = item;
+//     const optionIds = options.map(option => option.id);
+//     const optionCount = options.map(option => option.count);
 
-    const newOptions = [];
-    optionIds.forEach((optionId, index) => {
-      for (let i = 0; i < optionCount[index]; i++) {
-        newOptions.push(optionId);
-      }
-    });
+//     const newOptions = [];
+//     optionIds.forEach((optionId, index) => {
+//       for (let i = 0; i < optionCount[index]; i++) {
+//         newOptions.push(optionId);
+//       }
+//     });
 
-    transformedData.push({
-      menu_id: id,
-      option_list: newOptions
-    });
-  });
+//     transformedData.push({
+//       menu_id: id,
+//       option_list: newOptions
+//     });
+//   });
 
-  return transformedData;
-}
+//   return transformedData;
+// }
 
 const clickOrder = (event) => {
+  console.log('menuAllData,',menuAllData)
   const data = {
     table_id : lastPath,
-    order_list : transformData(deepCopy(menuAllData))
+    // order_list : transformData(deepCopy(menuAllData))
+    order_list : deepCopy(menuAllData)
   }
   console.log('data,', data)
   fetch(`/order`, {

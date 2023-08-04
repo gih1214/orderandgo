@@ -1,3 +1,4 @@
+import json
 from app import db
 from datetime import datetime
 
@@ -185,21 +186,31 @@ class Order(db.Model):
     menu_id = db.Column(db.Integer, db.ForeignKey('menu.id'))
     table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
     order_list_id = db.Column(db.Integer, db.ForeignKey('table_order_list.id'))
+    menu_options = db.Column(db.Text)
+    
+    def set_menu_options(self, options_dict):
+          # Python Dictionary를 JSON 형식으로 변환하여 저장
+        self.menu_options = json.dumps(options_dict)
+
+    def get_menu_options(self):
+        # JSON 형식의 데이터를 Python Dictionary로 변환하여 반환
+        return json.loads(self.menu_options) if self.menu_options else {}
 
     #def __repr__(self):
     #    return f'<Order {self.title}>'
 
 
-class OrderHasOption(db.Model):
-    __tablename__ = 'order_has_option'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
-    menu_option_id = db.Column(db.Integer, db.ForeignKey('menu_option.id'))
+# class OrderHasOption(db.Model):
+#     __tablename__ = 'order_has_option'
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
+#     menu_option_id = db.Column(db.Integer, db.ForeignKey('menu_option.id'))
 
 
 class TableOrderList(db.Model):
     __tablename__ = 'table_order_list'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
     table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
     checkingin_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     checkingout_at = db.Column(db.DateTime, index=True, nullable=True)

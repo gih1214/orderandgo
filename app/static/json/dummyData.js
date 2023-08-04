@@ -194,7 +194,7 @@
   }
 ]
 
-'order_list':[
+order_list = [
   {
     "menu_id" : 16,
     "option_list" : [2,3] 
@@ -208,11 +208,12 @@
     "option_list" : [2,3]  
   },
   {
-      "menu_id" : 10,
-      "option_list" : [2, 2, 3]
-  }
+    "menu_id" : 10,
+    "option_list" : [2, 2, 3]
+  },
   {
-      "menu_id" : 10,
-      "option_list" : [2]
+    "menu_id" : 10,
+    "option_list" : [2]
   }
 ]
+ 
