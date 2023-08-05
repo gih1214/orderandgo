@@ -111,12 +111,21 @@ const changeTableHtml = (tables) => {
   let html = '';
   tables.forEach((table, index)=>{
     html += `
-      <button class="table item ${table.select ? 'select' : ''}" data-id="${table.tableId}" data-state="${table.statusId}" style="border:${table.groupId != 0 ? "1px solid " + table.groupColor : ""}"
+      <button 
+        class="table item ${table.select ? 'select' : ''}" 
+        data-id="${table.tableId}" 
+        data-state="${table.statusId}" 
+        style="border:${table.groupId != 0 ? "1px solid " + table.groupColor : ""}"
         onclick="clickTable(${table.tableId})">
         `
       if(table.isGroup != 0) {
         html += `
-          <div class="item_grop_num" data-id="${table.groupId}" style="background : ${table.groupColor}">${table.groupNum}</div>
+          <div 
+            class="item_grop_num" 
+            data-id="${table.groupId}" 
+            style="background : ${table.groupColor}"
+          >
+          ${table.groupId}</div>
         `
 
       }
@@ -129,7 +138,9 @@ const changeTableHtml = (tables) => {
         </div>
         <div class="title">
           <h2>${table.table} <i class="ph-fill ph-bell-ringing"></i></h2>
-          <div class="table_state">${table.statusId != 0 ? table.status : ''}</div>
+          <div class="table_state">${
+            table.statusId == 0 ? '조리 중' : table.statusId == 1 ? '완료' : table.statusId == 2 ? '조리대기' : ''
+          }</div>
         </div>
         <div class="body">
           <i class="ph-bold ph-plus"></i>
@@ -149,8 +160,9 @@ const changeTableHtml = (tables) => {
               if(orderIndex == 2){
                 html += `
                   <li class="order_more">
-                    <span>외 ${orderList.length - 3}</span>
-                  </li>` 
+                    ${orderList.length - 3 > 0 ? `<span>외 ${orderList.length - 3}</span>`  : ''}
+                  </li>
+                ` 
               }
             })
           }
@@ -307,6 +319,7 @@ const clickAddGroupList = (event) => {
 
 //그룹 셀렉트 박스에서 특정 그룹 삭제 버튼 클릭 시
 const clickGroupDeleteBtn = (event) =>{
+  console.log('삭제 클릭함')
   event.stopPropagation();
   const _target = event.currentTarget;
   const _targetGroup = _target.closest('li');
@@ -318,9 +331,8 @@ const clickGroupDeleteBtn = (event) =>{
     categoryData.pageList.forEach((pageData)=>{
       pageData.tableList.forEach((table)=>{
         if(Number(table.groupId) == Number(value)){
-          table.groupColor = '';
-          table.groupId = '';
-          table.isGroup = 0;
+          table.groupColor = undefined;
+          table.groupId = undefined;
         }
       })
     })
@@ -328,7 +340,7 @@ const clickGroupDeleteBtn = (event) =>{
 
   // 현재 화면에서 해당 그룹 스타일 변경
   __groupEls.forEach((item)=>{
-    if(item.textContent == value){
+    if(Number(item.dataset.id) == Number(value)){
       item.closest('.item').style.border = '';
       item.remove();
     }
@@ -589,7 +601,7 @@ const clickCombineMoveSaveBtn = (event) => {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(tableData)
+    body: JSON.stringify(data)
   })
   .then(response => response.json())
   .then(data => {

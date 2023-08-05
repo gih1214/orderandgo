@@ -29,10 +29,12 @@ def set_group():
 
 @pos_bp.route('/get_table_page', methods=['GET'])
 def get_table_page():
+
     store_id = 1    # temp
-    
+
     # 실행할 코드
     orders = get_orders_by_store_id(store_id)
+
 
     # # 가져온 데이터 사용 예시
     # for order in orders:
@@ -47,14 +49,20 @@ def get_table_page():
         orders_by_table[table_id].append(order)
     
     all_table_list = []
+    
+    
     table_categories = select_table_category(store_id)
+
     
     for t in table_categories:
         category_name = t.category_name
         category_id = t.id
+
+        
+
         tables = select_table(category_id)
         sorted_tables = sorted(tables, key=lambda table: (table.page, table.position))
-        
+
         def sort_table(table):
             
             if table.id in dict(orders_by_table):
@@ -67,6 +75,7 @@ def get_table_page():
                     optionList = [];
                     options = json.loads(order.menu_options) if order.menu_options else []
                     for option_data in options:
+                                        
                         option = select_menu_option(option_data['id'])[0]
                         optionList.append({
                             "optionId" : option.id,
@@ -89,6 +98,8 @@ def get_table_page():
                     "table": table.name,
                     "statusId": statusId,
                     "status": "",
+                    "groupId" : table.is_group,
+                    "groupColor" : table.group_color,
                     "orderList" : orderList,
                 }
             else :
@@ -98,6 +109,8 @@ def get_table_page():
                     "table": table.name,
                     "statusId": 0,
                     "status": "",
+                    "groupId" : table.is_group,
+                    "groupColor" : table.group_color,
                     "orderList" : [],
                 }
 
@@ -119,7 +132,7 @@ def get_table_page():
             "category" : category_name,
             "pageList" : page_list
         })
-        
+
     return jsonify(all_table_list)
 
     # # JSON 파일 경로 설정
@@ -139,14 +152,31 @@ def menuList(table_id):
     # JSON 데이터를 프론트에 반환
     return render_template('/pos/menu_list.html')
 
+# 테이블 주문내역 조회
 @pos_bp.route('/get_table_order_list/<table_id>', methods=['GET'])
 def get_table_order_list(table_id):
     orders = find_order_list(table_id)
-    print('orders',orders)
-    # 데이터 그대로 풀어서 프론트에 넘겨주고 프론트에서 처리하기
-    # order list merge 방식을 사용하기
-    table_order_list = []
-    return jsonify(table_order_list)
+    order_list = []
+    for order in orders:
+        menu = select_menu(order.menu_id)[0]
+        options = []
+        for menu_option in json.loads(order.menu_options):
+            option = select_menu_option(menu_option['id'])[0]
+            options.append({
+                "id" : option.id,
+                "name" : option.name,
+                "price" : option.price,
+                "count" : menu_option['count']
+            })
+        order_list.append({
+            "id" : menu.id,
+            "name" : menu.name,
+            "price" : menu.price,
+            "count" : 1,
+            "options" : options
+        })
+    
+    return jsonify(order_list)
 
     
 
@@ -166,8 +196,7 @@ def get_menu_list(table_id):
         
         def sort_menu(menu):
             option_list = [];
-            menu_options = select_menu_option(menu.id)
-            
+            menu_options = select_menu_option_all(menu.id)
             if isinstance(menu_options, list):
                 for option in menu_options:
                     option_data = {
@@ -217,9 +246,10 @@ def get_menu_list(table_id):
 @pos_bp.route('/set_table', methods=['PUT'])
 def set_table_list():
     table_data = request.get_json()
-    end_id = table_data['end_id']
-    start_id = table_data['start_id'] # end_id로 이동할 테이블
-    set_table = move_table(end_id, start_id)
+    for data in table_data:       
+        end_id = data['end_table_id']
+        start_id = data['start_table_id'] # end_id로 이동할 테이블
+        set_table = move_table(end_id, start_id)
     response = jsonify({'message': 'Success'})
     response.status_code = 200
     print('Received JSON data:', set_table)

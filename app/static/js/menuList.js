@@ -3,6 +3,7 @@ let cachingData = null;
 let basket = new Array;
 let currentMenu = null;
 let menuAllData = [];
+let order_history = [];
 // 메뉴판 메뉴 리스트 가져오기
 fetch(`/pos/get_menu_list/${lastPath}`, {
   method: 'GET',
@@ -25,13 +26,32 @@ fetch(`/pos/get_table_order_list/${lastPath}`, {
 .then(response => response.json())
 .then(data => {
   // 받은 데이터 처리
-  console.log(data);
-  menuData = data;
-  createHtml(data);
+  console.log(data)
+  order_history=data.map((order)=>({
+    id: order.id,
+    masterName : setMasterName(order),
+    name: order.name,
+    price: order.price,
+    count: 1,
+    options: order.options,
+  }))
 })
 .catch(error => {
   console.error('Error:', error);
 });
+
+// 이전 주문 버튼 클릭 시
+const clickOrderHistoryBtn = (event) => {
+  const _orderHistoryBtn = event.currentTarget;
+  _orderHistoryBtn.dataset.check = true;
+  changeBasketHtml(setBasketData(order_history))
+}
+// 장바구니 버튼 클릭 시
+const clickBasketBtn = (event) => {
+  changeBasketHtml(setBasketData(menuAllData))
+  const _orderHistoryBtn = document.querySelector('.basket_container > .count_btns button.order_history')
+  _orderHistoryBtn.dataset.check = false;
+}
 
 const createHtml = (menuPageData) => {
   const _menuCatgory = document.querySelector('main section nav ul');

@@ -84,7 +84,6 @@ main section nav ul li button{
   border-radius: 5px;
   font-size: 15px;
   font-weight: 700;
-  line-height: 18px;
   color: #1FAA9C;
 }
 main section nav .btn_set {
@@ -93,7 +92,7 @@ main section nav .btn_set {
 }
 main section article {
   position: relative;
-  height: calc(100vh - (40px + 53px));
+  height: calc(100vh - (40px + 50px));
   padding: 20px;
   background: #ddd;
   overflow: hidden;
@@ -234,6 +233,14 @@ main section article .table .body ul li.order_more {
   
 }
 
+main section article .table[data-call="call"] {
+  background: #FFF2F0;
+  border: 1.5px solid #F43E25;
+}
+main section article .table[data-call="call"] .ph-bell-ringing{
+  display: inline-flex;
+}
+
 main section article .table .table_state {
   position: absolute;
   right: 0;
@@ -244,25 +251,15 @@ main section article .table .table_state {
   font-size: 10px;
   line-height: 12px;
 }
-main section article .table[data-call="call"] {
-  background: #FFF2F0;
-  border: 1.5px solid #F43E25;
-}
-main section article .table[data-call="call"] .ph-bell-ringing{
-  display: inline-flex;
-}
-main section article .table[data-state="3"] .table_state {
-  border-color: #1FAA9C;
-  color: #1FAA9C;
-}
-main section article .table[data-state="3"] .table_state {
-  border-color: #1FAA9C;
-  color: #1FAA9C;
-}
-main section article .table[data-state="2"] .table_state {
+main section article .table[data-state="0"] .table_state {
   border-color: #F46325;
   color: #F46325;
 }
+main section article .table[data-state="1"] .table_state {
+  border-color: #1FAA9C;
+  color: #1FAA9C;
+}
+
 
 main section article .table[data-state="0"] .body {
   display: flex;  
@@ -433,7 +430,10 @@ main section > aside .custom_btns button{
   padding: 8px 20px;
 }
 .basket_container > .count_btns button {
-  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+  width: 34px;
   height: 34px;
   border: 1px solid #CCCCCC;
   border-radius: 5px;
@@ -448,6 +448,22 @@ main section > aside .custom_btns button{
   color: #F43E25;
   border-color: #F43E25;
 }
+.basket_container > .count_btns button.order_history,
+.basket_container > .count_btns button.new_order{
+  flex: 1;
+  color: #111;
+  border-color: #111;
+}
+.basket_container > .count_btns button.new_order{
+  display: none;
+}
+.basket_container > .count_btns button.order_history[data-check="true"] {
+  display: none;
+}
+.basket_container > .count_btns button.order_history[data-check="true"] + button.new_order {
+  display: flex;
+}
+
 .basket_container .basket{
   display: flex;
   flex-flow: column;
