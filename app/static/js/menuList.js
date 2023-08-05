@@ -3,7 +3,23 @@ let cachingData = null;
 let basket = new Array;
 let currentMenu = null;
 let menuAllData = [];
+// 메뉴판 메뉴 리스트 가져오기
 fetch(`/pos/get_menu_list/${lastPath}`, {
+  method: 'GET',
+})
+.then(response => response.json())
+.then(data => {
+  // 받은 데이터 처리
+  console.log(data);
+  menuData = data;
+  createHtml(data);
+})
+.catch(error => {
+  console.error('Error:', error);
+});
+
+// 테이블 주문 내역 가져오기
+fetch(`/pos/get_table_order_list/${lastPath}`, {
   method: 'GET',
 })
 .then(response => response.json())

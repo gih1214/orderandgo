@@ -78,6 +78,7 @@ class TableCategory(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
     category_name = db.Column(db.String(50), nullable=True)
+    position = db.Column(db.Integer, nullable=True)
 
     #def __repr__(self):
     #    return f'<TableCategory {self.title}>'
@@ -115,6 +116,7 @@ class MainCategory(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
     name = db.Column(db.String(150), nullable=False)
+    position = db.Column(db.Integer, nullable=True)
 
     #def __repr__(self):
     #    return f'<MainCategory {self.title}>'

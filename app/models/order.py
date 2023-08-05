@@ -56,27 +56,33 @@ def make_order(store_id, table_id, order_list):
 
     return True
     
-
-# 주문만 출력
+# Table 전체 주문 내역 조회
 def find_order_list(table_id):
-    items = db.session.query(Menu.id, Menu.name, Menu.price, Order.id.label('order_id'))\
-                    .join(Order, Order.menu_id == Menu.id)\
-                    .join(TableOrderList, TableOrderList.id == Order.order_list_id)\
-                    .join(Table, Table.id == TableOrderList.table_id)\
-                    .filter(TableOrderList.checkingout_at.is_(None), Table.id == table_id)\
-                    .all()
-    if items is None:
-        return "잘못됨"
-    return items
+    # TableOrderList 테이블에서 table_id가 일치하고 checkingout_at 값이 없는 레코드들의 id 값을 조회
+    table_order_ids = db.session.query(TableOrderList.id).filter(
+        and_(
+            TableOrderList.table_id == table_id,
+            TableOrderList.checkingout_at == None
+        )
+    ).all()
+
+    # 조회한 id 값을 이용하여 Order 테이블에서 해당하는 데이터들을 가져옴
+    orders = db.session.query(Order).filter(
+        Order.order_list_id.in_([item[0] for item in table_order_ids])
+    ).all()
+
+    return orders
 
 
-# 주문 옵션 출력
-def find_order_option_list(order_id):
-    items = db.session.query(MenuOption)\
-                    .join(OrderHasOption, OrderHasOption.menu_option_id == MenuOption.id)\
-                    .join(Order, Order.id == OrderHasOption.order_id)\
-                    .filter(Order.id == order_id)\
-                    .all()
-    if items is None:
-        return "잘못됨"
-    return items    
+# # 주문만 출력
+# def find_order_list(table_id):
+#     items = db.session\
+#         .query(Menu.id, Menu.name, Menu.price, Order.id.label('order_id'))\
+#         .join(Order, Order.menu_id == Menu.id)\
+#         .join(TableOrderList, TableOrderList.id == Order.order_list_id)\
+#         .join(Table, Table.id == TableOrderList.table_id)\
+#         .filter(TableOrderList.checkingout_at.is_(None), Table.id == table_id)\
+#         .all()
+#     if items is None:
+#         return "잘못됨"
+#     return items

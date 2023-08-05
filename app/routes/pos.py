@@ -1,6 +1,6 @@
 from flask import render_template, jsonify, request
 from app.models.menu import select_main_category, select_menu_all, select_menu, select_menu_option, select_menu_option_all
-from app.models.order import find_order_list, find_order_option_list, get_orders_by_store_id
+from app.models.order import find_order_list, get_orders_by_store_id
 from app.routes import pos_bp
 import json
 
@@ -56,7 +56,6 @@ def get_table_page():
         sorted_tables = sorted(tables, key=lambda table: (table.page, table.position))
         
         def sort_table(table):
-            print('table,',table)
             
             if table.id in dict(orders_by_table):
                 # print("있음")
@@ -139,6 +138,17 @@ def get_table_page():
 def menuList(table_id): 
     # JSON 데이터를 프론트에 반환
     return render_template('/pos/menu_list.html')
+
+@pos_bp.route('/get_table_order_list/<table_id>', methods=['GET'])
+def get_table_order_list(table_id):
+    orders = find_order_list(table_id)
+    print('orders',orders)
+    # 데이터 그대로 풀어서 프론트에 넘겨주고 프론트에서 처리하기
+    # order list merge 방식을 사용하기
+    table_order_list = []
+    return jsonify(table_order_list)
+
+    
 
 # 테이블 -> 메뉴리스트에 필요한 메뉴 데이터 (json)
 @pos_bp.route('/get_menu_list/<table_id>', methods=['GET'])
