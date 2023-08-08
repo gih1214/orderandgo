@@ -39,3 +39,4 @@ def register():
         response = jsonify({'message': 'Success'})
         response.status_code = 200
         return response
+    
