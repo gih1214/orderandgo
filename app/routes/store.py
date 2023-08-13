@@ -1,6 +1,16 @@
+from flask import render_template, jsonify, request, session
 
 
-# 매장 생성
+from app.routes import store_bp
 
+@store_bp.route('/')
+def index():
+    return render_template('adm.html')
+  
+@store_bp.route('/product')
+def product():
+    return render_template('store_product.html')
 
-# 매장 리스트
+@store_bp.route('/set_menu')
+def set_menu():
+    return render_template('set_menu_product.html')

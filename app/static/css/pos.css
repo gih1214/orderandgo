@@ -1,59 +1,7 @@
 #container {
   
 }
-header {
-  display: flex;
-  align-items: center;
-  height: 40px;
-  width: 100%;
-  background: #333;
-  color: #fff;
-}
-header .center{
-  display: flex;
-  flex: 1;
-  justify-content: space-between;
-  padding: 10px 15px 10px 10px;
-}
-header .center img {
-  height: 20px
-}
-header .back_btn,
-header .home_btn {
-  position: relative;
-  font-size: 15px;
-  padding: 12.5px 15px;
-}
-header .home_btn:focus-visible{
-  outline: auto;
-}
-header .center .header_info{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 17px;
-}
-header .center .header_info .store_state {
-  display: flex;
-  align-items: center;
-  
-}
-header .center .header_info .store_state::before{
-  content: '';
-  position: relative;
-  top: 0;
-  left: 0;
-  display: block;
-  width: 10px;
-  height: 10px;
-  margin-right: 5px;
-  border-radius: 50%;
-}
-header .center .header_info .store_state[data-state="open"]::before{
-  background: #1FAA9C;
-}
+
 main section {
   position: relative;
   overflow: hidden;
