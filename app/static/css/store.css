@@ -252,16 +252,22 @@ section ul li .submit_btn {
 }
 
 .set_menu_product main aside {
+  display: flex;
+  justify-content: space-between;
+  flex-flow: column;
+  gap: 20px;
+
   width: 300px;
   
-}
-.set_menu_product main aside.open{
-
 }
 .set_menu_product main aside .responsive_btn{
   position: absolute;
   top: 50%;
   left: 0;
+  display: flex;
+  align-items: center;
+  flex-flow: column;
+  gap: 20px;
   padding: 20px 0px;
   border-radius: 10px 0px 0px 10px;
   background: #DDD;
@@ -269,6 +275,117 @@ section ul li .submit_btn {
   font-size: 14px;
   transform: translate(-100%, -50%);
 }
+
+.set_menu_product main aside .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  color: #ccc;
+  transition: all .4s;
+}
+.set_menu_product main aside .top .main_img{
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
+  border: 1px dashed #CCC;
+  visibility: visible;
+  opacity: 1;
+  transition: all .4s;
+}
+
+.set_menu_product main aside .top .main_img label{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 40px;
+  
+}
+.set_menu_product main aside .top .imgs {
+  display: flex;
+  flex-flow: column;
+  justify-content:space-between;
+  gap: 10px;
+  max-height: 200px;
+  overflow: hidden;
+  transition: all .4s;
+}
+.set_menu_product main aside .top .imgs > div {
+  border-radius: 5px;
+  border: 1px dashed #CCC;
+}
+.set_menu_product main aside .top .imgs > div label {
+  display: flex;
+  align-items: center;
+  justify-content:center;
+  
+  width: 40px;
+  height: 40px;
+  padding: 12px;
+  transition: all .4s;
+
+}
+.set_menu_product main aside .middle {
+  display: flex;
+  flex-flow: column;
+  gap: 15px;
+  height: calc(100% - 200px - 40px - 46px);
+  overflow: scroll;
+  transition: all .4s;
+}
+.set_menu_product main aside .middle label {
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
+  transition: all .4s;
+}
+.set_menu_product main aside .middle label span{
+  width: 100px;
+  font-size: 16px;
+  font-weight: 700;
+}
+.set_menu_product main aside .middle label input,
+.set_menu_product main aside .middle label textarea,
+.set_menu_product main aside .middle label select {
+  padding: 10px 12px;
+  border-radius: 5px;
+  border: 1px solid #CCC;
+  flex: 1;
+  transition: all .4s;
+}
+.set_menu_product main aside .middle label input{
+  height:40px;
+  transition: all .4s;
+}
+.set_menu_product main aside .bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+.set_menu_product main aside .bottom button{
+  flex: 1;
+  padding: 12px 10px;
+  border-radius: 5px;
+}
+
+.set_menu_product main aside .bottom button.delete{
+  border: 1px solid #F43E25;
+  color: #F43E25;
+}
+.set_menu_product main aside .bottom button.save{
+  background: #1FAA9C;
+  color: #fff;
+}
+
+
+
+
+
+
+
+
 
 .set_menu_product main.open_aside article {
   flex: initial;
@@ -279,7 +396,6 @@ section ul li .submit_btn {
   min-width: 300px;
   flex: 1;
 }
-
 .set_menu_product main aside .ph-caret-left{
   display: block;
 }
@@ -291,6 +407,37 @@ section ul li .submit_btn {
 }
 .set_menu_product main.open_aside aside .ph-caret-right{
   display: block;
+}
+.set_menu_product main.open_aside aside .top {
+  justify-content: start;
+  gap: 0;
+  margin-right: -20px;
+  overflow-x: scroll;
+}
+.set_menu_product main.open_aside aside .top .main_img {
+  width: 0;
+  border: none;
+  visibility: hidden;
+  opacity: 0;
+}
+.set_menu_product main.open_aside aside .top .imgs {
+  flex-flow: row;    
+  padding-right: 20px;
+}
+.set_menu_product main.open_aside aside .top .imgs label{
+  width: 200px;
+  height: 200px;
+  padding: 0;
+}
+.set_menu_product main.open_aside aside .middle label{
+  flex-flow: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.set_menu_product main.open_aside aside .middle label input,
+.set_menu_product main.open_aside aside .middle label textarea,
+.set_menu_product main.open_aside aside .middle label select{
+  flex: 1;
 }
 /* 매장 메뉴 관리 페이지 */
 /*************************/

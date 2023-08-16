@@ -68,12 +68,12 @@
       <article>
         <div class="article_top">
           <div class="buttons">
-            <button>전체</button>
-            <button>전체 취소</button>
+            <button><span>전체</span></button>
+            <button><span>전체 취소</span></button>
           </div>
           <div class="buttons">
-            <button class="delete_btn">삭제</button>
-            <button class="add_btn">추가</button>
+            <button class="delete_btn"><span>삭제</span></button>
+            <button class="add_btn"><span>추가</span></button>
           </div>
         </div>
         <div class="article_bottom scrollbar_hidden">
@@ -238,8 +238,59 @@
         <button class="responsive_btn" onclick="clickResponsiveBtn(event)">
           <i class="ph ph-caret-left"></i>
           <i class="ph ph-caret-right"></i>
-          
         </button>
+        <div class="top scrollbar_hidden">
+          <div class="main_img">
+            <label><i class="ph ph-plus"></i></label>
+            <input hidden type="file">
+            <img src="" alt="">
+          </div>
+          <div class="imgs">
+            <div>
+              <label for="menu_img_1"><i class="ph ph-plus"></i></label>
+              <input id="menu_img_1" hidden type="file">
+              <img src="" alt="">
+            </div>
+            <div>
+              <label for="menu_img_2"><i class="ph ph-plus"></i></label>
+              <input id="menu_img_2" hidden type="file">
+              <img src="" alt="">
+            </div>
+            <div>
+              <label for="menu_img_3"><i class="ph ph-plus"></i></label>
+              <input id="menu_img_3" hidden type="file">
+              <img src="" alt="">
+            </div>
+            <div>
+              <label for="menu_img_4"><i class="ph ph-plus"></i></label>
+              <input id="menu_img_4" hidden type="file">
+              <img src="" alt="">
+            </div>
+          </div>
+        </div>
+        <div class="middle scrollbar_hidden">
+          <label for="">
+            <span>메뉴명</span>
+            <input type="text">
+          </label>
+          <label for="">
+            <span>판매가</span>
+            <input type="text">
+          </label>
+          <label for="">
+            <span>메뉴 설명</span>
+            <textarea></textarea>
+          </label>
+          <label for="">
+            <span>카테고리</span>
+            <select></select>
+            <select></select>
+          </label>
+        </div>
+        <div class="bottom">
+          <button class="delete">삭제</button>
+          <button class="save">저장</button>
+        </div>
       </aside>
     </main>
   </div>
