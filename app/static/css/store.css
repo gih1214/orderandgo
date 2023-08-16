@@ -22,17 +22,24 @@
 }
 .store_product section {
   flex: 1;
+  height: initial;
   padding: 0 20px;
+  background: none;
+  border-bottom: none;
 }
 .store_product section ul {
-
+  flex-flow: column;
+  align-items: start;
 }
+
 .store_product section ul li{
   display: flex;
   align-items: center;
   gap: 20px;
+  width: 100%;
   padding: 20px 0;
 }
+
 .store_product section ul li h2 {
   width: 150px;
   font-size: 16px;
@@ -77,21 +84,44 @@ section ul li{
   display: flex;
   align-items: center;
   gap: 10px;
+  flex: 1;
+}
+section ul li.right {
+  gap: 20px;
+  flex: 2;
+  width: 100%;
+}
+section ul li.right > div{
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 10px;
+  width: 100%;
+}
+
+section ul li.right > div button{
+  flex: 1;
+}
+section ul li.right > div .search_box{
+  flex: 2.7;
 }
 section ul li h2{
   font-size: 14px;
   font-weight: 700;
 }
 section ul li > button {
-  height:37px
+  height:37px;
 }
 section ul li .input_box {
   display: flex;    
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
+  flex: 1;
   padding: 12px;
 }
-section ul li .search_btn {
+section ul li .submit_btn {
+  width: 60px;
   padding: 10px;
   border-radius: 5px;
   border: 1px solid #1FAA9C;
@@ -99,3 +129,168 @@ section ul li .search_btn {
   font-size: 14px;
   font-weight: 700;
 }
+
+/*************************/
+/* 매장 메뉴 관리 페이지 */
+
+.set_menu_product section ul li button,
+.set_menu_product section ul li input{
+  gap: 10px;
+  height: 37px;
+  font-size: 14px;
+}
+.set_menu_product main {
+  gap: 20px;
+  padding: 20px;
+  justify-content: space-between;
+}
+.set_menu_product main.open_aside{
+  
+}
+.set_menu_product main > * {
+  position: relative;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #CCC;
+  background: #FFF;
+  transition: all .4s;
+}
+
+.set_menu_product main article {
+  display: flex;
+  flex-flow: column;
+  gap: 15px;
+  flex: 1;
+  width: 100%;
+}
+.set_menu_product main article .article_top{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.set_menu_product main article .article_top .buttons{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.set_menu_product main article .article_top .buttons button{
+  padding: 8px 15px;
+  border-radius: 5px;
+  border: 1px solid #111;
+  background: #FFF;
+  font-size: 14px;
+  font-weight: 700;
+}
+.set_menu_product main article .article_top .buttons button.delete_btn {
+  border: 1px solid #F43E25;
+  color: #F43E25;
+}
+.set_menu_product main article .article_top .buttons button.add_btn {
+  border: 1px solid #1FAA9C;
+  color: #1FAA9C;
+}
+.set_menu_product main article .article_bottom {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  border: 1px solid #CCC;
+  border-radius: 5px;
+  font-size: 14px;
+  overflow: hidden;
+  overflow-x: auto;
+}
+.set_menu_product main article .article_bottom ul {
+  position: relative;
+  min-width: 630px;
+  height: 100%;
+  text-align: center;
+  overflow: auto;
+}
+.set_menu_product main article .article_bottom ul li{
+  display: flex;
+  flex: 1;
+  border-bottom: 1px solid #ccc;
+}
+.set_menu_product main article .article_bottom ul li:first-child{
+  position: sticky;
+  top: 0;
+  left: 0;
+  background: #F5F5F5;
+  border-bottom: 1px solid #000;
+  font-weight: 700;
+}
+.set_menu_product main article .article_bottom ul li div{
+  padding: 5px 5px;
+}
+.set_menu_product main article .article_bottom ul li div:not(:first-child){
+  border-left: 1px solid #ccc;
+  
+}
+.set_menu_product main article .article_bottom ul li div:nth-child(1){
+  padding: 5px 10px;
+}
+.set_menu_product main article .article_bottom ul li div:nth-child(2){
+  flex: 1;
+}
+.set_menu_product main article .article_bottom ul li div:nth-child(3){
+  flex: 1;
+}
+.set_menu_product main article .article_bottom ul li div:nth-child(4){
+  flex: 2;
+}
+.set_menu_product main article .article_bottom ul li:not(:first-child) div:nth-child(4){
+  text-align: start;
+}
+.set_menu_product main article .article_bottom ul li div:nth-child(5){
+  flex: 1;
+}
+.set_menu_product main article .article_bottom ul li div:nth-child(6){
+  flex: 1;
+}
+.set_menu_product main article .article_bottom ul li:not(:first-child) div:nth-child(6){
+  text-align: end;
+}
+
+.set_menu_product main aside {
+  width: 300px;
+  
+}
+.set_menu_product main aside.open{
+
+}
+.set_menu_product main aside .responsive_btn{
+  position: absolute;
+  top: 50%;
+  left: 0;
+  padding: 20px 0px;
+  border-radius: 10px 0px 0px 10px;
+  background: #DDD;
+  color: #999;
+  font-size: 14px;
+  transform: translate(-100%, -50%);
+}
+
+.set_menu_product main.open_aside article {
+  flex: initial;
+  width: 320px;
+}
+.set_menu_product main.open_aside aside {
+  max-width: initial; 
+  min-width: 300px;
+  flex: 1;
+}
+
+.set_menu_product main aside .ph-caret-left{
+  display: block;
+}
+.set_menu_product main aside .ph-caret-right{
+  display: none;
+}
+.set_menu_product main.open_aside aside .ph-caret-left{
+  display: none;
+}
+.set_menu_product main.open_aside aside .ph-caret-right{
+  display: block;
+}
+/* 매장 메뉴 관리 페이지 */
+/*************************/

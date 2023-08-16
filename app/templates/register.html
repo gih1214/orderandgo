@@ -5,20 +5,40 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>orderandgo</title>
+  <!-- 시작 초기 css 설정 -->
+  <link rel="stylesheet" href="/static/css/responsive.css">
+  <link rel="stylesheet" href="/static/css/reset.css">
+  <link rel="stylesheet" href="/static/css/common.css">
+  <link rel="stylesheet" href="/static/css/animation.css">
+  <!-- 아이콘 -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <!-- 전용 css -->
+  <link rel="stylesheet" href="/static/css/login.css">
 </head>
-<body>
-  <h1>회원가입</h1>
-  <form action="/register" method="POST">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
-    <br>
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
-    <br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-    <br>
-    <input type="submit" value="Register">
-  </form>
+<body class="register">
+  <main>
+    <h1>회원가입</h1>
+    <form action="/register" method="POST">
+      <input type="text" placeholder="성명을 입력해주세요" id="username" name="username" required>
+      <div>
+        <input type="email" placeholder="이메일을 입력해주세요" id="email" name="email" required>
+        <button>중복확인</button>
+      </div>
+      <div class="password_box">
+        <input type="password" placeholder="비밀번호를 입력해주세요" id="password" name="password" required>
+        <button class="not_btn_box">
+          <i class="ph ph-eye"></i>
+          <i class="ph ph-eye-slash"></i>
+        </button>
+      </div>
+      <div>
+        <input type="tel" placeholder="전화번호를 입력해주세요" id="tel" name="tel" required>
+        <button>본인인증</button>
+      </div>
+      <input type="text" placeholder="인증번호를 입력해주세요" required>
+      <input type="submit" value="회원가입">
+    </form>
+  </main>
 </body>
 </html>

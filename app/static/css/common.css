@@ -33,6 +33,20 @@
   text-overflow: ellipsis; /* 넘친 텍스트는 "..."으로 표시됩니다. */
 }
 
+/* 스크롤바 숨기기 스타일 정의 */
+.scrollbar_hidden::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.scrollbar_hidden::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.scrollbar_hidden::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
 
 /* ############################## */
 /* ######### 버튼 ############### */

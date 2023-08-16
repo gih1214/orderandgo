@@ -16,27 +16,20 @@
   <!-- 전용 css -->
   <link rel="stylesheet" href="/static/css/login.css">
 </head>
-<body class="login">
+<body class="store">
   <main>
     <h1>
       <a href="">
         <img src="/static/images/common/logo-order&go-color.png" alt="">
       </a>
     </h1>
-    <form action="/login" method="POST">
-      <input type="text" id="username" name="username" placeholder="아이디를 입력해주세요">
-      <input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요" required>
-      <div class="input_save_id">
-        <input type="checkbox" hidden id="save_id">
-        <label for="save_id">
-          <i class="ph ph-check-circle"></i>
-          <span>아이디 저장</span>
-        </label>
-      </div>
-      <input type="submit" value="로그인">
+    <form action="/store" method="POST">
+      <select name="" id="">
+        <option value=""></option>
+      </select>
+      <input type="submit" value="시작하기">
       <div class="buttons">
-        <a>회원가입</a>
-        <a>아이디/비밀번호 찾기</a>
+        <a>매장생성</a>
       </div>
     </form>
   </main>
