@@ -1,5 +1,6 @@
 from flask import session
 from app.models import db, User
+from app.models.auth import update_user_session
 import bcrypt
 
 from datetime import datetime
@@ -56,6 +57,7 @@ def delete_user_by_id(id):
 def get_user_login(user_id, password):
     user = User.query.filter_by(user_id=user_id).first()
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+        update_user_session(user)   # 세션 등록
         return user
     return False
 
