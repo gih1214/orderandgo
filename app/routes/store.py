@@ -37,6 +37,9 @@ def api_create_or_update_store():
         response.status_code = 200
         return response
 
+@store_bp.route('/login')
+def login():
+    return render_template('store_login.html');
 
 # 매장 리스트
 @store_bp.route('/create', methods=['GET', 'POST'])
@@ -63,3 +66,21 @@ def api_update_store_session(store_id):
     res = update_store_session(store_id)
 
     return res
+
+
+
+# @store_bp.route('/')
+# def index():
+#     return render_template('adm.html');
+
+@store_bp.route('/')
+def index():
+    return render_template('store.html')
+  
+@store_bp.route('/product')
+def product():
+    return render_template('store_product.html')
+
+@store_bp.route('/set_menu')
+def set_menu():
+    return render_template('set_menu_product.html')

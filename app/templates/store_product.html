@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OrderAndGo</title>
+
+  <!-- 시작 초기 css 설정 -->
+  <link rel="stylesheet" href="/static/css/responsive.css">
+  <link rel="stylesheet" href="/static/css/reset.css">
+  <link rel="stylesheet" href="/static/css/common.css">
+  <link rel="stylesheet" href="/static/css/animation.css">
+  <!-- 아이콘 -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <!-- 전용 css -->
+  <link rel="stylesheet" href="/static/css/store.css">
+</head>
+<body class="store_product">
+  <div id="container">
+    <header>
+      <!-- <h1>POS - Header</h1>-->
+      <a class="back_btn" href="/pos/tableList">
+        <i class="ph-bold ph-caret-left"></i>
+      </a>
+      <div class="center">
+        <a href="">
+          <h1>
+            <img src="/static/images/common/logo-order&go-white.png" alt="">
+          </h1>
+        </a>
+        <div class="header_info">
+          <span>2023-05-01(월) 14:00</span>
+          <span class="store_state" data-state="open">영업중</span>
+        </div>
+      </div>
+    </header>
+    <main>
+      <nav>
+        <ul>
+          <li class="active"><a href="">POS관리</a></li>
+          <li><a href="">테이블오더관리</a></li>
+        </ul>
+      </nav>
+      <section>
+        <ul>
+          <li>
+            <h2>상품</h2>
+            <a href="/store/set_menu">
+              <i class="ph ph-cube"></i>
+              <span>상품 정보 수정</span>
+            </a>
+            <a>
+              <i class="ph ph-cube-focus"></i>
+              <span>상품 배치 수정</span>
+            </a>
+          </li>
+          <li>
+            <h2>카테고리</h2>
+            <a>
+              <i class="ph ph-hard-drive"></i>
+              <span>카테고리 정보 수정</span>
+            </a>
+            <a>
+              <i class="ph ph-hard-drives"></i>
+              <span>카테고리 순서 변경</span>
+            </a>
+          </li>
+          <li>
+            <h2>구역/테이블</h2>
+            <a>
+              <i class="ph ph-squares-four"></i>
+              <span>구역 설정</span>
+            </a>
+            <a>
+              <i class="ph ph-subtract-square"></i>
+              <span>테이블 설정</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+  
+  <!-- 공통 스크립트 -->
+  <script src="/static/js/common.js"></script>
+  <!-- 전용 스크립트 -->
+  <script src="/static/js/menuList.js"></script>
+</body>
+</html>

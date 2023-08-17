@@ -13,38 +13,26 @@
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
   <!-- 전용 css -->
-  <!-- <link rel="stylesheet" href="static/css/main.css"> -->
+  <link rel="stylesheet" href="static/css/index.css">
   <style>
-    body {
-      display: flex;
-      gap: 10px;
-      flex-flow: column;
-      background: #694757;
-    }
-    body > div {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    a {
-      width: max-content;
-      padding: 10px 20px;
-      border: 1px solid var(--border-color-1fa);
-      border-radius: 10px;
-      color: var(--border-color-1fa);
-    }
   </style>
 </head>
 <body>
-  <h1>OrderAndGo</h1>
-  <div>
-    <span>관리자 페이지로 이동하기 : </span>
-    <a href="./adm">adm</a>
-  </div>
-  <div>
-    <span>포스 페이지로 이동하기 : </span>
-    <a href="./pos/tableList">pos</a>
-  </div>
+  <header>
+    <a href="/index">
+      <h1>
+        <img src="/static/images/common/logo-order&go-color.png" alt="">
+      </h1>
+    </a>
+  </header>
+  <main>
+    <ul>
+      <li><a href="/pos/tableList">POS</a></li>
+      <li><a href="#">테이블 오더</a></li>
+      <li><a href="#">주방 주문 관리</a></li>
+      <li><a href="/store/product">매장 관리</a></li>
+    </ul>
+  </main>
   <!-- 공통 스크립트 -->
   <!-- <script src="static/js/common.js"></script> -->
   <!-- 전용 스크립트 -->

@@ -1,0 +1,443 @@
+.store_product main {
+  display: flex;
+  height: calc(100vh - 40px);
+  background: #F5F5F5;
+}
+.store_product main nav{
+  width: 250px;
+  background: #FFF;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+}
+.store_product main nav ul{
+  color: #000;
+  font-size: 18px;
+  font-weight: 700;
+}
+.store_product main nav ul li{
+  padding: 20px;
+}
+.store_product main nav ul li.active{
+  background: #F3FAFA;
+  color: #1FAA9C;
+}
+.store_product section {
+  flex: 1;
+  height: initial;
+  padding: 0 20px;
+  background: none;
+  border-bottom: none;
+}
+.store_product section ul {
+  flex-flow: column;
+  align-items: start;
+}
+
+.store_product section ul li{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  padding: 20px 0;
+}
+
+.store_product section ul li h2 {
+  width: 150px;
+  font-size: 16px;
+  font-weight: 700;
+}
+.store_product section ul li a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #CCC;
+  background: #FFF;
+  font-size: 14px;
+  font-weight: 600;
+}
+.store_product section ul li a i {
+  font-size: 24px;
+}
+main {
+  display: flex;
+  height: calc(100vh - 40px - 60px);
+  background: #F5F5F5;
+}
+section {
+  width: 100%;
+  height: 60px;
+  padding: 0 20px;
+  background: #FFF;
+  border-bottom: 1px solid #CCC;
+  
+}
+
+section ul{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 100%;
+}
+section ul li{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+section ul li.right {
+  gap: 20px;
+  flex: 2;
+  width: 100%;
+}
+section ul li.right > div{
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 10px;
+  width: 100%;
+}
+
+section ul li.right > div button{
+  flex: 1;
+}
+section ul li.right > div .search_box{
+  flex: 2.7;
+}
+section ul li h2{
+  font-size: 14px;
+  font-weight: 700;
+}
+section ul li > button {
+  height:37px;
+}
+section ul li .input_box {
+  display: flex;    
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex: 1;
+  padding: 12px;
+}
+section ul li .submit_btn {
+  width: 60px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #1FAA9C;
+  color: #1FAA9C;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/*************************/
+/* 매장 메뉴 관리 페이지 */
+
+.set_menu_product section ul li button,
+.set_menu_product section ul li input{
+  gap: 10px;
+  height: 37px;
+  font-size: 14px;
+}
+.set_menu_product main {
+  gap: 20px;
+  padding: 20px;
+  justify-content: space-between;
+}
+.set_menu_product main.open_aside{
+  
+}
+.set_menu_product main > * {
+  position: relative;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #CCC;
+  background: #FFF;
+  transition: all .4s;
+}
+
+.set_menu_product main article {
+  display: flex;
+  flex-flow: column;
+  gap: 15px;
+  flex: 1;
+  width: 100%;
+}
+.set_menu_product main article .article_top{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.set_menu_product main article .article_top .buttons{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.set_menu_product main article .article_top .buttons button{
+  padding: 8px 15px;
+  border-radius: 5px;
+  border: 1px solid #111;
+  background: #FFF;
+  font-size: 14px;
+  font-weight: 700;
+}
+.set_menu_product main article .article_top .buttons button.delete_btn {
+  border: 1px solid #F43E25;
+  color: #F43E25;
+}
+.set_menu_product main article .article_top .buttons button.add_btn {
+  border: 1px solid #1FAA9C;
+  color: #1FAA9C;
+}
+.set_menu_product main article .article_bottom {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  border: 1px solid #CCC;
+  border-radius: 5px;
+  font-size: 14px;
+  overflow: hidden;
+  overflow-x: auto;
+}
+.set_menu_product main article .article_bottom ul {
+  position: relative;
+  min-width: 630px;
+  height: 100%;
+  text-align: center;
+  overflow: auto;
+}
+.set_menu_product main article .article_bottom ul li{
+  display: flex;
+  flex: 1;
+  border-bottom: 1px solid #ccc;
+}
+.set_menu_product main article .article_bottom ul li:first-child{
+  position: sticky;
+  top: 0;
+  left: 0;
+  background: #F5F5F5;
+  border-bottom: 1px solid #000;
+  font-weight: 700;
+}
+.set_menu_product main article .article_bottom ul li div{
+  padding: 5px 5px;
+}
+.set_menu_product main article .article_bottom ul li div:not(:first-child){
+  border-left: 1px solid #ccc;
+  
+}
+.set_menu_product main article .article_bottom ul li div:nth-child(1){
+  padding: 5px 10px;
+}
+.set_menu_product main article .article_bottom ul li div:nth-child(2){
+  flex: 1;
+}
+.set_menu_product main article .article_bottom ul li div:nth-child(3){
+  flex: 1;
+}
+.set_menu_product main article .article_bottom ul li div:nth-child(4){
+  flex: 2;
+}
+.set_menu_product main article .article_bottom ul li:not(:first-child) div:nth-child(4){
+  text-align: start;
+}
+.set_menu_product main article .article_bottom ul li div:nth-child(5){
+  flex: 1;
+}
+.set_menu_product main article .article_bottom ul li div:nth-child(6){
+  flex: 1;
+}
+.set_menu_product main article .article_bottom ul li:not(:first-child) div:nth-child(6){
+  text-align: end;
+}
+
+.set_menu_product main aside {
+  display: flex;
+  justify-content: space-between;
+  flex-flow: column;
+  gap: 20px;
+
+  width: 300px;
+  
+}
+.set_menu_product main aside .responsive_btn{
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: flex;
+  align-items: center;
+  flex-flow: column;
+  gap: 20px;
+  padding: 20px 0px;
+  border-radius: 10px 0px 0px 10px;
+  background: #DDD;
+  color: #999;
+  font-size: 14px;
+  transform: translate(-100%, -50%);
+}
+
+.set_menu_product main aside .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  color: #ccc;
+  transition: all .4s;
+}
+.set_menu_product main aside .top .main_img{
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
+  border: 1px dashed #CCC;
+  visibility: visible;
+  opacity: 1;
+  transition: all .4s;
+}
+
+.set_menu_product main aside .top .main_img label{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 40px;
+  
+}
+.set_menu_product main aside .top .imgs {
+  display: flex;
+  flex-flow: column;
+  justify-content:space-between;
+  gap: 10px;
+  max-height: 200px;
+  overflow: hidden;
+  transition: all .4s;
+}
+.set_menu_product main aside .top .imgs > div {
+  border-radius: 5px;
+  border: 1px dashed #CCC;
+}
+.set_menu_product main aside .top .imgs > div label {
+  display: flex;
+  align-items: center;
+  justify-content:center;
+  
+  width: 40px;
+  height: 40px;
+  padding: 12px;
+  transition: all .4s;
+
+}
+.set_menu_product main aside .middle {
+  display: flex;
+  flex-flow: column;
+  gap: 15px;
+  height: calc(100% - 200px - 40px - 46px);
+  overflow: scroll;
+  transition: all .4s;
+}
+.set_menu_product main aside .middle label {
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
+  transition: all .4s;
+}
+.set_menu_product main aside .middle label span{
+  width: 100px;
+  font-size: 16px;
+  font-weight: 700;
+}
+.set_menu_product main aside .middle label input,
+.set_menu_product main aside .middle label textarea,
+.set_menu_product main aside .middle label select {
+  padding: 10px 12px;
+  border-radius: 5px;
+  border: 1px solid #CCC;
+  flex: 1;
+  transition: all .4s;
+}
+.set_menu_product main aside .middle label input{
+  height:40px;
+  transition: all .4s;
+}
+.set_menu_product main aside .bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+.set_menu_product main aside .bottom button{
+  flex: 1;
+  padding: 12px 10px;
+  border-radius: 5px;
+}
+
+.set_menu_product main aside .bottom button.delete{
+  border: 1px solid #F43E25;
+  color: #F43E25;
+}
+.set_menu_product main aside .bottom button.save{
+  background: #1FAA9C;
+  color: #fff;
+}
+
+
+
+
+
+
+
+
+
+.set_menu_product main.open_aside article {
+  flex: initial;
+  width: 320px;
+}
+.set_menu_product main.open_aside aside {
+  max-width: initial; 
+  min-width: 300px;
+  flex: 1;
+}
+.set_menu_product main aside .ph-caret-left{
+  display: block;
+}
+.set_menu_product main aside .ph-caret-right{
+  display: none;
+}
+.set_menu_product main.open_aside aside .ph-caret-left{
+  display: none;
+}
+.set_menu_product main.open_aside aside .ph-caret-right{
+  display: block;
+}
+.set_menu_product main.open_aside aside .top {
+  justify-content: start;
+  gap: 0;
+  margin-right: -20px;
+  overflow-x: scroll;
+}
+.set_menu_product main.open_aside aside .top .main_img {
+  width: 0;
+  border: none;
+  visibility: hidden;
+  opacity: 0;
+}
+.set_menu_product main.open_aside aside .top .imgs {
+  flex-flow: row;    
+  padding-right: 20px;
+}
+.set_menu_product main.open_aside aside .top .imgs label{
+  width: 200px;
+  height: 200px;
+  padding: 0;
+}
+.set_menu_product main.open_aside aside .middle label{
+  flex-flow: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.set_menu_product main.open_aside aside .middle label input,
+.set_menu_product main.open_aside aside .middle label textarea,
+.set_menu_product main.open_aside aside .middle label select{
+  flex: 1;
+}
+/* 매장 메뉴 관리 페이지 */
+/*************************/

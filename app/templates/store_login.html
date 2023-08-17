@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>orderandgo</title>
+    <!-- 시작 초기 css 설정 -->
+    <link rel="stylesheet" href="/static/css/responsive.css">
+    <link rel="stylesheet" href="/static/css/reset.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/animation.css">
+    <!-- 아이콘 -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+    <!-- 전용 css -->
+    <link rel="stylesheet" href="/static/css/login.css">
+</head>
+<body>
+  <main>
+    <h1>
+      <a href="">
+        <img src="/static/images/common/logo-order&go-color.png" alt="">
+      </a>
+    </h1>
+    <form action="/" method="POST">
+      <label for="store_num">매장번호:</label>
+      <input type="text" id="store_num" name="store_num" required>
+      <label for="password">비밀번호:</label>
+      <input type="password" id="password" name="password" required>
+      <input type="submit" value="로그인">
+    </form>
+  </main>
+</body>
+</html>

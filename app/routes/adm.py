@@ -5,7 +5,7 @@ from app.routes import adm_bp
 from app.models import db, Store, TableCategory, Table
 from app.models.user import create_user
 from app.models.menu_category import create_main_category, create_sub_category
-from app.models.store import create_store, update_store
+from app.models.store import create_store, delete_store, update_store
 from app.models.menu import create_menu, create_menu_option, delete_menu, update_menu
 
 @adm_bp.route('/')
@@ -64,7 +64,7 @@ def delete_user(user_id):
 ####################
 ### 스토어 시작 ###
 
-# 매장 생성
+#  스토어 생성
 @adm_bp.route('/store', methods=['GET', 'POST'])
 def create_store_py():
     # 매장 생성 페이지로 옮긴 후 path 수정 필요
@@ -108,23 +108,45 @@ def create_store_py():
         #return jsonify({'message': '매장이 성공적으로 생성되었습니다.'}), 201
 
 @adm_bp.route('/store/<store_id>', methods=['GET'])
-def get_store(store_id):
+def get_store_py(store_id):
     # 스토어 조회 로직 수행
-    # ...
     store_data = {'id': store_id, 'name': 'John Doe', 'email': 'john@example.com'}  # 예시 데이터
     return jsonify(store_data), 200
 
+# 스토어 수정
 @adm_bp.route('/store/<store_id>', methods=['PATCH'])
-def update_store(store_id):
+def update_store_py(store_id):
     # 스토어 업데이트 로직 수행
-    # ...
-    
+    if request.method == 'PATCH':
+        store_data = request.get_json()
+        
+        #user_id = store_data['user_id']
+        user_id = 14 # temp
+        store_id = 2 # temp
+        name = store_data['name']
+        address = store_data['address']
+        tel = store_data['tel']
+        manager_name = store_data['manager_name']
+        manager_tel = store_data['manager_tel']
+        logo_img = store_data['logo_img']
+        store_image = store_data['store_image']
+        main_description = store_data['main_description']
+        sub_description = store_data['sub_description']
+
+        store = update_store(user_id, store_id, name, address, tel, manager_name, manager_tel, logo_img, store_image, main_description, sub_description)
+        print("스토어 수정 1차 성공", store)
+
+        response = jsonify({'message': 'Success'})
+        response.status_code = 200
+        print('Received JSON data:', store_data)
     return jsonify({'message': '스토어가 성공적으로 업데이트되었습니다.'}), 200
 
+# 스토어 삭제
 @adm_bp.route('/store/<store_id>', methods=['DELETE'])
-def delete_store(store_id):
-    # 스토어 삭제 로직 수행
-    # ...
+def delete_store_py(store_id):
+    if request.method == 'DELETE':
+        delete_store(store_id)
+        print('스토어 삭제 성공')
     return jsonify({'message': '스토어가 성공적으로 삭제되었습니다.'}), 204
 ### 스토어 끝 ###
 ####################
