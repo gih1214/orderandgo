@@ -170,12 +170,14 @@
   width: 100%;
   visibility: hidden;
   max-height: 0;
+  height: 0;
   overflow: hidden;
   opacity: 0;
   transition: all .25s;
   border-radius: 5px;
   background: #FFF;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.10);
+  transition: all .4s;
 }
 .dropdown-list.active {
   visibility: visible;
