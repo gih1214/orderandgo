@@ -30,6 +30,7 @@
 .store_product section ul {
   flex-flow: column;
   align-items: start;
+  height: initial;
 }
 
 .store_product section ul li{
