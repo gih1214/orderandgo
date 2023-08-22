@@ -113,13 +113,34 @@ section ul li h2{
 section ul li > button {
   height:37px;
 }
+section ul li .dropdown-box {
+  position: relative;
+  flex: 1;
+}
+section ul li .dropdown-box .dropdown-list {
+  display: flex;
+  flex-flow: column;
+  gap: initial;
+  height: initial;
+  font-size: 14px;
+  border: 1px solid var(--border-color-da);
+  border-radius: 6px;
+  transition: all .4s;
+}
+section ul li .dropdown-box .dropdown-list li {
+  width: 100%;
+  max-height: 37px;
+  padding: 12px;
+}
 section ul li .input_box {
   display: flex;    
   align-items: center;
   justify-content: space-between;
   gap: 10px;
   flex: 1;
+  width: 100%;
   padding: 12px;
+
 }
 section ul li .submit_btn {
   width: 60px;

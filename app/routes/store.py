@@ -106,16 +106,6 @@ def get_sub_category():
     # JSON 데이터를 프론트에 반환
     return jsonify(json_data)
 
-@store_bp.route('/get_menu_list', methods=['GET'])
-def get_menu_list():
-    # JSON 파일 경로 설정
-    json_file_path = 'app/static/json/setMenuProductMenu.json'
-    # JSON 파일 로드
-    with open(json_file_path, 'r', encoding='UTF-8') as file:
-        json_data = json.load(file)
-    # JSON 데이터를 프론트에 반환
-    return jsonify(json_data)
-
 @store_bp.route('/all_menu_list', methods=['GET'])
 def all_menu_list():
     # JSON 파일 경로 설정
@@ -126,3 +116,4 @@ def all_menu_list():
     # JSON 데이터를 프론트에 반환
     return jsonify(json_data)
 
+``
