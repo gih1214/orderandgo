@@ -1,12 +1,14 @@
 from flask import render_template, request, jsonify
+from flask_login import login_required
 from app.routes import store_bp
 
 from app.models import db, Store
 from app.models.store import create_store, update_store
-from app.models.auth import update_store_session
+from app.login_manager import update_store_session
 
 
 # 매장 생성
+@login_required
 @store_bp.route('/create_or_update', methods=['GET', 'POST'])
 def api_create_or_update_store():
     if request.method == 'GET':
@@ -36,13 +38,10 @@ def api_create_or_update_store():
         response = jsonify({'message': 'Success'})
         response.status_code = 200
         return response
-
-@store_bp.route('/login')
-def login():
-    return render_template('store_login.html');
+    
 
 # 매장 리스트
-@store_bp.route('/create', methods=['GET', 'POST'])
+@store_bp.route('/store_list', methods=['GET', 'POST'])
 def api_store_list(user_id):
     dummy = [
         {'id':1, 'name':'할맥'},
@@ -61,7 +60,7 @@ def api_store_list(user_id):
 
 
 # 매장 클릭 시 세션 접속
-@store_bp.route('/create', methods=['GET', 'POST'])
+@store_bp.route('/session_store', methods=['GET', 'POST'])
 def api_update_store_session(store_id):
     res = update_store_session(store_id)
 
@@ -76,6 +75,12 @@ def api_update_store_session(store_id):
 @store_bp.route('/')
 def index():
     return render_template('store.html')
+
+
+@store_bp.route('/login')
+def login():
+    return render_template('store_login.html')
+
   
 @store_bp.route('/product')
 def product():
