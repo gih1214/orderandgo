@@ -115,5 +115,3 @@ def all_menu_list():
         json_data = json.load(file)
     # JSON 데이터를 프론트에 반환
     return jsonify(json_data)
-
-``
