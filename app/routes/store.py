@@ -5,6 +5,7 @@ from app.routes import store_bp
 
 from app.models import db, Store
 from app.models.store import create_store, update_store
+from app.models.menu import select_main_category, select_sub_category, select_menu_option_all, find_all_menu
 from app.login_manager import update_store_session
 
 
@@ -89,10 +90,11 @@ def product():
 
 @store_bp.route('/set_menu')
 def set_menu():
-    return render_template('set_menu_product.html');
+    return render_template('set_menu_product.html')
 
 @store_bp.route('/get_main_category', methods=['GET'])
 def get_main_category():
+    '''
     # JSON 파일 경로 설정
     json_file_path = 'app/static/json/setMenuProductMainCategory.json'
     # JSON 파일 로드
@@ -100,9 +102,22 @@ def get_main_category():
         json_data = json.load(file)
     # JSON 데이터를 프론트에 반환
     return jsonify(json_data)
+    '''
+    store_id = request.args.get('store_id')
+    items = select_main_category(store_id)
+
+    main_category_list = []
+    for i in items:
+        main_category_list.append({
+            'id': i.id,
+            "name": i.name
+        })
+
+    return main_category_list
 
 @store_bp.route('/get_sub_category', methods=['GET'])
 def get_sub_category():
+    '''
     # JSON 파일 경로 설정
     json_file_path = 'app/static/json/setMenuProductSubCategory.json'
     # JSON 파일 로드
@@ -110,9 +125,23 @@ def get_sub_category():
         json_data = json.load(file)
     # JSON 데이터를 프론트에 반환
     return jsonify(json_data)
+    '''
+
+    main_category_id = request.args.get('main_category_id')
+    items = select_sub_category(main_category_id)
+    
+    sub_category_list = []
+    for i in items:
+        sub_category_list.append({
+            'id': i.id,
+            "name": i.name
+        })
+
+    return sub_category_list
 
 @store_bp.route('/all_menu_list', methods=['GET'])
 def all_menu_list():
+    '''
     # JSON 파일 경로 설정
     json_file_path = 'app/static/json/setMenuProductAllMenu.json'
     # JSON 파일 로드
@@ -120,3 +149,28 @@ def all_menu_list():
         json_data = json.load(file)
     # JSON 데이터를 프론트에 반환
     return jsonify(json_data)
+    '''
+
+    store_id = request.args.get('store_id')
+    menu_items = find_all_menu(store_id)
+
+    all_menu_list = []
+    for i in menu_items:
+        # 옵션 있으면 어떻게?
+        option_list = []
+        all_option_list = select_menu_option_all(i.id)
+        for o in all_option_list:
+            option_list.append({
+                'option_id': o.id,
+                'option_name': o.name,
+                'option_price': o.price
+            })
+
+        all_menu_list.append({
+            'id': i.id,
+            'main_category': i.main_category_name,
+            'sub_category': i.sub_category_name,
+            'name': i.name,
+            'price': i.price,
+            'option': option_list
+        })
