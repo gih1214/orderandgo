@@ -99,7 +99,7 @@ def select_sub_category(main_category_id):
 
 # store id의 모든 메뉴 조회
 def find_all_menu(store_id):
-    items = session.query(Menu.id, Menu.name, Menu.price, 
+    items = db.session.query(Menu.id, Menu.name, Menu.price, 
                         MainCategory.name.label('main_category_name'), 
                         SubCategory.name.label('sub_category_name')
                     )\
