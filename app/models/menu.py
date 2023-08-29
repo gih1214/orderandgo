@@ -38,6 +38,17 @@ def select_menu_option_all(menu_id):
         return '메뉴 옵션이 없습니다.'
     return item
 
+# 메뉴 옵션 수정
+def update_menu_option(id, name, price, description, menu_id):
+    item = MenuOption.query.filter(MenuOption.id == id).first()
+    if not item:
+        return '없는 메뉴입니다.'
+    item.name = name
+    item.price = price
+    item.main_description = description
+    db.session.commit()
+    return True
+
 # 메뉴 카테고리 조회 (SELECT ALL)
 def select_main_category(store_id):
     item = MainCategory.query.filter(MainCategory.store_id == store_id).all()
@@ -66,7 +77,7 @@ def select_menu_all(main_category_id):
 def update_menu(menu_id, name, price, image, main_description, sub_description, is_soldout):
     item = Menu.query.filter(Menu.id == menu_id).first()
     if not item:
-        return '없는 메뉴입니다.'
+        return '해당 메뉴 옵션이 없습니다.'
     
     item.name = name
     item.price = price
