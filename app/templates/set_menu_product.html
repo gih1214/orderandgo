@@ -240,31 +240,34 @@
           <i class="ph ph-caret-right"></i>
         </button>
         <div class="top scrollbar_hidden">
-          <div class="main_img">
-            <label><i class="ph ph-plus"></i></label>
-            <input hidden type="file">
+          <div class="main_img" data-index="">
+            <label for="main_menu_img"><i class="ph ph-plus"></i></label>
+            <input id="main_menu_img" hidden multiple  type="file" onchange="multiPreviewImage(event)">
             <img src="" alt="">
+            <button class="delete_btn" onclick="clickDeleteImg(event)">
+              <i class="ph ph-trash"></i>
+            </button>
           </div>
           <div class="imgs">
-            <div>
+            <div class="img_box" data-index="1">
               <label for="menu_img_1"><i class="ph ph-plus"></i></label>
-              <input id="menu_img_1" hidden type="file">
-              <img src="" alt="">
+              <input id="menu_img_1" hidden type="file" onchange="previewImage(event)">
+              <img src="" alt="" onclick="clickMenuImg(event)">
             </div>
-            <div>
+            <div class="img_box" data-index="2">
               <label for="menu_img_2"><i class="ph ph-plus"></i></label>
-              <input id="menu_img_2" hidden type="file">
-              <img src="" alt="">
+              <input id="menu_img_2" hidden type="file" onchange="previewImage(event)">
+              <img src="" alt="" onclick="clickMenuImg(event)">
             </div>
-            <div>
+            <div class="img_box" data-index="3">
               <label for="menu_img_3"><i class="ph ph-plus"></i></label>
-              <input id="menu_img_3" hidden type="file">
-              <img src="" alt="">
+              <input id="menu_img_3" hidden type="file" onchange="previewImage(event)">
+              <img src="" alt="" onclick="clickMenuImg(event)">
             </div>
-            <div>
+            <div class="img_box" data-index="4">
               <label for="menu_img_4"><i class="ph ph-plus"></i></label>
-              <input id="menu_img_4" hidden type="file">
-              <img src="" alt="">
+              <input id="menu_img_4" hidden type="file" onchange="previewImage(event)">
+              <img src="" alt="" onclick="clickMenuImg(event)">
             </div>
           </div>
         </div>

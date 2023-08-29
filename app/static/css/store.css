@@ -306,12 +306,14 @@ section ul li .submit_btn {
   transition: all .4s;
 }
 .set_menu_product main aside .top .main_img{
+  position: relative;
   width: 200px;
   height: 200px;
   border-radius: 10px;
   border: 1px dashed #CCC;
   visibility: visible;
   opacity: 1;
+  overflow: hidden;
   transition: all .4s;
 }
 
@@ -322,7 +324,32 @@ section ul li .submit_btn {
   width: 100%;
   height: 100%;
   font-size: 40px;
-  
+}
+.set_menu_product main aside .top .main_img img{
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.set_menu_product main aside .top .main_img .delete_btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: none;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  background: #fff;
+  color: red;
+}
+.set_menu_product main aside .top .main_img.active img{
+  display: block;
+}
+.set_menu_product main aside .top .main_img.active .delete_btn{
+  display: flex;  
 }
 .set_menu_product main aside .top .imgs {
   display: flex;
@@ -333,11 +360,13 @@ section ul li .submit_btn {
   overflow: hidden;
   transition: all .4s;
 }
-.set_menu_product main aside .top .imgs > div {
+.set_menu_product main aside .top .imgs > .img_box {
+  position: relative;
   border-radius: 5px;
   border: 1px dashed #CCC;
+  overflow: hidden;
 }
-.set_menu_product main aside .top .imgs > div label {
+.set_menu_product main aside .top .imgs > .img_box label {
   display: flex;
   align-items: center;
   justify-content:center;
@@ -346,7 +375,18 @@ section ul li .submit_btn {
   height: 40px;
   padding: 12px;
   transition: all .4s;
-
+}
+.set_menu_product main aside .top .imgs > .img_box img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.set_menu_product main aside .top .imgs > .img_box.active img {
+  display: block;
 }
 .set_menu_product main aside .middle {
   display: flex;
