@@ -108,70 +108,108 @@ const changeTableCategory = (event, index) => {
 
 const changeTableHtml = (tables) => {
   console.log('changeTableHtml',tables)
-  let html = '';
-  tables.forEach((table, index)=>{
-    html += `
-      <button 
-        class="table item ${table.select ? 'select' : ''}" 
-        data-id="${table.tableId}" 
-        data-state="${table.statusId}" 
-        style="border:${table.groupId != 0 ? "1px solid " + table.groupColor : ""}"
-        onclick="clickTable(${table.tableId})">
-        `
-      if(table.isGroup != 0) {
-        html += `
-          <div 
-            class="item_grop_num" 
-            data-id="${table.groupId}" 
-            style="background : ${table.groupColor}"
-          >
-          ${table.groupId}</div>
-        `
-
-      }
-      html +=` 
-        <div class="transparent_group_box" onclick="clickTransparentGroupTable(event)">
-          <i class="ph-fill ph-check-fat"></i>
-        </div>
-        <div class="transparent_move_box" onclick="clickTransparentMoveTable(event)">
-          <i class="ph-fill ph-check-fat"></i>
-        </div>
-        <div class="title">
-          <h2>${table.table} <i class="ph-fill ph-bell-ringing"></i></h2>
-          <div class="table_state">${
-            table.statusId == 0 ? '조리 중' : table.statusId == 1 ? '완료' : table.statusId == 2 ? '조리대기' : ''
-          }</div>
-        </div>
-        <div class="body">
-          <i class="ph-bold ph-plus"></i>
-          <ul>
-          `
-          if(table.orderList.length != 0){
-            const orderList = table.orderList;
-            orderList.forEach((order, orderIndex)=>{
-              if(orderIndex <= 2){
-                html +=`
-                <li data-id="${order.menuId}">
-                  <span>${order.menu}</span>
-                  <span>${order.count}</span>
-                </li>
-                `
-              } 
-              if(orderIndex == 2){
-                html += `
-                  <li class="order_more">
-                    ${orderList.length - 3 > 0 ? `<span>외 ${orderList.length - 3}</span>`  : ''}
-                  </li>
-                ` 
-              }
-            })
-          }
-
-        html +=`
-          </ul>
-        </div>
-      </button>`
+  tables.sort((a,b)=> a.position-b.position);
+  const forArray = Array.from({ length: tables[tables.length - 1].position }, () => false);
+  tables.forEach((table,index)=>{
+    forArray[table.position-1] = table
   })
+  let html = '';
+  html = forArray.map((table, index)=>`
+  ${table == false ? `<button></button>` : `
+    <button class="table item ${table.select ? 'select' : ''}" data-id="${table.tableId}" data-state="${table.statusId}" style="border:${table.groupId != 0 ? "1px solid " + table.groupColor : ""}"onclick="clickTable(${table.tableId})">
+      ${table.isGroup != 0 ? `
+      <div class="item_grop_num" data-id="${table.groupId}" style="background : ${table.groupColor}">${table.groupId}</div>
+      ` : ``}
+      <div class="transparent_group_box" onclick="clickTransparentGroupTable(event)">
+        <i class="ph-fill ph-check-fat"></i>
+      </div>
+      <div class="transparent_move_box" onclick="clickTransparentMoveTable(event)">
+        <i class="ph-fill ph-check-fat"></i>
+      </div>
+      <div class="title">
+        <h2>${table.table} <i class="ph-fill ph-bell-ringing"></i></h2>
+        <div class="table_state">${table.statusId == 0 ? '조리 중' : table.statusId == 1 ? '완료' : table.statusId == 2 ? '조리대기' : ''}</div>
+      </div>
+      <div class="body">
+        <i class="ph-bold ph-plus"></i>
+        <ul>
+          ${table.orderList.length != 0 ? `${table.orderList.map((order, orderIndex)=>`${orderIndex <= 2 ? `
+          <li data-id="${order.menuId}">
+            <span>${order.menu}</span>
+            <span>${order.count}</span>
+          </li>
+          ` : ``}
+          ${orderIndex == 2 ? `
+          <li class="order_more">${table.orderList.length - 3 > 0 ? `<span>외 ${table.orderList.length - 3}</span>`  : ''}</li>
+          ` : ``}
+          `).join('')}` : ``}
+        </ul>
+      </div>
+    </button>
+  ` }`).join('');
+  // tables.forEach((table, index)=>{
+  //   html += `
+  //     <button 
+  //       class="table item ${table.select ? 'select' : ''}" 
+  //       data-id="${table.tableId}" 
+  //       data-state="${table.statusId}" 
+  //       style="border:${table.groupId != 0 ? "1px solid " + table.groupColor : ""}"
+  //       onclick="clickTable(${table.tableId})">
+  //       `
+  //     if(table.isGroup != 0) {
+  //       html += `
+  //         <div 
+  //           class="item_grop_num" 
+  //           data-id="${table.groupId}" 
+  //           style="background : ${table.groupColor}"
+  //         >
+  //         ${table.groupId}</div>
+  //       `
+
+  //     }
+  //     html +=` 
+  //       <div class="transparent_group_box" onclick="clickTransparentGroupTable(event)">
+  //         <i class="ph-fill ph-check-fat"></i>
+  //       </div>
+  //       <div class="transparent_move_box" onclick="clickTransparentMoveTable(event)">
+  //         <i class="ph-fill ph-check-fat"></i>
+  //       </div>
+  //       <div class="title">
+  //         <h2>${table.table} <i class="ph-fill ph-bell-ringing"></i></h2>
+  //         <div class="table_state">${
+  //           table.statusId == 0 ? '조리 중' : table.statusId == 1 ? '완료' : table.statusId == 2 ? '조리대기' : ''
+  //         }</div>
+  //       </div>
+  //       <div class="body">
+  //         <i class="ph-bold ph-plus"></i>
+  //         <ul>
+  //         `
+  //         if(table.orderList.length != 0){
+  //           const orderList = table.orderList;
+  //           orderList.forEach((order, orderIndex)=>{
+  //             if(orderIndex <= 2){
+  //               html +=`
+  //               <li data-id="${order.menuId}">
+  //                 <span>${order.menu}</span>
+  //                 <span>${order.count}</span>
+  //               </li>
+  //               `
+  //             } 
+  //             if(orderIndex == 2){
+  //               html += `
+  //                 <li class="order_more">
+  //                   ${orderList.length - 3 > 0 ? `<span>외 ${orderList.length - 3}</span>`  : ''}
+  //                 </li>
+  //               ` 
+  //             }
+  //           })
+  //         }
+
+  //       html +=`
+  //         </ul>
+  //       </div>
+  //     </button>`
+  // })
   return html;
 }
 
@@ -525,7 +563,7 @@ const clickTransparentMoveTable = (event) => {
     delete cachingSetTableData[0].select;
 
     for( key in targetData) {
-      if(key != 'table' && key != 'tableId'){
+      if(key != 'table' && key != 'tableId' && key != 'position'){
         targetData[key] = JSON.parse(JSON.stringify(cachingSetTableData[0][key]));   
       }
     }

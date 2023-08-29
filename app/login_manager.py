@@ -4,17 +4,20 @@ from flask_login import LoginManager, UserMixin, login_required
 from app.models import db, Store, User
 from app.models.user import get_user_by_userid
 
+from app import login_manager # Flask-login의 변수
+
 
 # 사용자 로드 함수
 @login_manager.user_loader
 def load_user(user_id):
+    print('사용자 로드 함수')
     return get_user_by_userid(user_id)
 
 
 # 로그인이 되어있지 않은 경우
 @login_manager.unauthorized_handler
 def unauthorized_callback():
-
+    print('로그인이 되어있지 않은 경우')
     return render_template('login.html')
 
 

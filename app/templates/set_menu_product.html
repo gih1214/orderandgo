@@ -20,11 +20,11 @@
   <div id="container">
     <header>
       <!-- <h1>POS - Header</h1>-->
-      <a class="back_btn" href="/pos/tableList">
+      <a class="back_btn" onclick="history.back();">
         <i class="ph-bold ph-caret-left"></i>
       </a>
       <div class="center">
-        <a href="">
+        <a onclick="location.reload();">
           <h1>
             <img src="/static/images/common/logo-order&go-white.png" alt="">
           </h1>
@@ -48,7 +48,16 @@
         <li class="right">
           <div>
             <h2>조회 구분</h2>
-            <div class="dropdown-box seletebox_menu"></div>
+            <div class="dropdown-box seletebox_menu">
+              <button class="input_box btn-dropdown" data-id="1" data-name="전체" onclick="clickDropDownBtn(event)">
+                <span>전체</span>
+                <i class="ph ph-caret-down"></i>
+              </button>
+              <ul class="dropdown-list">
+                <li onclick="clickCategory(event)" data-id="1" data-name="전체">전체</li>
+                <li onclick="clickCategory(event)" data-id="2" data-name="메뉴명">메뉴명</li>
+              </ul>
+            </div>
             <input class="search_box input_box">
           </div>
           <button class="submit_btn">조회</button>
@@ -260,23 +269,47 @@
           </div>
         </div>
         <div class="middle scrollbar_hidden">
-          <label for="">
-            <span>메뉴명</span>
-            <input type="text">
-          </label>
-          <label for="">
-            <span>판매가</span>
-            <input type="text">
-          </label>
-          <label for="">
-            <span>메뉴 설명</span>
-            <textarea></textarea>
-          </label>
-          <label for="">
-            <span>카테고리</span>
-            <select></select>
-            <select></select>
-          </label>
+          <div class="left">
+            <label for="">
+              <span>메뉴명</span>
+              <input type="text">
+            </label>
+            <label for="">
+              <span>판매가</span>
+              <input type="text">
+            </label>
+            <label for="">
+              <span>메뉴 설명</span>
+              <textarea></textarea>
+            </label>
+          </div>
+          <div class="right">
+            <label for="">
+              <span>카테고리</span>
+              <div class="category_box">
+                <div class="dropdown-box seletebox_menu">
+                  <button class="input_box btn-dropdown" data-id="1" data-name="전체" onclick="clickDropDownBtn(event)">
+                    <span>메인카테고리</span>
+                    <i class="ph ph-caret-down"></i>
+                  </button>
+                  <ul class="dropdown-list">
+                    <li onclick="clickCategory(event)" data-id="1" data-name="전체">전체</li>
+                    <li onclick="clickCategory(event)" data-id="2" data-name="메뉴명">메뉴명</li>
+                  </ul>
+                </div>
+                <div class="dropdown-box seletebox_menu">
+                  <button class="input_box btn-dropdown" data-id="1" data-name="전체" onclick="clickDropDownBtn(event)">
+                    <span>서브카테고리</span>
+                    <i class="ph ph-caret-down"></i>
+                  </button>
+                  <ul class="dropdown-list">
+                    <li onclick="clickCategory(event)" data-id="1" data-name="전체">전체</li>
+                    <li onclick="clickCategory(event)" data-id="2" data-name="메뉴명">메뉴명</li>
+                  </ul>
+                </div>  
+              </div>
+            </label>
+          </div>
         </div>
         <div class="bottom">
           <button class="delete">삭제</button>

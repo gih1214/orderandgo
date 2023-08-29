@@ -96,6 +96,7 @@ def get_table_page():
                 return {
                     "tableId": table.id, 
                     "table": table.name,
+                    "position": table.position,
                     "statusId": statusId,
                     "status": "",
                     "groupId" : table.is_group,
@@ -107,6 +108,7 @@ def get_table_page():
                 return {
                     "tableId": table.id, 
                     "table": table.name,
+                    "position": table.position,
                     "statusId": 0,
                     "status": "",
                     "groupId" : table.is_group,

@@ -111,7 +111,6 @@ const changeMenuCategory = (event, index) => {
 
 // 메뉴 html 변경
 const changeMenuHtml = (menus) => {
-  console.log(menus)
   let html = '';
   menus.forEach((menu, index)=>{
     html += `
@@ -119,7 +118,7 @@ const changeMenuHtml = (menus) => {
         <div class="title">
           <h2 class="ellipsis">${menu.menu}</h2>
         </div>
-        <span class="price">${menu.price}원</span>
+        <span class="price">${menu.price.toLocaleString()}원</span>
       </button>
     `
   })
@@ -180,8 +179,20 @@ const clickMenu = (event) => {
   currentMenu.masterName = setMasterName(currentMenu);
 
   menuAllData.push(currentMenu);
-  console.log('menuAllData,',menuAllData)
+  
   changeBasketHtml(setBasketData(menuAllData))
+
+  const targetType = 'menu';
+  const optionIndex = undefined;
+
+  const basketItems = document.querySelectorAll('.basket li');
+  const menuIndex = Array
+    .from(basketItems)
+    .findIndex(el=> el.querySelector('div').dataset.master == currentMenu.masterName);
+
+  maintainActive(targetType, menuIndex, optionIndex);
+
+
   // 메뉴 옵션 HTML 토글
   if(menu.optionList.length != 0){
     showMenuOptionHtml(menu.optionList)
@@ -190,37 +201,6 @@ const clickMenu = (event) => {
   }else {
     _optionHtml.classList.remove('active');
   }
-
-  // basket.forEach((data)=>{
-  //   if(data.id == menu.menuId){
-  //     data.count += 1;
-  //     data.price += data.price;
-  //     hasMenu = true;
-  //   }
-  // })
-
-  // if(!hasMenu){
-  //   let newMenu = {
-  //     id: menu.menuId,
-  //     name: menu.menu,
-  //     price: menu.price,
-  //     options: [],
-  //     count: 1
-  //   }
-  //   basket.push(newMenu)
-  // }
-  
-  // if(menu.optionList.length != 0){
-  //   showMenuOptionHtml(menu.optionList)
-  //   _optionHtml.classList.add('active');
-  //   setMenuDisabled(__menu, event.currentTarget)
-  // }else {
-  //   _optionHtml.classList.remove('active');
-
-  // }
-  // changeBasketHtml(basket)
-  // const menuIndex = basket.findIndex(menu => menu.id == menuId);
-  // maintainActive(menuIndex, undefined);
 }
 
 
@@ -250,7 +230,7 @@ const showMenuOptionHtml = (optionDatas,) => {
       <div class="title">
         <h2>${optionData.option}</h2>
       </div>
-      <span class="price">${optionData.price}원</span>
+      <span class="price">${optionData.price.toLocaleString()}원</span>
     </button>
     `
   })
@@ -292,7 +272,6 @@ const clickMenuOption = (event) => {
   const menuId = document.querySelector('main section article .item.active').dataset.id;
   const optionId = event.currentTarget.dataset.id;
   const option = getMenuOptionData(menuData, categoryId, page, menuId, optionId);
-  let optionIndex = undefined;
   const newOption = {
     id: option.optionId,
     name: option.option,
@@ -303,7 +282,6 @@ const clickMenuOption = (event) => {
   currentMenu = menuAllData[menuAllData.length-1]
   currentMenu.options.forEach((option)=>{
     if(option.id == newOption.id){
-      console.log('이미 있는 옵션입니다.')
       option.count = option.count + 1; 
       isHas = true;
     }
@@ -312,74 +290,48 @@ const clickMenuOption = (event) => {
     currentMenu.options.push(newOption)
   }
   currentMenu.masterName = setMasterName(currentMenu);
-  console.log('menuAllData,',menuAllData)
   changeBasketHtml(setBasketData(menuAllData))
-  // basket.forEach((data)=>{
-  //   if(data.id == menuId){
-  //     let hasMenu = false;
-  //     data.options.forEach((optionData, index)=>{
-  //       if(optionData.id == option.optionId){
-  //         optionData.count += 1;
-  //         optionData.price += optionData.price;
-  //         hasMenu = true;
-  //         optionIndex = index;
-  //       } 
-  //     })
-  //     const isOptionIndex = currentMenu.options.indexOf(option.optionId);
-  //     if (isOptionIndex !== -1) {
-  //       console.log('이미 안에 있음');
-  //       currentMenu.options.splice(isOptionIndex, 1);
-  //     }else {
-  //       currentMenu.options.push(option.optionId);
-  //       currentMenu.options.sort(function(a, b) { return a - b });
-        
-  //     }
-  //     console.log('currentMenu, ',currentMenu)
-  //     console.log('basket,',basket)
-      
-  //     if(!hasMenu) {
-  //       const newOption = {
-  //         id: option.optionId,
-  //         name: option.option,
-  //         price: option.price,
-  //         count: 1
-  //       };
-  //       data.options.push(newOption)
-  //       optionIndex = (data.options.length -1)
-  //     }
-  //   }
-  // })
-  // changeBasketHtml(basket)
-  // const menuIndex = basket.findIndex(menu => menu.id == menuId);
-  // maintainActive(menuIndex, optionIndex);
+
+  const targetType = 'menu_option';
+  const basketItems = document.querySelectorAll('.basket li');
+  const menuIndex = Array
+    .from(basketItems)
+    .findIndex(el=> el.querySelector('div').dataset.master == currentMenu.masterName);
+  const optionData = [...basketItems][menuIndex].querySelectorAll('[data-type="menu_option"]')
+  const optionIndex = [...optionData].findIndex(el=> el.dataset.id == option.optionId)
+
+  maintainActive(targetType, menuIndex, optionIndex);
+
 }
 
 
 
 // 장바구니 html 변경
 const changeBasketHtml = (datas) => {
-  console.log(datas)
   const _basket = document.querySelector('main aside .basket');
   const _totalPrice = document.querySelector('main aside .total_price .price');
   html = ``;
   let totalPrice = 0;
-  datas.forEach(({data, length})=>{
-    totalPrice += data.price
+  datas.forEach(({data, length, masterName})=>{
+    totalPrice += data.price * length
     html += `
       <li>
-        <div data-id="${data.id}" data-type="menu" class="menu" onclick="clickBasketMenu(event)">
+        <div data-id="${data.id}" data-type="menu" data-count="${length}" data-master="${masterName}" class="menu" onclick="clickBasketMenu(event)">
+          <div class="count"><span>${length}</span></div>
           <h2>${data.name}</h2>
-          <span>${data.count * length}</span>
-          <span class="price">${data.price}원</span>
+          <span class="price">${(data.price * length).toLocaleString()}원</span>
         </div>
         `
         data?.options?.forEach((option)=>{
-          totalPrice += option.price
+          totalPrice += option.price * option.count * length
           html +=`
           <div data-id="${option.id}" data-type="menu_option" class="menu_option" onclick="clickBasketMenu(event)">
-            <h2>${option.name}</h2>
-            <span>${option.count}</span>
-            <span class="price">${option.price}원</span>
+            <div class="option_name_count">
+              <h2>${option.name}</h2>
+              <span>x</span>
+              <span>${option.count}</span>
+            </div>
+            <span class="price">${(option.price * option.count * length).toLocaleString()}원</span>
           </div>
           `
 
@@ -390,7 +342,7 @@ const changeBasketHtml = (datas) => {
     `
   })
   _basket.innerHTML = html
-  _totalPrice.innerHTML = totalPrice;
+  _totalPrice.innerHTML = `${totalPrice.toLocaleString()} 원`;
 }
 
 // 장바구니 아이템 클릭 시
@@ -405,175 +357,149 @@ const clickBasketMenu = (event) => {
 
 // 장바구니 - 클릭 시
 const minusBasketMenu = () => {
-  if(basket.length == 0) return;
-  const target = document.querySelector('.basket .active');
+  if(menuAllData.length == 0) return;
+  const basketItems = document.querySelectorAll('.basket li');
+  let menuIndex;
+  menuIndex = Array
+    .from(basketItems)
+    .findIndex(el => el.querySelector('div').classList.contains('active'))
+  if(menuIndex == -1) {
+    menuIndex = Array
+      .from(basketItems)
+      .findIndex((el)=>el.querySelector('div.active[data-type="menu_option"]') != undefined)
+  }
+
+  const target = document.querySelector('.basket li div.active');
   const targetType = target.dataset.type;
   const pargetEl = target.closest('li').querySelector('[data-type="menu"]')
-  const menuId = targetType == "menu" ? target.dataset.id : pargetEl.dataset.id;
-  const optionId = targetType == "menu_option" ? target.dataset.id : "";
+  const masterName = targetType == "menu" ? target.dataset.master : pargetEl.dataset.master;
+
   let optionIndex = undefined;
 
-  const menuIndex = basket.findIndex(menu => menu.id == menuId);
-  if (menuIndex != -1) {
-    const menu = basket[menuIndex];
-    
-    if (optionId) {
-      optionIndex = menu.options.findIndex(option => option.id == optionId);
-      
-      if (optionIndex != -1) {
-        const option = menu.options[optionIndex];
-        
-        if (option.count > 0) {
-          option.price = option.price - (option.price/option.count)
-          option.count--;
-          
-          if (option.count == 0) {
-            menu.options.splice(optionIndex, 1); // 옵션 제거
-          }
-        }
-      }
-    } else {
-      if (menu.count > 0) {
-        menu.price = menu.price - (menu.price/menu.count)
-        menu.count--;
-        if (menu.count == 0) {
-          basket.splice(menuIndex, 1); // 메뉴 제거
-        }
-      }
+  if(targetType == 'menu'){
+    const dataIndex = menuAllData.findIndex(data=>data.masterName == masterName)
+    menuAllData.splice(dataIndex, 1);
+  }
+  if(targetType == 'menu_option'){
+    const filterData = menuAllData
+      .filter(data=>data.masterName == masterName);
+    optionIndex = filterData[0].options
+      .findIndex(option => Number(option.id) == Number(target.dataset.id));
+    if(filterData[0].options[optionIndex].count > 1) {
+      filterData.forEach(({options}) => options[optionIndex].count -= 1 );
+    }else{
+      filterData.forEach((data)=>data.options.splice(optionIndex, 1))
     }
   }
-  changeBasketHtml(basket)
-  if (basket.length !== 0) {
-    maintainActive(menuIndex, optionIndex);
-  }
+  menuAllData.forEach(data =>data.masterName = setMasterName(data))
+  changeBasketHtml(setBasketData(menuAllData))
+  maintainActive(targetType, menuIndex, optionIndex);
+
 }
 
 // 장바구니 + 클릭 시
 const plusBasketMenu = () => {
-  if(basket.length == 0) return;
-  const target = document.querySelector('.basket .active');
-  const targetType = target.dataset.type;
-  const pargetEl = target.closest('li').querySelector('[data-type="menu"]')
-  const menuId = targetType == "menu" ? target.dataset.id : pargetEl.dataset.id;
-  const optionId = targetType == "menu_option" ? target.dataset.id : "";
-
-  const menuIndex = basket.findIndex(menu => menu.id == menuId);
-  let optionIndex = undefined;
-  if (menuIndex != -1) {
-    const menu = basket[menuIndex];
-    
-    if (optionId) {
-      optionIndex = menu.options.findIndex(option => option.id == optionId);
-      
-      if (optionIndex != -1) {
-        const option = menu.options[optionIndex];
-        
-        if (option.count > 0) {
-          option.price = option.price + (option.price/option.count)
-          option.count++;
-        }
-      }
-    } else {
-      if (menu.count > 0) {
-        menu.price = menu.price + (menu.price/menu.count)
-        menu.count++;
-      }
-    }
+  if(menuAllData.length == 0) return;
+  const basketItems = document.querySelectorAll('.basket li');
+  let menuIndex;
+  menuIndex = Array
+    .from(basketItems)
+    .findIndex(el => el.querySelector('div').classList.contains('active'))
+  if(menuIndex == -1) {
+    menuIndex = Array
+      .from(basketItems)
+      .findIndex((el)=>el.querySelector('div.active[data-type="menu_option"]') != undefined)
   }
-  changeBasketHtml(basket)
-  maintainActive(menuIndex, optionIndex);
+
+  const target = document.querySelector('.basket li div.active');
+  const targetType = target.dataset.type;
+  const pargetEl = target.closest('li').querySelector('div[data-type="menu"]')
+  const masterName = targetType == "menu" ? target.dataset.master : pargetEl.dataset.master;
+  let optionIndex = undefined;
+  if(targetType == 'menu'){
+    const data = menuAllData.find(data=>data.masterName == masterName);
+    menuAllData.push(deepCopy(data));
+  }
+  if(targetType == 'menu_option'){
+    const filterData = menuAllData
+      .filter(data =>data.masterName == masterName);
+    optionIndex = filterData[0].options
+      .findIndex(option => Number(option.id) == Number(target.dataset.id));
+    filterData.forEach(({options}) => options[optionIndex].count+=1 );
+
+  }
+  
+  menuAllData.forEach(data =>data.masterName = setMasterName(data))
+  changeBasketHtml(setBasketData(menuAllData))
+  
+  maintainActive(targetType, menuIndex, optionIndex);
 }
 
 // 장바구니 클릭 상태 유지
-const maintainActive = (menuIndex, optionIndex) => {
+const maintainActive = (targetType, menuIndex, optionIndex) => {
   const basketItems = document.querySelectorAll('.basket li');
   const basketLength = basketItems.length;
   
   if (basketLength === 0) return;
-  
-  let menuElement = basketItems[Math.min(menuIndex, basketLength - 1)];
-  const menuOptions = menuElement.querySelectorAll('[data-type="menu_option"]');
-  const menuOptionLength = menuOptions.length;
-  
-  let targetElement = optionIndex !== undefined && optionIndex !== -1
-    ? menuOptions[Math.min(optionIndex, menuOptionLength - 1)]
-    : menuElement.querySelector('[data-type="menu"]');
-  
-  if (optionIndex === undefined || !menuOptions[optionIndex]) {
-    targetElement = menuOptionLength === 0
-      ? menuElement.querySelector('[data-type="menu"]')
-      : menuOptions[Math.max(menuOptionLength - 1, 0)];
+  let targetEl;
+  if(targetType == 'menu'){
+    targetEl = basketItems[menuIndex]?.querySelector('[data-type="menu"]');
+    if(targetEl == undefined){
+      while(menuIndex >= 0){
+        if(basketItems[menuIndex]?.querySelector('[data-type="menu"]') != undefined) {
+          targetEl = basketItems[menuIndex].querySelector('[data-type="menu"]');
+          break
+        }
+        menuIndex -= 1;
+      }
+    }
+  }else {
+    targetEl = basketItems[menuIndex].querySelectorAll('[data-type="menu_option"]')[optionIndex]
+    if(targetEl == undefined) {
+      while(optionIndex >= 0){
+        if(basketItems[menuIndex].querySelectorAll('[data-type="menu_option"]')[optionIndex] != undefined) {
+          targetEl = basketItems[menuIndex].querySelectorAll('[data-type="menu_option"]')[optionIndex]
+          break
+        }
+        optionIndex -= 1;
+      }
+      if(optionIndex == -1){
+        targetEl = basketItems[menuIndex].querySelector('[data-type="menu"]');
+      }
+    }
   }
-  
-      
-  
-  targetElement.classList.add('active');
+  targetEl.classList.add('active');
 }
 
 // 장바구니 삭제 클릭 시
 const deleteBasketMenu = () => {
-  if(basket.length == 0) return;
+  if(menuAllData.length == 0) return;
   const target = document.querySelector('.basket .active');
   const targetType = target.dataset.type;
   const pargetEl = target.closest('li').querySelector('[data-type="menu"]')
-  const menuId = targetType == "menu" ? target.dataset.id : pargetEl.dataset.id;
-  const optionId = targetType == "menu_option" ? target.dataset.id : "";
+  const masterName = targetType == "menu" ? target.dataset.master : pargetEl.dataset.master;
 
-  const menuIndex = basket.findIndex(menu => menu.id == menuId);
-  if (menuIndex != -1) {
-    const menu = basket[menuIndex];
-    if (optionId) {
-      const optionIndex = menu.options.findIndex(option => option.id == optionId);     
-      if (optionIndex != -1) {
-        const option = menu.options[optionIndex];
-        menu.options.splice(optionIndex, 1); // 옵션 제거
-      }
-    } else {
-      if (menu.count > 0) {
-        basket.splice(menuIndex, 1); // 메뉴 제거
-      }
-    }
+  if(targetType == 'menu'){
+    menuAllData = deepCopy(menuAllData.filter(data => data.masterName != masterName))
   }
-  changeBasketHtml(basket)
-  let optionIndex = undefined;
+  if(targetType == 'menu_option'){
+    const filterData = menuAllData
+      .filter(data => data.masterName == masterName);
+    const optionIndex = filterData[0].options
+      .findIndex(option => Number(option.id) == Number(target.dataset.id));
 
-  maintainActive(menuIndex, optionIndex);
+    filterData.forEach((data)=>data.options.splice(optionIndex, 1))
+  }
+  menuAllData.forEach(data =>data.masterName = setMasterName(data))
+  changeBasketHtml(setBasketData(menuAllData))
 
 }
 
-// // 주문하기 용 데이터 만들기
-// function transformData(inputData) {
-//   const transformedData = [];
-
-//   inputData.forEach(item => {
-//     const { id, options } = item;
-//     const optionIds = options.map(option => option.id);
-//     const optionCount = options.map(option => option.count);
-
-//     const newOptions = [];
-//     optionIds.forEach((optionId, index) => {
-//       for (let i = 0; i < optionCount[index]; i++) {
-//         newOptions.push(optionId);
-//       }
-//     });
-
-//     transformedData.push({
-//       menu_id: id,
-//       option_list: newOptions
-//     });
-//   });
-
-//   return transformedData;
-// }
-
 const clickOrder = (event) => {
-  console.log('menuAllData,',menuAllData)
   const data = {
     table_id : lastPath,
-    // order_list : transformData(deepCopy(menuAllData))
     order_list : deepCopy(menuAllData)
   }
-  console.log('data,', data)
   fetch(`/order`, {
     method: 'POST',
     headers: {

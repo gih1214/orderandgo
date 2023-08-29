@@ -356,17 +356,40 @@ section ul li .submit_btn {
   overflow: scroll;
   transition: all .4s;
 }
+.set_menu_product main aside .middle > div {
+  display: flex;
+  flex-flow: column;
+  gap: 15px;
+}
 .set_menu_product main aside .middle label {
   display: flex;
   flex-flow: column;
   gap: 10px;
   transition: all .4s;
 }
+.set_menu_product main aside .middle label .category_box{
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
+}
+.set_menu_product main aside .middle label .category_box .dropdown-box{
+  flex: 1;
+  position: relative;
+}
+.set_menu_product main aside .middle label .category_box .dropdown-box .btn-dropdown{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: start;
+  gap: 10px;
+  width: 100%;
+}
 .set_menu_product main aside .middle label span{
   width: 100px;
   font-size: 16px;
   font-weight: 700;
 }
+
 .set_menu_product main aside .middle label input,
 .set_menu_product main aside .middle label textarea,
 .set_menu_product main aside .middle label select {
@@ -451,15 +474,28 @@ section ul li .submit_btn {
   height: 200px;
   padding: 0;
 }
+.set_menu_product main.open_aside aside .middle {
+  flex-flow: initial;
+  gap: 20px;
+}
+.set_menu_product main.open_aside aside .middle > div {
+  display: flex;
+  flex-flow: column;
+  gap: 15px;
+  flex: 1;
+}
 .set_menu_product main.open_aside aside .middle label{
-  flex-flow: row;
-  align-items: center;
-  justify-content: space-between;
 }
 .set_menu_product main.open_aside aside .middle label input,
 .set_menu_product main.open_aside aside .middle label textarea,
 .set_menu_product main.open_aside aside .middle label select{
   flex: 1;
+}
+.set_menu_product main.open_aside aside .middle label .category_box {
+  flex-flow: initial;
+}
+.set_menu_product main.open_aside aside .middle label .category_box .dropdown-box .btn-dropdown {
+  gap: initial;
 }
 /* 매장 메뉴 관리 페이지 */
 /*************************/
