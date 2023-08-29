@@ -3,6 +3,7 @@ from app.models import db, User
 import bcrypt
 
 from datetime import datetime
+from flask_login import login_user, logout_user
 
 # 회원가입
 def create_user(user_id, password, name, birthday, tel, email, address):
@@ -56,9 +57,10 @@ def delete_user_by_id(id):
 def get_user_login(user_id, password):
     user = User.query.filter_by(user_id=user_id).first()
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+        login_user()        # current_user로 조회 가능
         return user
     return False
 
 # 로그아웃
 def logout():
-    session.clear()
+    logout_user()
