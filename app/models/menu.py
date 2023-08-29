@@ -34,8 +34,8 @@ def select_menu_option(option_id):
 # 메뉴 옵션 조회
 def select_menu_option_all(menu_id):
     item = MenuOption.query.filter(MenuOption.menu_id == menu_id).all()
-    if not item:
-        return '메뉴 옵션이 없습니다.'
+    # if not item:
+    #     return '메뉴 옵션이 없습니다.'
     return item
 
 # 메뉴 카테고리 조회 (SELECT ALL)

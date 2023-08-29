@@ -103,7 +103,9 @@ def get_main_category():
     # JSON 데이터를 프론트에 반환
     return jsonify(json_data)
     '''
-    store_id = request.args.get('store_id')
+
+    # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
+    store_id = 1
     items = select_main_category(store_id)
 
     main_category_list = []
@@ -128,6 +130,14 @@ def get_sub_category():
     '''
 
     main_category_id = request.args.get('main_category_id')
+
+    # 메인카테고리 아무것도 선택 안했을 때 기본값 설정
+    if main_category_id is None:
+        # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
+        store_id = 1
+        main_categorys = select_main_category(store_id)
+        main_category_id = main_categorys[0].id
+
     items = select_sub_category(main_category_id)
     
     sub_category_list = []
@@ -151,8 +161,11 @@ def all_menu_list():
     return jsonify(json_data)
     '''
 
-    store_id = request.args.get('store_id')
+    # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
+    store_id = 1
+
     menu_items = find_all_menu(store_id)
+    print("@$#", menu_items)
 
     all_menu_list = []
     for i in menu_items:
@@ -174,3 +187,6 @@ def all_menu_list():
             'price': i.price,
             'option': option_list
         })
+
+    print("@@@", all_menu_list)
+    return all_menu_list
