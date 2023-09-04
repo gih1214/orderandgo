@@ -24,21 +24,30 @@
       </a>
     </h1>
     <form action="/login" method="POST">
-      <input type="text" id="username" name="username" placeholder="아이디를 입력해주세요">
+      <label for="">핸드폰번호</label>
+      <div class="tel_box">
+        <input type='tel' data-index="0" name='phone1' maxlength="3" oninput="changeInputTel(event)" />
+        <span>-</span>
+        <input type='tel' data-index="1" name='phone2' maxlength="4" oninput="changeInputTel(event)"/>
+        <span>-</span>
+        <input type='tel' data-index="2" name='phone3' maxlength="4" oninput="changeInputTel(event)"/>
+      </div>
+      <label for="">비밀번호</label>
       <input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요" required>
-      <div class="input_save_id">
+      <!-- <div class="input_save_id">
         <input type="checkbox" hidden id="save_id">
         <label for="save_id">
           <i class="ph ph-check-circle"></i>
           <span>아이디 저장</span>
         </label>
-      </div>
+      </div> -->
       <input type="submit" value="로그인">
       <div class="buttons">
-        <a>회원가입</a>
-        <a>아이디/비밀번호 찾기</a>
+        <a href="/register">회원가입</a>
+        <a href="/find_password">비밀번호 찾기</a>
       </div>
     </form>
   </main>
+  <script src="static/js/login.js"></script>
 </body>
 </html>

@@ -83,6 +83,10 @@ def index():
 def login():
     return render_template('store_login.html')
 
+@store_bp.route('/create')
+def create():
+    return render_template('store_create.html')
+
   
 @store_bp.route('/product')
 def product():

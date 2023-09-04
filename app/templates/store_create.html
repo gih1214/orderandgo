@@ -19,26 +19,28 @@
 <body>
   <main>
     <h1>
-      <a href="">
+      <a href="/store/login">
         <img src="/static/images/common/logo-order&go-color.png" alt="">
       </a>
     </h1>
     <form>
-      <label for="store_num">아이디</label>
-      <input type="text" value="testtest" placeholder="testtest" required>
-      <label for="password">비밀번호</label>
-      <input type="password" value="test!@34" id="password" name="password" placeholder="test!@34" required>
-      <div class="input_save_id">
-        <input type="checkbox" hidden id="save_id">
-        <label for="save_id">
-          <i class="ph ph-check-circle"></i>
-          <span>아이디 저장</span>
-        </label>
+      <label for="store_num">매장명</label>
+      <input type="text" required>
+      <label for="">비밀번호</label>
+      <div class="password_box">
+        <input type="password" placeholder="비밀번호를 입력해주세요" id="password" name="password" required>
+        <button class="not_btn_box" onclick="clickToggleShowPassword(event)">
+          <i class="ph ph-eye"></i>
+          <i class="ph ph-eye-slash"></i>
+        </button>
       </div>
-      <input type="submit" value="로그인">
-      <div class="buttons">
-        <a href="/store/create">매장 생성</a>
-      </div>
+      <label for="input_logo_img">
+        <h3>로고 이미지 등록</h3>
+        <img src="" alt="">
+        <div class="dotted_line"></div>
+      </label>
+      <input id="input_logo_img" type="file" hidden>
+      <input type="submit" value="생성">
     </form>
   </main>
 </body>
