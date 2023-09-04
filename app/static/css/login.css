@@ -144,3 +144,37 @@ label[for="input_logo_img"] .dotted_line {
   border: 1px dashed #ccc;
   border-radius: 10px;
 }
+.login label[for="store_id"] {
+  display: none;
+}
+.login #store_id{
+  display: none;
+}
+.login .store label[for="store_id"] {
+  display: block;
+}
+.login .store #store_id{
+  display: block;
+}
+.login .tel_box {
+  display: none;
+}
+.login label[for="admin_tel"] {
+  display: none;
+}
+.login .admin .tel_box{
+  display: flex;
+}
+.login .admin label[for="admin_tel"]{
+  display: block;
+}
+.login .store .store_btn {
+  background: var(--backgound-color-1fa);
+  border-color: var(--backgound-color-1fa);
+  color: #fff;
+}
+.login .admin .admin_btn {
+  background: var(--backgound-color-1fa);
+  border-color: var(--backgound-color-1fa);
+  color: #fff;
+}

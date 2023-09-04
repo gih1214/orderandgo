@@ -24,4 +24,18 @@ const clickToggleShowPassword = (event) => {
   _passwordBox.classList.toggle('active')
 }
 
+// 매장 로그인 클릭 시
+const clickAsStoreLogin = (event) => {
+  event.preventDefault();
+  const _formEl = document.querySelector('form');
+  _formEl.classList.remove('admin');
+  _formEl.classList.add('store');
+}
 
+// 관리자 로그인 클릭 시
+const clickAsAdminLogin = (event) => {
+  event.preventDefault();
+  const _formEl = document.querySelector('form');
+  _formEl.classList.remove('store');
+  _formEl.classList.add('admin');
+}

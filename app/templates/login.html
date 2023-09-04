@@ -23,17 +23,23 @@
         <img src="/static/images/common/logo-order&go-color.png" alt="">
       </a>
     </h1>
-    <form action="/login" method="POST">
-      <label for="">핸드폰번호</label>
-      <div class="tel_box">
-        <input type='tel' data-index="0" name='phone1' maxlength="3" oninput="changeInputTel(event)" />
-        <span>-</span>
-        <input type='tel' data-index="1" name='phone2' maxlength="4" oninput="changeInputTel(event)"/>
-        <span>-</span>
-        <input type='tel' data-index="2" name='phone3' maxlength="4" oninput="changeInputTel(event)"/>
+    <form class="store">
+      <div class="buttons">
+        <button class="store_btn" onclick="clickAsStoreLogin(event)">매장 로그인</button>
+        <button class="admin_btn" onclick="clickAsAdminLogin(event)">관리자 로그인</button>
       </div>
+      <label for="admin_tel" for="">핸드폰번호</label>
+      <div class="tel_box">
+        <input type='tel' data-index="0" name='phone1' maxlength="3" oninput="changeInputTel(event)" value="010"/>
+        <span>-</span>
+        <input type='tel' data-index="1" name='phone2' maxlength="4" oninput="changeInputTel(event)" value="2085"/>
+        <span>-</span>
+        <input type='tel' data-index="2" name='phone3' maxlength="4" oninput="changeInputTel(event)" value="2374"/>
+      </div>
+      <label for="store_id">매장 아이디</label>
+      <input id="store_id" type="text" value="testtest">
       <label for="">비밀번호</label>
-      <input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요" required>
+      <input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요" value="test!@34" required>
       <!-- <div class="input_save_id">
         <input type="checkbox" hidden id="save_id">
         <label for="save_id">
