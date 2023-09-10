@@ -46,6 +46,7 @@ main section article {
   overflow: hidden;
   transition: .25s;
 }
+
 main section article.disabled {
   background: #00000080;
 }
@@ -584,3 +585,52 @@ main section > aside .custom_btns button{
 
 /* ##### order ##### */
 /* ################# */
+
+/* ################### */
+/* ##### payment ##### */
+.payment #container.order main > aside{
+  gap: 10px;
+}
+.payment .basket_container .basket{
+  max-height: calc(100vh - 40px - 10px - 160px);
+  padding: 10px 0;
+}
+.payment main section article{
+  height: calc(100vh - (40px));
+  background: #F5F5F5;
+}
+.payment .basket_container .order_btns {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  gap: 20px;
+  height: 160px;
+  padding: 20px 0;
+  background: #F3FAFA;
+}
+.payment .basket_container .order_btns .top {
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 400;
+}
+.payment .basket_container .order_btns .top div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+.payment .basket_container .order_btns .bottom div{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  color: #000;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+
+/* ##### payment ##### */
+/* ################### */

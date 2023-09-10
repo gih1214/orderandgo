@@ -256,3 +256,10 @@ def set_table_list():
     response.status_code = 200
     print('Received JSON data:', set_table)
     return response
+
+
+# 테이블 -> 메뉴리스트 페이지
+@pos_bp.route('/payment/<table_id>', methods=['GET'])
+def payment(table_id): 
+    # JSON 데이터를 프론트에 반환
+    return render_template('/pos/payment.html')

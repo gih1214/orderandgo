@@ -495,6 +495,7 @@ const deleteBasketMenu = () => {
 
 }
 
+// 주문하기 클릭 시
 const clickOrder = (event) => {
   const data = {
     table_id : lastPath,
@@ -516,5 +517,8 @@ const clickOrder = (event) => {
   .catch(error => {
     console.error('Error:', error);
   });
-  
+}
+// 결제하기 클릭 시
+const clickPayment = (event) => {
+  window.location.href = `/pos/payment/${lastPath}`
 }

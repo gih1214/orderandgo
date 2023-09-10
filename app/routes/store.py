@@ -116,7 +116,8 @@ def get_main_category():
     for i in items:
         main_category_list.append({
             'id': i.id,
-            "name": i.name
+            "name": i.name,
+            "checked": False,
         })
 
     return main_category_list
@@ -148,7 +149,8 @@ def get_sub_category():
     for i in items:
         sub_category_list.append({
             'id': i.id,
-            "name": i.name
+            "name": i.name,
+            "checked" : False,
         })
 
     return sub_category_list

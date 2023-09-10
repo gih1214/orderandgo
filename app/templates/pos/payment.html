@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OrderAndGo</title>
+
+  <!-- 시작 초기 css 설정 -->
+  <link rel="stylesheet" href="/static/css/responsive.css">
+  <link rel="stylesheet" href="/static/css/reset.css">
+  <link rel="stylesheet" href="/static/css/common.css">
+  <link rel="stylesheet" href="/static/css/animation.css">
+  <!-- 아이콘 -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <!-- 전용 css -->
+  <link rel="stylesheet" href="/static/css/pos.css">
+</head>
+<body class="payment">
+  <div id="container" class="order">
+    <header>
+      <!-- <h1>POS - Header</h1>-->
+      <a class="back_btn" onclick="history.back();">
+        <i class="ph-bold ph-caret-left"></i>
+      </a>
+      <div class="center">
+        <a onclick="location.reload();">
+          <h1>
+            <img src="/static/images/common/logo-order&go-white.png" alt="">
+          </h1>
+        </a>
+        <div class="header_info">
+          <span>2023-05-01(월) 14:00</span>
+          <span class="store_state" data-state="open">영업중</span>
+        </div>
+      </div>
+    </header>
+    <main>
+      <!-- 메뉴판 페이지에서 장바구니 영역 -->
+      <aside class="basket_container">
+        <!-- <h1>POS - aside</h1> -->
+        <ul class="basket middle"></ul>
+        <div class="order_btns bottom">
+          <div class="top">
+            <div>
+              <span>공급가액</span>
+              <span>원</span>
+            </div>
+            <div>
+              <span>부가세</span>
+              <span>원</span>
+            </div>
+            <div>
+              <span>면세물품가액</span>
+              <span>원</span>
+            </div>
+          </div>
+
+          <div class="bottom">
+            <div>
+              <span>총액</span>
+              <span>원</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+      <section>
+        <!-- <h1>POS - section</h1> -->
+        <article>
+        </article>
+      </section>
+      
+    </main>
+  </div>
+  
+  <!-- 직원 요청 및 호출에 대한 처리 영역 -->
+  <div id="alarm"></div>
+
+  <!-- 공통 스크립트 -->
+  <script src="/static/js/common.js"></script>
+  <!-- 전용 스크립트 -->
+  <!-- <script src="/static/js/menuList.js"></script> -->
+</body>
+</html>
