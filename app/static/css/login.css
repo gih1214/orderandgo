@@ -51,26 +51,43 @@ form label {
   justify-content:space-between;
   font-size: 12px;
 }
+.tel_box {
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+}
+.tel_box > input {
+  flex: 1;
+  width: 100%;
+}
+.tel_box > span {
+  padding: 5px;
+}
 .register h1 {
   font-size: 24px;
   font-weight: 700;
 }
-.register form > div {
+form > div {
   position: relative;
   display: flex;
   gap: 10px;
 }
-.register form input:not([type="checkbox"]){
-  flex: 1;
+form > div.tel_box {
+  gap: 0;
 }
-.register form button:not(.not_btn_box) {
+
+form input:not([type="checkbox"]){
+  flex: 1;
+  width: 100%;
+}
+form button:not(.not_btn_box) {
   flex: 1;
   max-width: max-content;
   padding: 10px;
   border-radius: 5px;
   border: 1px solid #999;
 }
-.register form .not_btn_box {
+form .not_btn_box {
   position: absolute;
   top: 50%;
   right: 20px;
@@ -79,10 +96,14 @@ form label {
 .password_box .ph-eye-slash{
   display: none;
 }
+.password_box.active .ph-eye-slash{
+  display: inline;
+}
 .password_box.active .ph-eye{
   display: none;
 }
-.register form .password_box input {
+
+form .password_box input {
   padding-right: 40px;
 }
 .store select{
@@ -93,4 +114,67 @@ form label {
   color: #000;
   font-size: 14px;
   font-weight: 400;
+}
+
+label[for="input_logo_img"] {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+  border: 1px solid #999;
+  border-radius: 10px;
+}
+label[for="input_logo_img"] h3 {
+  font-size: 14px;
+  color: #828482;
+}
+label[for="input_logo_img"] img {
+  display: none;
+}
+label[for="input_logo_img"].active img {
+  display: block;
+}
+label[for="input_logo_img"] .dotted_line {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border: 1px dashed #ccc;
+  border-radius: 10px;
+}
+.login label[for="store_id"] {
+  display: none;
+}
+.login #store_id{
+  display: none;
+}
+.login .store label[for="store_id"] {
+  display: block;
+}
+.login .store #store_id{
+  display: block;
+}
+.login .tel_box {
+  display: none;
+}
+.login label[for="admin_tel"] {
+  display: none;
+}
+.login .admin .tel_box{
+  display: flex;
+}
+.login .admin label[for="admin_tel"]{
+  display: block;
+}
+.login .store .store_btn {
+  background: var(--backgound-color-1fa);
+  border-color: var(--backgound-color-1fa);
+  color: #fff;
+}
+.login .admin .admin_btn {
+  background: var(--backgound-color-1fa);
+  border-color: var(--backgound-color-1fa);
+  color: #fff;
 }

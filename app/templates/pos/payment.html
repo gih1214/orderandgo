@@ -14,10 +14,10 @@
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
   <!-- 전용 css -->
-  <link rel="stylesheet" href="/static/css/store.css">
+  <link rel="stylesheet" href="/static/css/pos.css">
 </head>
-<body class="store_product">
-  <div id="container">
+<body class="payment">
+  <div id="container" class="order">
     <header>
       <!-- <h1>POS - Header</h1>-->
       <a class="back_btn" onclick="history.back();">
@@ -36,52 +36,46 @@
       </div>
     </header>
     <main>
-      <nav>
-        <ul>
-          <li class="active"><a href="">POS관리</a></li>
-          <li><a href="">테이블오더관리</a></li>
-        </ul>
-      </nav>
+      <!-- 메뉴판 페이지에서 장바구니 영역 -->
+      <aside class="basket_container">
+        <!-- <h1>POS - aside</h1> -->
+        <ul class="basket middle"></ul>
+        <div class="order_btns bottom">
+          <div class="top">
+            <div>
+              <span>공급가액</span>
+              <span>원</span>
+            </div>
+            <div>
+              <span>부가세</span>
+              <span>원</span>
+            </div>
+            <div>
+              <span>면세물품가액</span>
+              <span>원</span>
+            </div>
+          </div>
+
+          <div class="bottom">
+            <div>
+              <span>총액</span>
+              <span>원</span>
+            </div>
+          </div>
+        </div>
+      </aside>
       <section>
-        <ul>
-          <li>
-            <h2>상품</h2>
-            <a href="/store/set_menu">
-              <i class="ph ph-cube"></i>
-              <span>상품 정보 수정</span>
-            </a>
-            <a>
-              <i class="ph ph-cube-focus"></i>
-              <span>상품 배치 수정</span>
-            </a>
-          </li>
-          <li>
-            <h2>카테고리</h2>
-            <a>
-              <i class="ph ph-hard-drive"></i>
-              <span>카테고리 정보 수정</span>
-            </a>
-            <a>
-              <i class="ph ph-hard-drives"></i>
-              <span>카테고리 순서 변경</span>
-            </a>
-          </li>
-          <li>
-            <h2>구역/테이블</h2>
-            <a>
-              <i class="ph ph-squares-four"></i>
-              <span>구역 설정</span>
-            </a>
-            <a>
-              <i class="ph ph-subtract-square"></i>
-              <span>테이블 설정</span>
-            </a>
-          </li>
-        </ul>
+        <!-- <h1>POS - section</h1> -->
+        <article>
+        </article>
       </section>
+      
     </main>
   </div>
   
+  <!-- 직원 요청 및 호출에 대한 처리 영역 -->
+  <div id="alarm"></div>
+
   <!-- 공통 스크립트 -->
   <script src="/static/js/common.js"></script>
   <!-- 전용 스크립트 -->

@@ -34,8 +34,8 @@ def select_menu_option(option_id):
 # 메뉴 옵션 조회
 def select_menu_option_all(menu_id):
     item = MenuOption.query.filter(MenuOption.menu_id == menu_id).all()
-    if not item:
-        return '메뉴 옵션이 없습니다.'
+    # if not item:
+    #     return '메뉴 옵션이 없습니다.'
     return item
 
 # 메뉴 옵션 수정
@@ -110,7 +110,10 @@ def select_sub_category(main_category_id):
 
 # store id의 모든 메뉴 조회
 def find_all_menu(store_id):
-    items = session.query(Menu.id, Menu.name, Menu.price, MainCategory.name.label('main_category_name'), SubCategory.name.label('sub_category_name'))\
+    items = db.session.query(Menu.id, Menu.name, Menu.price, 
+                        MainCategory.name.label('main_category_name'), 
+                        SubCategory.name.label('sub_category_name')
+                    )\
                     .join(SubCategory, SubCategory.id == Menu.menu_category_id)\
                     .join(MainCategory, MainCategory.id == SubCategory.main_category_id)\
                     .filter(MainCategory.store_id == store_id)\

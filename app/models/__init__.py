@@ -228,16 +228,37 @@ class Payment_method(db.Model):
 
     #def __repr__(self):
     #    return f'<Payment_method {self.title}>'
+    
+class Payment_status(db.Model):
+    __tablename__ = 'payment_status'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    status = db.Column(db.String(50), nullable=False)
+
 
 
 class Payment(db.Model):
     __tablename__ = 'payment'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    payment_amount = db.Column(db.Integer, nullable=False)
-    payment_datetime = db.Column(db.DateTime, default=datetime.now)
-    store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
-    payment_method_id = db.Column(db.Integer, db.ForeignKey('payment_method.id'))
-    table_order_list_id = db.Column(db.Integer, db.ForeignKey('table_order_list.id'))
+    payment_amount = db.Column(db.Integer, nullable=False)  # 결제 금액 컬럼 (실수형)
+    payment_method_id = db.Column(db.Integer, db.ForeignKey('payment_method.id'))  # 결제 수단 컬럼
+    payment_status = db.Column(db.Integer, db.ForeignKey('payment_status.id'))  # 결제 상태 컬럼
+    payment_datetime = db.Column(db.DateTime, default=datetime.now)  # 결제 시간 컬럼
+    table_payment_list_id = db.Column(db.Integer, db.ForeignKey('table_payment_list.id'))
+
+    
+    # payment_amount = db.Column(db.Integer, nullable=False)
+    # payment_datetime = db.Column(db.DateTime, default=datetime.now)
+    # store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
+    # payment_method_id = db.Column(db.Integer, db.ForeignKey('payment_method.id'))
+    # table_order_list_id = db.Column(db.Integer, db.ForeignKey('table_order_list.id'))
 
     #def __repr__(self):
     #    return f'<Payment {self.title}>'
+
+class TablePaymentList(db.Model):
+    __tablename__ = 'table_payment_list'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
+    
+    order_details = db.Column(db.Text)  # 주문 내역 컬럼 (문자열로 저장됨)
+    payment_time = db.Column(db.DateTime)  # 결제 시간 컬럼

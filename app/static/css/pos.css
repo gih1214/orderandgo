@@ -46,6 +46,7 @@ main section article {
   overflow: hidden;
   transition: .25s;
 }
+
 main section article.disabled {
   background: #00000080;
 }
@@ -418,6 +419,8 @@ main section > aside .custom_btns button{
   flex: 1;
   max-height: calc(100vh - 90px - 184px - 16px);
   height: 100%;
+  /* margin-top: -10px; */
+  /* margin-bottom: 10px; */
   overflow: auto;
 }
 .basket_container .basket li {
@@ -425,6 +428,8 @@ main section > aside .custom_btns button{
   flex-flow: column;
   gap: 10px;
   padding: 12px 20px;
+  /* background: #F3FAFA; */
+  /* border-bottom: 1px solid #fff; */
 }
 .basket_container .basket li .menu {
   position: relative;
@@ -460,6 +465,18 @@ main section > aside .custom_btns button{
 .basket_container .basket li > .menu{
   font-weight: 500;
 }
+.basket_container .basket li > .menu .count{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  background: #1FAA9C;
+  color: #FFF;
+  font-size: 16px;
+  font-weight: 500;
+}
 .basket_container .basket li > .menu h2{
   font-weight: 700;
 }
@@ -475,11 +492,20 @@ main section > aside .custom_btns button{
 }
 .basket_container .basket li > div.menu_option{
   position: relative;
+  justify-content: space-between;
   border-color: #999;
   font-weight: 500;
   font-size: 14px;
   line-height: 17px;
   color: #999;
+}
+.basket_container .basket li > div.menu_option .option_name_count {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.basket_container .basket li > div.menu_option h2 {
+  margin-left: 23px;
 }
 .basket_container .basket li > div.menu_option h2::before{
   content: "";
@@ -559,3 +585,52 @@ main section > aside .custom_btns button{
 
 /* ##### order ##### */
 /* ################# */
+
+/* ################### */
+/* ##### payment ##### */
+.payment #container.order main > aside{
+  gap: 10px;
+}
+.payment .basket_container .basket{
+  max-height: calc(100vh - 40px - 10px - 160px);
+  padding: 10px 0;
+}
+.payment main section article{
+  height: calc(100vh - (40px));
+  background: #F5F5F5;
+}
+.payment .basket_container .order_btns {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  gap: 20px;
+  height: 160px;
+  padding: 20px 0;
+  background: #F3FAFA;
+}
+.payment .basket_container .order_btns .top {
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 400;
+}
+.payment .basket_container .order_btns .top div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+.payment .basket_container .order_btns .bottom div{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  color: #000;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+
+/* ##### payment ##### */
+/* ################### */

@@ -118,6 +118,7 @@ section ul li .dropdown-box {
   flex: 1;
 }
 section ul li .dropdown-box .dropdown-list {
+  top: 110%;
   display: flex;
   flex-flow: column;
   gap: initial;
@@ -241,6 +242,9 @@ section ul li .submit_btn {
   border-bottom: 1px solid #000;
   font-weight: 700;
 }
+.set_menu_product main article .article_bottom ul li:last-child{
+  border-bottom: none;
+}
 .set_menu_product main article .article_bottom ul li div{
   padding: 5px 5px;
 }
@@ -306,12 +310,14 @@ section ul li .submit_btn {
   transition: all .4s;
 }
 .set_menu_product main aside .top .main_img{
+  position: relative;
   width: 200px;
   height: 200px;
   border-radius: 10px;
   border: 1px dashed #CCC;
   visibility: visible;
   opacity: 1;
+  overflow: hidden;
   transition: all .4s;
 }
 
@@ -322,7 +328,32 @@ section ul li .submit_btn {
   width: 100%;
   height: 100%;
   font-size: 40px;
-  
+}
+.set_menu_product main aside .top .main_img img{
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.set_menu_product main aside .top .main_img .delete_btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: none;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  background: #fff;
+  color: red;
+}
+.set_menu_product main aside .top .main_img.active img{
+  display: block;
+}
+.set_menu_product main aside .top .main_img.active .delete_btn{
+  display: flex;  
 }
 .set_menu_product main aside .top .imgs {
   display: flex;
@@ -333,11 +364,13 @@ section ul li .submit_btn {
   overflow: hidden;
   transition: all .4s;
 }
-.set_menu_product main aside .top .imgs > div {
+.set_menu_product main aside .top .imgs > .img_box {
+  position: relative;
   border-radius: 5px;
   border: 1px dashed #CCC;
+  overflow: hidden;
 }
-.set_menu_product main aside .top .imgs > div label {
+.set_menu_product main aside .top .imgs > .img_box label {
   display: flex;
   align-items: center;
   justify-content:center;
@@ -346,7 +379,18 @@ section ul li .submit_btn {
   height: 40px;
   padding: 12px;
   transition: all .4s;
-
+}
+.set_menu_product main aside .top .imgs > .img_box img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.set_menu_product main aside .top .imgs > .img_box.active img {
+  display: block;
 }
 .set_menu_product main aside .middle {
   display: flex;
@@ -356,17 +400,65 @@ section ul li .submit_btn {
   overflow: scroll;
   transition: all .4s;
 }
+.set_menu_product main aside .middle > div {
+  display: flex;
+  flex-flow: column;
+  gap: 15px;
+}
 .set_menu_product main aside .middle label {
   display: flex;
   flex-flow: column;
   gap: 10px;
   transition: all .4s;
 }
-.set_menu_product main aside .middle label span{
+.set_menu_product main aside .middle label .flex_box{
+  display: flex;
+  /* flex-flow: column; */
+  gap: 10px;
+}
+.set_menu_product main aside .middle label .flex_box .dropdown-box{
+  flex: 1;
+  position: relative;
+}
+.set_menu_product main aside .middle label .flex_box .dropdown-box .btn-dropdown{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: start;
+  gap: 10px;
+  width: 100%;
+  border: 1px solid #ccc;
+}
+.set_menu_product main aside .middle label .flex_box .dropdown-box .dropdown-list {
+  top: 110%;
+}
+.set_menu_product main aside .middle label .flex_box .dropdown-box .dropdown-list li{
+  padding: 12px;
+}
+.set_menu_product main aside .middle label .flex_box .delete_btn{
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #F43E25;
+  color:#F43E25;;
+}
+.set_menu_product main aside .middle label .add_option_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 12px;
+}
+.set_menu_product main aside .middle label .add_option_btn span{
+  color: #000;
+  font-size: 14px;
+  font-weight: 700;
+}
+.set_menu_product main aside .middle label > span{
   width: 100px;
   font-size: 16px;
   font-weight: 700;
 }
+
 .set_menu_product main aside .middle label input,
 .set_menu_product main aside .middle label textarea,
 .set_menu_product main aside .middle label select {
@@ -377,8 +469,15 @@ section ul li .submit_btn {
   transition: all .4s;
 }
 .set_menu_product main aside .middle label input{
+  flex: 1;
+  width: 100%;
   height:40px;
   transition: all .4s;
+}
+.set_menu_product main aside .middle label .menu_options {
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
 }
 .set_menu_product main aside .bottom {
   display: flex;
@@ -451,15 +550,30 @@ section ul li .submit_btn {
   height: 200px;
   padding: 0;
 }
+.set_menu_product main.open_aside aside .middle {
+  flex-flow: initial;
+  gap: 20px;
+}
+.set_menu_product main.open_aside aside .middle > div {
+  display: flex;
+  flex-flow: column;
+  gap: 15px;
+  flex: 1;
+}
 .set_menu_product main.open_aside aside .middle label{
-  flex-flow: row;
-  align-items: center;
-  justify-content: space-between;
 }
 .set_menu_product main.open_aside aside .middle label input,
 .set_menu_product main.open_aside aside .middle label textarea,
 .set_menu_product main.open_aside aside .middle label select{
   flex: 1;
 }
+.set_menu_product main.open_aside aside .middle label .flex_box {
+  flex-flow: initial;
+}
+.set_menu_product main.open_aside aside .middle label .flex_box .dropdown-box .btn-dropdown {
+  gap: initial;
+}
+
+
 /* 매장 메뉴 관리 페이지 */
 /*************************/

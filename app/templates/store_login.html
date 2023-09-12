@@ -23,12 +23,25 @@
         <img src="/static/images/common/logo-order&go-color.png" alt="">
       </a>
     </h1>
-    <form action="/" method="POST">
-      <label for="store_num">매장번호:</label>
-      <input type="text" id="store_num" name="store_num" required>
-      <label for="password">비밀번호:</label>
-      <input type="password" id="password" name="password" required>
+    <form>
+
+      <label for="store_num">매장 선택</label>
+      <select required>
+        <option value="" disabled selected>매장을 선택해주세요</option>
+      </select>
+      <label for="password">비밀번호</label>
+      <input type="password" value="test!@34" id="password" name="password" placeholder="test!@34" required>
+      <!-- <div class="input_save_id">
+        <input type="checkbox" hidden id="save_id">
+        <label for="save_id">
+          <i class="ph ph-check-circle"></i>
+          <span>아이디 저장</span>
+        </label>
+      </div> -->
       <input type="submit" value="로그인">
+      <div class="buttons">
+        <a href="/store/create">매장 생성</a>
+      </div>
     </form>
   </main>
 </body>

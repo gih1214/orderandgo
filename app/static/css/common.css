@@ -182,6 +182,7 @@
 .dropdown-list.active {
   visibility: visible;
   max-height: 250px;
+  height: initial;
   overflow: scroll;
   opacity: 1;
 }

@@ -1,5 +1,6 @@
 const lastPath = window.location.href.split('/').pop();
 
+
 // 깊은 복사
 function deepCopy(obj) {
   return JSON.parse(JSON.stringify(obj));
