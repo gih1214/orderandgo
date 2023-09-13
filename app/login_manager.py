@@ -11,6 +11,7 @@ from app import login_manager # Flask-login의 변수
 @login_manager.user_loader
 def load_user(user_id):
     print('사용자 로드 함수')
+    print("user",user_id)
     return get_user_by_userid(user_id)
 
 

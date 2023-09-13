@@ -3,7 +3,7 @@ import os
 
 from app.routes import adm_bp
 from app.models import db, Store, TableCategory, Table
-from app.models.user import create_user
+# from app.models.user import create_user
 from app.models.menu_category import create_main_category, create_sub_category
 from app.models.store import create_store, delete_store, update_store
 from app.models.menu import create_menu, create_menu_option, delete_menu, update_menu
@@ -15,6 +15,7 @@ def index():
 ####################
 ### 유저 시작 ###
 
+'''
 # 회원가입(유저 생성)
 @adm_bp.route('/user', methods=['GET', 'POST'])
 def create_user_py():
@@ -39,7 +40,8 @@ def create_user_py():
         response.status_code = 200
         return response
         #return jsonify({'message': '사용자가 성공적으로 생성되었습니다.'}), 201
-
+'''
+        
 @adm_bp.route('/user/<user_id>', methods=['GET'])
 def get_user(user_id):
     # 유저 조회 로직 수행
@@ -64,6 +66,8 @@ def delete_user(user_id):
 ####################
 ### 스토어 시작 ###
 
+
+'''
 #  스토어 생성
 @adm_bp.route('/store', methods=['GET', 'POST'])
 def create_store_py():
@@ -90,23 +94,23 @@ def create_store_py():
         store = create_store(user_id, name, address, tel, manager_name, manager_tel, logo_img, store_image, main_description, sub_description)
         print("매장생성 1차 성공", store)
 
-        '''
-        # store 이미지 다시 넣기
-        store_image = request.files['store_image']
-        UPLOAD_FOLDER = 'app/static/images/user/'
-        upload_path = '{}{}/{}/store_img'.format(UPLOAD_FOLDER, user_id, store.id)
-        if not os.path.exists(upload_path):
-            os.makedirs(upload_path)        
-        store_image.save(os.path.join(upload_path, store_image))
-        store_image_path = '{}/{}'.format(upload_path, store_image.filename)
-        '''
+        # # store 이미지 다시 넣기
+        # store_image = request.files['store_image']
+        # UPLOAD_FOLDER = 'app/static/images/user/'
+        # upload_path = '{}{}/{}/store_img'.format(UPLOAD_FOLDER, user_id, store.id)
+        # if not os.path.exists(upload_path):
+        #     os.makedirs(upload_path)        
+        # store_image.save(os.path.join(upload_path, store_image))
+        # store_image_path = '{}/{}'.format(upload_path, store_image.filename)
 
         response = jsonify({'message': 'Success'})
         response.status_code = 200
         print('Received JSON data:', store_data)
         return response
         #return jsonify({'message': '매장이 성공적으로 생성되었습니다.'}), 201
+'''
 
+        
 @adm_bp.route('/store/<store_id>', methods=['GET'])
 def get_store_py(store_id):
     # 스토어 조회 로직 수행
