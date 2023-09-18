@@ -79,6 +79,7 @@ def logout():
     logout_user()
 
 
+
 ### 로그인
 # 관리자 유저 로그인
 def get_admin_user_login(tel, password):
@@ -94,6 +95,7 @@ def get_store_user_login(store_id, password):
     if store_user and bcrypt.checkpw(password.encode('utf-8'), store_user.store_pw.encode('utf-8')):
         if current_user:
             logout()
+        print(store_user)
         login_user(store_user)        # current_user로 조회 가능
         return store_user
     return False

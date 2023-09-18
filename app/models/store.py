@@ -11,7 +11,9 @@ def create_store(user_id, name, address, tel, manager_name, manager_tel,
     return store
 
 # 조회
-
+def get_store(user_id): # user_id 로 스토어 리스트 조회
+    stores = Store.query.filter_by(user_id=user_id).all()
+    return stores
 
 # 수정
 def update_store(store_id, user_id, name, address, tel, manager_name, manager_tel,

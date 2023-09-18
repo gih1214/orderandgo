@@ -12,7 +12,6 @@ window.onclick = function (event) {
     const _modal = document.querySelector(".modal");
     _modal.classList.remove("show");
     _modal.remove();
-
   }
 }
 
@@ -132,3 +131,106 @@ const groupColors = [
   { num: 19, color: '#2D9B66' },
   { num: 20, color: '#373579' }
 ]
+
+
+// 메뉴 올 데이터를 이용해서 장바구니 데이터로 만들기
+const setBasketData = (menus) => {
+  const transformedData = [];
+  const tempData = {};
+
+  menus.forEach(item => {
+    const { masterName, id, name, count, price, options } = item;
+    if (tempData[masterName]) {
+      tempData[masterName].length++;
+    } else {
+      tempData[masterName] = {
+        masterName,
+        length: 1,
+        data: {
+          id,
+          name,
+          count,
+          price,
+          options
+        }
+      };
+    }
+  });
+
+  for (const key in tempData) {
+    transformedData.push(tempData[key]);
+  }
+
+  return transformedData;
+}
+
+// 메뉴 마스터 네임 만들기
+const setMasterName = (menu) => {
+  let masterName = '';
+  masterName = `${menu.id}_${menu.count}`;
+  menu?.options.sort((a, b)=>{return b - a});
+  menu?.options.forEach((option)=>{
+    masterName += `_${option.id}_${option.count}`
+  })
+  return masterName
+}
+
+// 장바구니 html 변경
+const changeBasketHtml = (datas) => {
+  const _basket = document.querySelector('main aside .basket');
+  html = ``;
+  let totalPrice = 0;
+  datas.forEach(({data, length, masterName})=>{
+    totalPrice += data.price * length
+    html += `
+      <li>
+        <div data-id="${data.id}" data-type="menu" data-count="${length}" data-master="${masterName}" class="menu" onclick="clickBasketMenu(event)">
+          <div class="count"><span>${length}</span></div>
+          <h2>${data.name}</h2>
+          <span class="price">${(data.price * length).toLocaleString()}원</span>
+        </div>
+        `
+        data?.options?.forEach((option)=>{
+          totalPrice += option.price * option.count * length
+          html +=`
+          <div data-id="${option.id}" data-type="menu_option" class="menu_option" onclick="clickBasketMenu(event)">
+            <div class="option_name_count">
+              <h2>${option.name}</h2>
+              <span>x</span>
+              <span>${option.count}</span>
+            </div>
+            <span class="price">${(option.price * option.count * length).toLocaleString()}원</span>
+          </div>
+          `
+
+        })
+      html +=
+        `
+      </li>
+    `
+  })
+  _basket.innerHTML = html
+
+  const currentPage = window.location.pathname.split("/")[2];
+  if(currentPage == 'menuList'){
+    const _totalPrice = document.querySelector('main aside .total_price .price');
+    _totalPrice.innerHTML = `${totalPrice.toLocaleString()} 원`;
+  }
+  if(currentPage == 'payment'){
+    const _supplyPrice = document.querySelector('main aside .order_btns .supply_price');
+    const _vat = document.querySelector('main aside .order_btns .vat');
+    const _totalPrice = document.querySelector('main aside .order_btns .price');
+    const _sectionTotalPrice = document.querySelector('main section .total_price .price');
+
+    const vat = Math.trunc(totalPrice * 10 / 110);
+    const supplyPrice = Math.trunc(totalPrice - vat);
+
+    _supplyPrice.innerHTML = `${supplyPrice.toLocaleString()} 원`;
+    _vat.innerHTML = `${vat.toLocaleString()} 원`;
+    _totalPrice.innerHTML = `${totalPrice.toLocaleString()} 원`;
+    _sectionTotalPrice.innerHTML = `${totalPrice.toLocaleString()} 원`;
+
+  }
+  
+  
+}

@@ -24,6 +24,7 @@
         <img src="/static/images/common/logo-order&go-color.png" alt="">
       </h1>
     </a>
+    <a onclick="clickLogout(event)">로그아웃</a>
   </header>
   <main>
     <ul>
@@ -37,5 +38,21 @@
   <!-- <script src="static/js/common.js"></script> -->
   <!-- 전용 스크립트 -->
   <!-- <script src="static/js/main.js"></script> -->
+  <script>
+    const clickLogout = (event) => {
+      fetch(`/logout`, {
+        method: 'GET',
+      })
+      .then(response => response.json())
+      .then(data => {
+        if(data.code == 200){
+          window.location.href = '/login'
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+  </script>
 </body>
 </html>

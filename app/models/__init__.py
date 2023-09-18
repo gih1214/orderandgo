@@ -39,10 +39,14 @@ class Test(db.Model):
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    tel = db.Column(db.String(50), nullable=False)
+    tel = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(120), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     last_logged_at = db.Column(db.DateTime, nullable=True)
+
+    def is_authenticated(self):
+        # 사용자가 인증된 경우 True 반환
+        return True
 
     def is_active(self):
         return True
