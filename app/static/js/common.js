@@ -1,5 +1,82 @@
 const lastPath = window.location.href.split('/').pop();
 
+// fetch api
+function fetchData(url, method, data, onSuccess, form=false) {
+  let newUrl = url;
+  const headers = form ? {
+    // 'Authorization': `Bearer ${accessToken}`,
+  } : {
+    // 'Authorization': `Bearer ${accessToken}`,
+    'Content-Type': `application/json`
+    // 필요한 경우, 추가적인 헤더를 설정할 수 있습니다.
+  }
+  let fetchOptions = {
+    method: method,
+    headers: headers,
+    // GET 요청에서는 body를 제외합니다.
+    // body: JSON.stringify(data),
+    // 필요한 경우, 요청에 필요한 다른 옵션들을 설정할 수 있습니다.
+  };
+
+  if(method !== 'GET') {
+    if(form) {
+      const formData = new FormData();
+      formData.append('json_data', JSON.stringify(data.json_data)) 
+      data.form_data.forEach(({key, value})=>{
+        formData.append(key, value);
+      })
+
+      fetchOptions.body = formData
+    }else{
+      fetchOptions.body = JSON.stringify(data);
+    }
+  }
+  if(method == 'GET' || method == 'DELETE'){
+    newUrl += `?`
+    for (const key in data) {
+      const value = data[key];
+      newUrl += `${key}=${value}&`;
+    }
+    console.log(newUrl);
+  }
+
+  fetch(newUrl, fetchOptions)
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Something went wrong');
+      }
+    })
+    .then(data => {
+      // 성공적으로 데이터를 받아온 경우 처리합니다.
+      onSuccess(data);
+    })
+    .catch(error => {
+      // 오류가 발생한 경우 처리합니다.
+      console.error(error);
+    });
+}
+
+// 타겟의 부모요소 중 특정 부모가 있는지 찾아서 리턴함
+const findParentTarget = (targetEl, parent) => {
+  return targetEl.closest(parent);
+}
+
+// form tag 내부 데이터 Object 만들기
+const getData = (elements) =>{
+  const data = {};
+  elements.forEach((element, index)=>{
+  
+    const key = element.dataset.title;
+    let value = element.value; 
+    if(element.type == 'checkbox'){
+        value = element.checked;
+    }
+    data[key] = value;
+  })
+  return data;
+}
 
 // 깊은 복사
 function deepCopy(obj) {

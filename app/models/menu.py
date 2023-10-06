@@ -59,7 +59,7 @@ def select_menu_all(main_category_id):
         .filter(SubCategory.id == Menu.menu_category_id)\
         .filter(SubCategory.main_category_id == main_category_id).all()
     if not item:
-        return '없는 메뉴입니다.'
+        return [] # 카테고리에 메뉴가 하나도 없음, 오류 발생
     return item
 
 # 메뉴 수정

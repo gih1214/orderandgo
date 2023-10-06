@@ -15,10 +15,12 @@
 
   <!-- 전용 css -->
   <link rel="stylesheet" href="/static/css/login.css">
+  {% if json_data %}
   <script>
     const jsonData = JSON.parse(`{{ json_data | tojson | safe }}`);
-    console.log(jsonData)
+    console.log(jsonData);
   </script>
+  {% endif %}
 </head>
 <body class="login">
   <div id="app">

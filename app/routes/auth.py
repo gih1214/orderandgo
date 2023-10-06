@@ -71,13 +71,18 @@ def register_admin_user():
 
         if result == False:
             print("회원가입 실패")
-            response = jsonify({'message': '회원가입 실패'})
-            response.status_code = 400
+            response = jsonify({
+                'code' : 400,
+                'message': '회원가입 실패',
+                
+            })
             return response
         
         print("회원가입 성공", result)
-        response = jsonify({'message': 'Success'})
-        response.status_code = 200
+        response = jsonify({
+            'code' : 200,
+            'message': 'Success'
+        })
         return response
     
 
@@ -96,16 +101,16 @@ def register_store_user():
         logo_img = ''
         result = create_store_user(user_id, store_id, password, name, logo_img)
 
-        # store 이미지 넣기
-        store_image = request.files['store_image']
-        UPLOAD_FOLDER = 'app/static/images/user/'
-        upload_path = '{}{}/{}/store_img'.format(UPLOAD_FOLDER, user_id, result.id)
-        if not os.path.exists(upload_path):
-            os.makedirs(upload_path)        
-        store_image.save(os.path.join(upload_path, store_image))
-        store_image_path = '{}/{}'.format(upload_path, store_image.filename)
+        # # store 이미지 넣기
+        # store_image = request.files['store_image']
+        # UPLOAD_FOLDER = 'app/static/images/user/'
+        # upload_path = '{}{}/{}/store_img'.format(UPLOAD_FOLDER, user_id, result.id)
+        # if not os.path.exists(upload_path):
+        #     os.makedirs(upload_path)        
+        # store_image.save(os.path.join(upload_path, store_image))
+        # store_image_path = '{}/{}'.format(upload_path, store_image.filename)
 
-        update_store_logo_img(result, upload_path)
+        # update_store_logo_img(result, upload_path)
 
         if result == False:
             print("회원가입 실패")
@@ -126,6 +131,7 @@ def register_store_user():
 @login_required
 @auth_bp.route("/logout", methods=['GET'])
 def logout():
+    logout_user();
     return jsonify({
         'message': '로그아웃 성공',
         'code' : 200

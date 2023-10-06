@@ -125,7 +125,12 @@ const onSubmitRegister = (event) => {
   .then(data => {
     // 받은 데이터 처리
     console.log(data);
-    // window.location.href = '/pos/tableList'
+    if(data.code == 200){
+      alert('관리자 로그인 후 스토어를 생성해 주세요')
+      window.location.href = '/login'
+    }else{
+      alert(data.message);
+    }
   })
   .catch(error => {
     console.error('Error:', error);
@@ -137,7 +142,7 @@ const onSubmitCreateStore = (event) => {
   event.preventDefault();
   const _form = event.target;
   const name = _form.querySelector('#name').value;
-  const password = _form.querySelector('input[type="password"]').value;
+  const password = _form.querySelector('.password_box input').value;
   const store_id = _form.querySelector('#store_id').value;
   const store_image = _form.querySelector('#input_logo_img').files[0];
   
@@ -154,7 +159,8 @@ const onSubmitCreateStore = (event) => {
   .then(response => response.json())
   .then(data => {
     if(data.code == 200) {
-      window.location.href = '/store/login'
+      alert('매장을 생성하였습니다. 스토어 로그인을 진행해 주세요')
+      window.location.href = '/login'
     }else{
       alert(data.message);
     }

@@ -7,5 +7,5 @@ from flask_login import current_user, login_required
 @main_bp.route('/')
 @login_required
 def index():
-    return redirect(url_for('main.index'))
+    return render_template('index.html')
 
