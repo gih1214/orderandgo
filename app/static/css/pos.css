@@ -596,15 +596,71 @@ main section > aside .custom_btns button{
   padding: 10px 0;
 }
 .payment main section article{
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
   height: calc(100vh - (40px));
   background: #F5F5F5;
+}
+.payment main section article .top {
+  display: flex;
+  justify-content: space-between;
+}
+.payment main section article .top .other_btns {
+  display: flex;
+  flex-flow: column;
+  flex: 1;
+  gap: 10px;
+  max-width: 140px;
+}
+.payment main section article .top .other_btns button{
+  flex: 1;
+  border-radius: 10px;
+  border: 1px solid #CCC;
+  background: #FFF;
+  font-size: 18px;
+  font-weight: 700;
+}
+.payment main section article .top .total_price h2{
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 700;
+}
+.payment main section article .top .total_price span{
+  color: #1FAA9C;
+  font-size: 40px;
+  font-weight: 700;
+}
+.payment main section article .payment_btns {
+  display: flex;
+  gap: 20px;
+  max-height: 140px;
+  height: 100%;
+  padding-top: 20px;
+}
+.payment main section article .payment_btns button{
+  flex: 1;
+}
+.payment main section article .payment_btns button.cash_btn{
+  border-radius: 10px;
+  border: 1px solid #1FAA9C;
+  background: #FFF;
+  color: #1FAA9C;
+  font-size: 24px;
+  font-weight: 700;
+}
+.payment main section article .payment_btns button.card_btn{
+  border-radius: 10px;
+  background: #1FAA9C;
+  color: #FFF;
+  font-size: 24px;
+  font-weight: 700;
 }
 .payment .basket_container .order_btns {
   display: flex;
   flex-flow: column;
   justify-content: space-between;
   gap: 20px;
-  height: 160px;
   padding: 20px 0;
   background: #F3FAFA;
 }
@@ -630,7 +686,185 @@ main section > aside .custom_btns button{
   font-size: 20px;
   font-weight: 700;
 }
+.payment .modal-content{
+  max-width: 600px;
+}
+.payment .modal-content .modal-body{
+  display: flex;
+  flex-flow: column;
+  gap: 30px;
+}
+.payment .modal-content .modal-body .top {
+  display: flex;
+  gap: 20px;
+}
+.payment .modal-content .modal-body .top .content {
+  display: flex;
+  flex-flow: column;
+  gap: 20px;
+  flex: 1;
+}
+.payment .modal-content .modal-body .top .content .tab_btns{
+  display: flex;
+  gap: 15px;
+}
+.payment .modal-content .modal-body .top .content .tab_btns button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.payment .modal-content .modal-body .top .content h3 {
+  font-size: 16px;
+  font-weight: 700;
+}
+.payment .modal-content .modal-body .top .content .tab_btns button {
+  border: 1px solid #CCC;
+}
 
+.payment .modal-content .modal-body .top .content .receive_amount {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 700;
+}
+.payment .modal-content .modal-body .top .content .payment_amount {
+  flex: 1;
+}
+.payment .modal-content .modal-body .top .content .payment_amount h3 {
+  margin-bottom: 10px;
+}
+.payment .modal-content .modal-body .top .content .payment_amount input {
+  width: 100%;
+  padding: 12px; 
+  border-radius: 5px;
+  border: 1px solid #CCC;
+  font-size: 14px;
+  font-weight: 500;
+}
+.payment .modal-content .modal-body .top .content .split_payment_amount,
+.payment .modal-content .modal-body .top .content .cash_amount,
+.payment .modal-content .modal-body .top .content .change_amount{
+  display: flex;
+  align-items: center;
+  justify-content: space-between; 
+  font-size: 18px;
+  font-weight: 700;
+}
+.payment .modal-content .modal-body .top .content .cash_amount{
+  margin-bottom: -10px;
+}
+.payment .modal-content .modal-body .top .content .split_payment_amount span{
+  color: #1FAA9C;
+}
+.payment .modal-content .modal-body .top .content .change_amount span{
+  color: #1FAA9C;
+}
+
+.payment .modal-content .modal-body .top .content .dutch_content{
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  flex: 1;
+}
+.payment .modal-content .modal-body .top .content .dutch_content .count_btns {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.payment .modal-content .modal-body .top .content .dutch_content button {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #CCC;
+}
+
+.payment .modal-content .modal-body .top .content.dutch .dutch_btn {
+  border: 1px solid #1FAA9C;
+  background: #F3FAFA;
+  color: #1FAA9C;
+}
+.payment .modal-content .modal-body .top .content.direct .direct_btn {
+  border: 1px solid #1FAA9C;
+  background: #F3FAFA;
+  color: #1FAA9C;
+}
+.payment .modal-content .modal-body .top .content.direct .dutch_content{
+  display: none;
+}
+.payment .modal-content .modal-body .top .content.dutch .direct_content {
+  display: none;
+}
+.payment .modal-content .modal-body .top .content .direct_content{
+  display: flex;
+  flex-flow: column;
+  flex: 1;
+}
+
+.payment .modal-content .modal-body .top .number_pad{
+  display: grid;
+  grid-template-columns: repeat(3, 55px); 
+  grid-template-rows: repeat(4, 55px); 
+  gap: 8px; 
+  max-width: 210px;
+  width: 100%;
+  padding: 15px;
+  border-radius: 20px;
+  background: #F5F5F5;
+  text-align: center;
+}
+
+.payment .modal-content .modal-body .top .number_pad button {
+  max-width: 55px;
+  max-height: 55px;
+  border-radius: 10px;
+  border: 1px solid #CCC;
+  background: #FFF;
+  font-size: 24px;
+  font-weight: 700;
+}
+.payment .modal-content .modal-body .bottom{
+  display: flex;
+  align-items: center;
+  max-height: 48px;
+  height: 100%
+}
+.payment .modal-content .modal-body .bottom button{
+  flex: 1;
+  padding: 10px;
+  border-radius: 5px;
+  background: #1FAA9C;
+  color: #FFF;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.success_payment .modal-content .modal-top{
+  margin-bottom: -10px;
+}
+.success_payment .modal-content .modal-body .top{
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+.success_payment .modal-content .modal-body .top i {
+  padding-bottom: 20px;
+  font-size: 45px;
+  color: #1FAA9C;
+}
+.success_payment .modal-content .modal-body .top h2{
+  padding-bottom: 10px;
+  font-size: 22px;
+  font-weight: 700;
+}
+.success_payment .modal-content .modal-body .top span{
+  padding-bottom: 30px;
+  font-size: 16px;
+  font-weight: 400;
+}
 
 /* ##### payment ##### */
 /* ################### */

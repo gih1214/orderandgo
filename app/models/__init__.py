@@ -39,15 +39,20 @@ class Test(db.Model):
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.String(120), nullable=False)
+    tel = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(120), nullable=False)
-    name = db.Column(db.String(50), unique=True)
-    birthday = db.Column(db.Date, nullable=False)
-    tel = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(120), unique=True)
-    address = db.Column(db.String(150), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     last_logged_at = db.Column(db.DateTime, nullable=True)
+
+    def is_authenticated(self):
+        # 사용자가 인증된 경우 True 반환
+        return True
+
+    def is_active(self):
+        return True
+
+    def get_id(self):
+        return self.id
 
     #def __repr__(self):
     #    return f'<User {self.title}>'
@@ -57,18 +62,23 @@ class Store(db.Model):
     __tablename__ = 'store'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    store_id = db.Column(db.String(50), unique=True)
+    store_pw = db.Column(db.String(120), nullable=False)
     name = db.Column(db.String(50), unique=True)
-    address = db.Column(db.String(150), nullable=False)
-    tel = db.Column(db.String(50), nullable=False)
-    manager_name = db.Column(db.String(50), nullable=False)
-    manager_tel = db.Column(db.String(50), nullable=False)
     logo_img = db.Column(db.String(150), nullable=False)
-    store_image = db.Column(db.String(150), nullable=False)
-    main_description = db.Column(db.Text, nullable=False)
-    sub_description = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     last_logged_at = db.Column(db.DateTime, nullable=True)
 
+    def is_authenticated(self):
+        # 사용자가 인증된 경우 True 반환
+        return True
+
+    def is_active(self):
+        return True
+
+    def get_id(self):
+        return self.id
+    
     #def __repr__(self):
     #    return f'<Store {self.title}>'
 
@@ -225,6 +235,7 @@ class Payment_method(db.Model):
     __tablename__ = 'payment_method'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     method = db.Column(db.String(50), nullable=False)
+    # 카드, 현금,
 
     #def __repr__(self):
     #    return f'<Payment_method {self.title}>'
@@ -233,7 +244,7 @@ class Payment_status(db.Model):
     __tablename__ = 'payment_status'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     status = db.Column(db.String(50), nullable=False)
-
+    # 결제 완료, 결제 진행 중, 결제 취소
 
 
 class Payment(db.Model):
@@ -260,5 +271,6 @@ class TablePaymentList(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
     
-    order_details = db.Column(db.Text)  # 주문 내역 컬럼 (문자열로 저장됨)
-    payment_time = db.Column(db.DateTime)  # 결제 시간 컬럼
+    order_details = db.Column(db.Text)  # 주문 내역 컬럼 (문자열로 저장됨), orderDetails.json
+    first_order_time = db.Column(db.DateTime) # 첫 주문 시간
+    payment_time = db.Column(db.DateTime)  # 결제 시간 컬럼(분할 시 최근 결제 마다 업데이트)

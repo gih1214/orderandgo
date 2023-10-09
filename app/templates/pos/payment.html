@@ -39,27 +39,29 @@
       <!-- 메뉴판 페이지에서 장바구니 영역 -->
       <aside class="basket_container">
         <!-- <h1>POS - aside</h1> -->
-        <ul class="basket middle"></ul>
+        <ul class="basket middle">
+
+        </ul>
         <div class="order_btns bottom">
           <div class="top">
             <div>
               <span>공급가액</span>
-              <span>원</span>
+              <span class="supply_price">원</span>
             </div>
             <div>
               <span>부가세</span>
-              <span>원</span>
+              <span class="vat">원</span>
             </div>
             <div>
               <span>면세물품가액</span>
-              <span>원</span>
-            </div>
+              <span >0 원</span>
+            </div> 
           </div>
 
           <div class="bottom">
             <div>
               <span>총액</span>
-              <span>원</span>
+              <span class="price">원</span>
             </div>
           </div>
         </div>
@@ -67,6 +69,20 @@
       <section>
         <!-- <h1>POS - section</h1> -->
         <article>
+          <div class="top">
+            <div class="total_price">
+              <h2>결제 금액</h2>
+              <span class="price">94,000원</span>
+            </div>
+            <div class="other_btns">
+              <button onclick="clickDiscount(event)">할인</button>
+              <button onclick="clickSplitPayment(event)">분할 결제</button>
+            </div>
+          </div>
+          <div class="payment_btns">
+            <button onclick="clickCashPayment(event)" class="cash_btn">현금 결제</button>
+            <button onclick="createCompletedPaymentModal(event, 'CARD')" class="card_btn">카드 결제</button>
+          </div>
         </article>
       </section>
       
@@ -79,6 +95,6 @@
   <!-- 공통 스크립트 -->
   <script src="/static/js/common.js"></script>
   <!-- 전용 스크립트 -->
-  <!-- <script src="/static/js/menuList.js"></script> -->
+  <script src="/static/js/payment.js"></script>
 </body>
 </html>

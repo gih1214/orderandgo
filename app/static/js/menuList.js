@@ -125,36 +125,6 @@ const changeMenuHtml = (menus) => {
   return html;
 }
 
-// 메뉴 올 데이터를 이용해서 장바구니 데이터로 만들기
-const setBasketData = (menus) => {
-  const transformedData = [];
-  const tempData = {};
-
-  menus.forEach(item => {
-    const { masterName, id, name, count, price, options } = item;
-    if (tempData[masterName]) {
-      tempData[masterName].length++;
-    } else {
-      tempData[masterName] = {
-        masterName,
-        length: 1,
-        data: {
-          id,
-          name,
-          count,
-          price,
-          options
-        }
-      };
-    }
-  });
-
-  for (const key in tempData) {
-    transformedData.push(tempData[key]);
-  }
-
-  return transformedData;
-}
 
 // 메뉴 클릭 시
 const clickMenu = (event) => {
@@ -254,16 +224,6 @@ const resetMenuBackground = (__menu) => {
   })
 }
 
-// 메뉴 마스터 네임 만들기
-const setMasterName = (menu) => {
-  let masterName = '';
-  masterName = `${menu.id}_${menu.count}`;
-  menu?.options.sort((a, b)=>{return b - a});
-  menu?.options.forEach((option)=>{
-    masterName += `_${option.id}_${option.count}`
-  })
-  return masterName
-}
 
 // 메뉴 옵션 클릭 시
 const clickMenuOption = (event) => {
@@ -302,47 +262,6 @@ const clickMenuOption = (event) => {
 
   maintainActive(targetType, menuIndex, optionIndex);
 
-}
-
-
-
-// 장바구니 html 변경
-const changeBasketHtml = (datas) => {
-  const _basket = document.querySelector('main aside .basket');
-  const _totalPrice = document.querySelector('main aside .total_price .price');
-  html = ``;
-  let totalPrice = 0;
-  datas.forEach(({data, length, masterName})=>{
-    totalPrice += data.price * length
-    html += `
-      <li>
-        <div data-id="${data.id}" data-type="menu" data-count="${length}" data-master="${masterName}" class="menu" onclick="clickBasketMenu(event)">
-          <div class="count"><span>${length}</span></div>
-          <h2>${data.name}</h2>
-          <span class="price">${(data.price * length).toLocaleString()}원</span>
-        </div>
-        `
-        data?.options?.forEach((option)=>{
-          totalPrice += option.price * option.count * length
-          html +=`
-          <div data-id="${option.id}" data-type="menu_option" class="menu_option" onclick="clickBasketMenu(event)">
-            <div class="option_name_count">
-              <h2>${option.name}</h2>
-              <span>x</span>
-              <span>${option.count}</span>
-            </div>
-            <span class="price">${(option.price * option.count * length).toLocaleString()}원</span>
-          </div>
-          `
-
-        })
-      html +=
-        `
-      </li>
-    `
-  })
-  _basket.innerHTML = html
-  _totalPrice.innerHTML = `${totalPrice.toLocaleString()} 원`;
 }
 
 // 장바구니 아이템 클릭 시

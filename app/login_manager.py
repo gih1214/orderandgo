@@ -1,17 +1,22 @@
-from flask import session, jsonify, request, render_template
+from flask import session, jsonify, request, render_template, request
 from flask_login import LoginManager, UserMixin, login_required
 
 from app.models import db, Store, User
-from app.models.user import get_user_by_userid
+from app.models.user import get_user_by_userid, get_store_by_storeid
 
 from app import login_manager # Flask-login의 변수
 
 
 # 사용자 로드 함수
 @login_manager.user_loader
-def load_user(user_id):
+def load_user(store_id):
     print('사용자 로드 함수')
-    return get_user_by_userid(user_id)
+    # type 이 user, store를 구분해서 실행해야함
+    current_path = request.path
+    if current_path ==  '/register_store':
+        return get_user_by_userid(store_id)
+    else:
+        return get_store_by_storeid(store_id)
 
 
 # 로그인이 되어있지 않은 경우
