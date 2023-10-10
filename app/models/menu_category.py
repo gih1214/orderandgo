@@ -15,6 +15,13 @@ def create_sub_category(main_category_id, name):
     db.session.commit()
     return True
 
+# 메뉴id 생성에 필요한 메인, 서브 카테고리 id 조회
+def select_main_and_sub_category_by_store_id(store_id):
+    main_category = MainCategory.query.filter(MainCategory.store_id == store_id).first()
+    main_id = main_category.id
+    menu_category = SubCategory.query.filter(SubCategory.main_category_id == main_category.id).first()
+    menu_id = menu_category.id
+    return menu_id
 
 # 메뉴로 메인, 서브 카테고리 모두 조회
 def get_main_and_sub_category_by_menu_id(menu):
