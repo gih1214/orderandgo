@@ -93,12 +93,6 @@ def create():
 def product():
     return render_template('store_product.html')
 
-# 카테고리, 메뉴, 옵션 관리 페이지
-@store_bp.route('/set_menu')
-def set_menu():
-    return render_template('set_menu_product.html')
-
-
 
 @store_bp.route('/get_main_category', methods=['GET'])
 def get_main_category():
@@ -114,12 +108,8 @@ def get_main_category():
 
     # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
     store_id = 1
-<<<<<<< HEAD
-=======
     # store_id = current_user.id
->>>>>>> 19752613fc3f9a3c66d51c7c15fb9382cf2e173e
     items = select_main_category(store_id)
-
     main_category_list = []
     for i in items:
         main_category_list.append({
@@ -133,15 +123,6 @@ def get_main_category():
 
 @store_bp.route('/get_sub_category', methods=['GET'])
 def get_sub_category():
-    '''
-    # JSON 파일 경로 설정
-    json_file_path = 'app/static/json/setMenuProductSubCategory.json'
-    # JSON 파일 로드
-    with open(json_file_path, 'r', encoding='UTF-8') as file:
-        json_data = json.load(file)
-    # JSON 데이터를 프론트에 반환
-    return jsonify(json_data)
-    '''
 
     main_category_id = request.args.get('main_category_id')
 
@@ -149,10 +130,7 @@ def get_sub_category():
     if main_category_id is None:
         # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
         store_id = 1
-<<<<<<< HEAD
-=======
         # store_id = current_user.id
->>>>>>> 19752613fc3f9a3c66d51c7c15fb9382cf2e173e
         main_categorys = select_main_category(store_id)
         main_category_id = main_categorys[0].id
 
@@ -171,22 +149,10 @@ def get_sub_category():
 
 @store_bp.route('/all_menu_list', methods=['GET'])
 def all_menu_list():
-    '''
-    # JSON 파일 경로 설정
-    json_file_path = 'app/static/json/setMenuProductAllMenu.json'
-    # JSON 파일 로드
-    with open(json_file_path, 'r', encoding='UTF-8') as file:
-        json_data = json.load(file)
-    # JSON 데이터를 프론트에 반환
-    return jsonify(json_data)
-    '''
 
     # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
     store_id = 1
-<<<<<<< HEAD
-=======
     # store_id = current_user.id
->>>>>>> 19752613fc3f9a3c66d51c7c15fb9382cf2e173e
 
     menu_items = find_all_menu(store_id)
     # print("@$#", menu_items)
@@ -215,6 +181,68 @@ def all_menu_list():
     print("@@@", all_menu_list)
     return all_menu_list
 
+@store_bp.route('/get_menu', methods=['GET'])
+def get_menu():
+    menu_id = request.args.get('menu_id')
+    menu = select_menu(menu_id)[0]
+    options = select_menu_option_all(menu_id)
+    option_data = []
+    if options:
+        for option in options:
+            option_data.append({
+                'name' : option.name,
+                'price' : option.price
+            })
+    menu_data = {}
+    
+    cur_main_category, cur_sub_category = get_main_and_sub_category_by_menu_id(menu);
+    main_category_list = get_main_category()
+    sub_category_list = get_sub_category()
+    for main_category in main_category_list:
+        print(main_category['id'], cur_main_category.id)
+        if main_category['id'] == cur_main_category.id:
+            
+            main_category['checked'] = True
+        else:
+            main_category['checked'] = False
+    
+    for sub_category in sub_category_list:
+        if sub_category['id'] == cur_sub_category.id:
+            sub_category['checked'] = True
+        else:
+            sub_category['checked'] = False
+    
+    
+    menu_data = {
+        'id' : menu.id,
+        'name' : menu.name,
+        'price': menu.price,
+        'imgList' : [],
+        'description': menu.main_description,
+        'options' : option_data,
+        'category': {
+            'main' : main_category_list,
+            'sub' : sub_category_list,
+        },
+    }
+    return menu_data
+
+
+
+@store_bp.route('/set_menu', methods=['GET', 'POST', 'PATCH'])
+def set_menu():
+    if request.method == 'GET':
+        return render_template('set_menu_product.html')
+
+    # 새 메뉴 추가
+    if request.method == 'POST':
+        return True
+    
+    # 기존 메뉴 수정
+    if request.method == 'PATCH':
+        return True
+    
+    
 # POS관리 -> 상품 정보 등록 페이지
 # '추가' 버튼 클릭 시 메뉴 id 생성
 @store_bp.route('/create_menu', methods=['POST'])
@@ -225,31 +253,9 @@ def api_create_menu():
         store_data = request.get_json()
         store_id = store_data['store_id']
 
-        print('여기부터 문제라니..?')
-        print(store_id)
         menu_category_id = select_main_and_sub_category_by_store_id(store_id)
 
         menu = create_menu(store_id, menu_category_id)
         print('DB 저장 후 컨트롤러까지 잘 왔음!!! :D')
         print(menu)
         return menu
-
-# 상품 정보 등록 or 수정하기 (미완성)
-@login_required
-@store_bp.route('/create_product', methods=['POST', 'UPDATE'])
-def api_create_product():
-    if request.method == 'POST':
-        # 상품 이미지(여러개 가능), 메뉴명, 판매가, 메뉴 설명, 카테고리(메인, 서브), 옵션(여러개 가능)
-        #store_images = request.form.get('store_images')
-        name = request.form.get('name')
-        price = request.form.get('price')
-        main_category = request.form.get('main_category')
-        sub_category = request.form.get('sub_category')
-        option = request.form.get('option')
-
-        store = create_product(name, price, main_category, sub_category, option)
-
-        print("상품 등록 성공", store)
-        response = jsonify({'message': 'Success'})
-        response.status_code = 200
-        return response
