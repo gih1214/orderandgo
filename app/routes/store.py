@@ -114,6 +114,10 @@ def get_main_category():
 
     # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
     store_id = 1
+<<<<<<< HEAD
+=======
+    # store_id = current_user.id
+>>>>>>> 19752613fc3f9a3c66d51c7c15fb9382cf2e173e
     items = select_main_category(store_id)
 
     main_category_list = []
@@ -124,6 +128,7 @@ def get_main_category():
             "checked": False,
         })
 
+    print("\n\n###main_category_list",main_category_list)
     return main_category_list
 
 @store_bp.route('/get_sub_category', methods=['GET'])
@@ -144,6 +149,10 @@ def get_sub_category():
     if main_category_id is None:
         # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
         store_id = 1
+<<<<<<< HEAD
+=======
+        # store_id = current_user.id
+>>>>>>> 19752613fc3f9a3c66d51c7c15fb9382cf2e173e
         main_categorys = select_main_category(store_id)
         main_category_id = main_categorys[0].id
 
@@ -157,6 +166,7 @@ def get_sub_category():
             "checked" : False,
         })
 
+    print("\n\n###sub_category_list",sub_category_list)
     return sub_category_list
 
 @store_bp.route('/all_menu_list', methods=['GET'])
@@ -173,9 +183,13 @@ def all_menu_list():
 
     # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
     store_id = 1
+<<<<<<< HEAD
+=======
+    # store_id = current_user.id
+>>>>>>> 19752613fc3f9a3c66d51c7c15fb9382cf2e173e
 
     menu_items = find_all_menu(store_id)
-    print("@$#", menu_items)
+    # print("@$#", menu_items)
 
     all_menu_list = []
     for i in menu_items:
