@@ -6,15 +6,12 @@ from app.models import Order, TableOrderList, db, Table, TableCategory
 #################
 
 
-# 테이블 카테고리 생성
-def create_table_catgory(data):
-    table_category_item = TableCategory(data['store_id'], data['category_name'])
-    db.session.add(table_category_item)
+# # 테이블 카테고리 생성
+def create_table_category(store_id, category_name, position=None):
+    table_category = TableCategory(store_id=store_id, category_name=category_name, position=position)
+    db.session.add(table_category)
     db.session.commit()
-    db.session.refresh(table_category_item)
-
-    return table_category_item
-
+    return table_category
 
 # 테이블 카테고리 조회
 def select_table_category(store_id):

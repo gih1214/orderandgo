@@ -14,33 +14,6 @@ def index():
 
 ####################
 ### 유저 시작 ###
-
-'''
-# 회원가입(유저 생성)
-@adm_bp.route('/user', methods=['GET', 'POST'])
-def create_user_py():
-    # 회원가입 페이지로 옮긴 후 path 수정 필요
-    #if request.method == 'GET':
-    #    return render_template('/register.html')
-
-    if request.method == 'POST':
-        #print('Received JSON data:', user_data)
-        user_data = request.get_json()
-        
-        user_id = user_data['user_id']
-        password = user_data['password']
-        name = user_data['name']
-        birthday = user_data['birthday']
-        tel = user_data['tel']
-        email = user_data['email']
-        address = user_data['address']
-        user = create_user(user_id, password, name, birthday, tel, email, address)
-        print("회원가입 성공", user)
-        response = jsonify({'message': 'Success'})
-        response.status_code = 200
-        return response
-        #return jsonify({'message': '사용자가 성공적으로 생성되었습니다.'}), 201
-'''
         
 @adm_bp.route('/user/<user_id>', methods=['GET'])
 def get_user(user_id):

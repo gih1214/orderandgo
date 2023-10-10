@@ -1,11 +1,12 @@
 import json
 from flask import render_template, request, jsonify
 from flask_login import login_required, current_user
+from app.models.menu_category import get_main_and_sub_category_by_menu_id
 from app.routes import store_bp
 
 from app.models import db, Store
 from app.models.store import create_store, update_store
-from app.models.menu import select_main_category, select_sub_category, select_menu_option_all, find_all_menu
+from app.models.menu import select_main_category, select_menu, select_sub_category, select_menu_option_all, find_all_menu
 from app.login_manager import update_store_session
 
 
@@ -92,9 +93,6 @@ def create():
 def product():
     return render_template('store_product.html')
 
-@store_bp.route('/set_menu')
-def set_menu():
-    return render_template('set_menu_product.html')
 
 @store_bp.route('/get_main_category', methods=['GET'])
 def get_main_category():
@@ -112,7 +110,6 @@ def get_main_category():
     store_id = 1
     # store_id = current_user.id
     items = select_main_category(store_id)
-
     main_category_list = []
     for i in items:
         main_category_list.append({
@@ -126,15 +123,6 @@ def get_main_category():
 
 @store_bp.route('/get_sub_category', methods=['GET'])
 def get_sub_category():
-    '''
-    # JSON 파일 경로 설정
-    json_file_path = 'app/static/json/setMenuProductSubCategory.json'
-    # JSON 파일 로드
-    with open(json_file_path, 'r', encoding='UTF-8') as file:
-        json_data = json.load(file)
-    # JSON 데이터를 프론트에 반환
-    return jsonify(json_data)
-    '''
 
     main_category_id = request.args.get('main_category_id')
 
@@ -161,15 +149,6 @@ def get_sub_category():
 
 @store_bp.route('/all_menu_list', methods=['GET'])
 def all_menu_list():
-    '''
-    # JSON 파일 경로 설정
-    json_file_path = 'app/static/json/setMenuProductAllMenu.json'
-    # JSON 파일 로드
-    with open(json_file_path, 'r', encoding='UTF-8') as file:
-        json_data = json.load(file)
-    # JSON 데이터를 프론트에 반환
-    return jsonify(json_data)
-    '''
 
     # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
     store_id = 1
@@ -201,3 +180,64 @@ def all_menu_list():
 
     print("@@@", all_menu_list)
     return all_menu_list
+
+@store_bp.route('/get_menu', methods=['GET'])
+def get_menu():
+    menu_id = request.args.get('menu_id')
+    menu = select_menu(menu_id)[0]
+    options = select_menu_option_all(menu_id)
+    option_data = []
+    if options:
+        for option in options:
+            option_data.append({
+                'name' : option.name,
+                'price' : option.price
+            })
+    menu_data = {}
+    
+    cur_main_category, cur_sub_category = get_main_and_sub_category_by_menu_id(menu);
+    main_category_list = get_main_category()
+    sub_category_list = get_sub_category()
+    for main_category in main_category_list:
+        print(main_category['id'], cur_main_category.id)
+        if main_category['id'] == cur_main_category.id:
+            
+            main_category['checked'] = True
+        else:
+            main_category['checked'] = False
+    
+    for sub_category in sub_category_list:
+        if sub_category['id'] == cur_sub_category.id:
+            sub_category['checked'] = True
+        else:
+            sub_category['checked'] = False
+    
+    
+    menu_data = {
+        'id' : menu.id,
+        'name' : menu.name,
+        'price': menu.price,
+        'imgList' : [],
+        'description': menu.main_description,
+        'options' : option_data,
+        'category': {
+            'main' : main_category_list,
+            'sub' : sub_category_list,
+        },
+    }
+    return menu_data
+
+
+
+@store_bp.route('/set_menu', methods=['GET', 'POST', 'PATCH'])
+def set_menu():
+    if request.method == 'GET':
+        return render_template('set_menu_product.html')
+
+    # 새 메뉴 추가
+    if request.method == 'POST':
+        return True
+    
+    # 기존 메뉴 수정
+    if request.method == 'PATCH':
+        return True

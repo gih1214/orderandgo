@@ -1,12 +1,13 @@
 from flask import render_template, jsonify, request
 from app.models.menu import select_main_category, select_menu_all, select_menu, select_menu_option, select_menu_option_all
 from app.models.order import find_order_list, get_orders_by_store_id
+from flask_login import login_required, current_user
+
 from app.routes import pos_bp
 import json
 
 from app.routes import pos_bp
 from app.models.table import \
-    create_table_catgory,\
     move_table, \
     select_table_category, \
     update_table_category, \
@@ -30,11 +31,11 @@ def set_group():
 @pos_bp.route('/get_table_page', methods=['GET'])
 def get_table_page():
 
-    store_id = 1    # temp
+    store_id = current_user.id
 
     # 실행할 코드
     orders = get_orders_by_store_id(store_id)
-
+    print('orders,',orders)
 
     # # 가져온 데이터 사용 예시
     # for order in orders:
@@ -50,7 +51,7 @@ def get_table_page():
     
     all_table_list = []
     
-    
+    print('store_id,',store_id)
     table_categories = select_table_category(store_id)
 
     
@@ -186,10 +187,9 @@ def get_table_order_list(table_id):
 @pos_bp.route('/get_menu_list/<table_id>', methods=['GET'])
 def get_menu_list(table_id):
     
-    store_id = 1    # temp
+    store_id = current_user.id
     all_menu_list = []
     menu_categories = select_main_category(store_id) # 메인 카테고리 조회
-    
     for t in menu_categories:
         category_name = t.name
         category_id = t.id
@@ -217,16 +217,21 @@ def get_menu_list(table_id):
         # 페이지별로 그룹화
         page_list = [];
         current_page = None
-        for menu in sorted_menus:
-            if menu.page != current_page:
-                current_page = menu.page
-                page_list.append({
-                    "page": current_page, 
-                    "menuList": [sort_menu(menu)]
-                })
-            else:
-                page_list[-1]["menuList"].append(sort_menu(menu))
-
+        if len(sorted_menus) > 0:    
+            for menu in sorted_menus:
+                if menu.page != current_page:
+                    current_page = menu.page
+                    page_list.append({
+                        "page": current_page, 
+                        "menuList": [sort_menu(menu)]
+                    })
+                else:
+                    page_list[-1]["menuList"].append(sort_menu(menu))
+        else:
+            page_list.append({
+                "page": 1, 
+                "menuList": []
+            })
         all_menu_list.append({
             "categoryId" : category_id,
             "category" : category_name,

@@ -6,6 +6,9 @@ import bcrypt
 from datetime import datetime
 from flask_login import login_user, logout_user
 
+from app.models.menu_category import create_main_category, create_sub_category
+from app.models.table import create_table_category
+
 
 # 아이디(PK)로 유저 조회
 def get_user_by_id(id):
@@ -14,6 +17,8 @@ def get_user_by_id(id):
 # 유저아이디로 유저 조회
 def get_user_by_userid(user_id):
     return User.query.filter_by(id=user_id).first()
+
+
 
 # 회원정보 수정 (마이페이지)
 # 비밀번호, 성명, 생년월일, 전화번호, 이메일, 주소
@@ -64,6 +69,14 @@ def create_store_user(user_id, store_id, password, name, logo_img):
     store = Store(user_id=user_id, store_id=store_id, store_pw=bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()), name=name, logo_img=logo_img)
     db.session.add(store)
     db.session.commit()
+    
+    # 메뉴 메인, 서브 카테고리 생성
+    main_category = create_main_category(store.id, '메인')
+    create_sub_category(main_category.id, '메인')
+    # 테이블 카테고리 생성
+    table_category_item = create_table_category(store.id, '매장')
+
+    
     return store
 
 
@@ -77,6 +90,7 @@ def update_store_logo_img(store_item, logo_img):
 # 로그아웃
 def logout():
     logout_user()
+
 
 
 ### 로그인
@@ -97,5 +111,9 @@ def get_store_user_login(store_id, password):
         login_user(store_user)        # current_user로 조회 가능
         return store_user
     return False
+
+# 스토어 아이디로 유저 조회
+def get_store_by_storeid(store_id):
+    return Store.query.filter_by(id=store_id).first()
 
 

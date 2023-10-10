@@ -4,56 +4,43 @@ let allMenuData;
 let menuImgData = [];
 
 // 메인카테고리 데이터 가져오기
-fetch(`/store/get_main_category`, {
-  method: 'GET',
-})
-.then(response => response.json())
-.then(data => {
-  // 받은 데이터 처리
-  console.log(data);
-  mainCategoryData = data;
-  createSeleteBox({main: data}, 'clickCategory', '.seletebox_main_category', 'main', '메인 카테고리');
-})
-.catch(error => {
-  console.error('Error:', error);
-});
-
+const callMainCategoryList = () => {
+  const onSuccess = (data) => {
+    console.log(data);
+    mainCategoryData = data;
+    createSeleteBox({main: data}, 'clickCategory', '.seletebox_main_category', 'main', '메인 카테고리');
+  }
+  fetchData(`/store/get_main_category`, 'GET', {}, onSuccess)
+}
+callMainCategoryList();
 
 // 서브카테고리 데이터 가져오기
-fetch(`/store/get_sub_category`, {
-  method: 'GET',
-})
-.then(response => response.json())
-.then(data => {
-  // 받은 데이터 처리
-  console.log(data);
-  subCategoryData = data;
-  createSeleteBox({sub:data}, 'clickCategory', '.seletebox_sub_category', 'sub', '서브카테고리');
-})
-.catch(error => {
-  console.error('Error:', error);
-});
-
+const callSubCategoryList = (main_category_id=undefined) => {
+  const submit_data = main_category_id != undefined ? { main_category_id } : '';
+  const onSuccess = (data) => {
+    console.log(data);
+    subCategoryData = data;
+    createSeleteBox({sub:data}, 'clickCategory', '.seletebox_sub_category', 'sub', '서브카테고리');
+  }
+  fetchData(`/store/get_sub_category`, 'GET', submit_data, onSuccess)
+}
+callSubCategoryList();
 
 // 메뉴 데이터 가져오기
-fetch(`/store/all_menu_list`, {
-  method: 'GET',
-})
-.then(response => response.json())
-.then(data => {
-  // 받은 데이터 처리
-  console.log(data);
-  allMenuData = data;
-  createMenuTable(data);
-})
-.catch(error => {
-  console.error('Error:', error);
-});
+const callAllMenuList = () => {
+  const onSuccess = (data) => {
+    console.log(data);
+    allMenuData = data;
+    createMenuTable(data);
+  }
+  fetchData(`/store/all_menu_list`, 'GET', {}, onSuccess)
+}
+callAllMenuList();
 
 // 메뉴 리스트 테이블 html 만들기
 const createMenuTable = (data) => {
   const html = `
-    <li>
+    <li class="table_header">
       <div><input type="checkbox"></div>
       <div>메인카테고리</div>
       <div>서브카테고리</div>
@@ -62,7 +49,7 @@ const createMenuTable = (data) => {
       <div>가격</div>
     </li>
     ${data.map(({ id, main_category, sub_category, name, price, option })=>`
-    <li data-id="${id}}" onclick="clickCallMenuData(event)">
+    <li data-id="${id}" onclick="clickCallMenuData(event)">
       <div><input type="checkbox"></div>
       <div>${main_category}</div>
       <div>${sub_category}</div>
@@ -127,29 +114,9 @@ const dropDownAnimation = (event) => {
 const clickCategory = (event) => {
   dropDownAnimation(event);
   const target = event.target;
-  
   if(target.closest(".seletebox_main_category") == undefined) return;
-  // sub category api call;
-  const data = {
-    sub:[
-      {
-        id: 1,
-        name: '??',
-        checked: false
-      },
-      {
-        id: 2,
-        name: '면류',
-        checked: false
-      },
-      {
-        id: 3,
-        name: '밥류',
-        checked: false
-      }
-    ]
-  }
-  createSeleteBox(data, 'clickCategory', '.seletebox_sub_category', 'sub', '서브카테고리');
+  const category_id = target.dataset.id;
+  callSubCategoryList(category_id)
 }
 
 // 메뉴 영역 확장 버튼 클릭 시
@@ -245,18 +212,7 @@ const setMenuHtmlEmptyData = {
   price: '',
   description: '',
   category: {
-    main: [
-      {
-        id: 1,
-        name: '식사류',
-        checked: false,
-      },
-      {
-        id: 2,
-        name: '주류',
-        checked: false
-      }
-    ],
+    main: [],
     sub: [],
   },
   options: []
@@ -340,7 +296,7 @@ const setMenuHtml = ({imgList,name,price,description,category,options}) => {
       ${imgCountArray.map((data, index)=>`
         <div class="img_box ${imgList[index] != undefined ? `active` : ``}" data-index="${index + 1}">
           <label for="menu_img_${index + 1}"><i class="ph ph-plus"></i></label>
-          <input id="menu_img_${index + 1}" hidden type="file" onchange="previewImage(event)">
+          <input data-title="image" data-type="form" id="menu_img_${index + 1}" hidden type="file" onchange="previewImage(event)">
           <img src="${imgList[index] != undefined ? `${imgList[index]}` : ``}" alt="" onclick="clickMenuImg(event)">
         </div>
       `).join('')}
@@ -350,15 +306,15 @@ const setMenuHtml = ({imgList,name,price,description,category,options}) => {
       <div class="left">
         <label for="">
           <span>메뉴명</span>
-          <input type="text" value="${name}">
+          <input data-title="name" data-type="form" type="text" value="${name}">
         </label>
         <label for="">
           <span>판매가</span>
-          <input type="text" value="${price}">
+          <input data-title="price" data-type="form" type="text" value="${price}">
         </label>
         <label for="">
           <span>메뉴 설명</span>
-          <textarea value="${description}"></textarea>
+          <textarea data-title="main_description" data-type="form" value="${description}"></textarea>
         </label>
       </div>
       <div class="right">
@@ -378,8 +334,8 @@ const setMenuHtml = ({imgList,name,price,description,category,options}) => {
           <div class="menu_options">
             ${options.map(({name, price})=>`
             <div class="flex_box">
-              <input type="text" value="${name}">
-              <input type="text" value="${price}">
+              <input data-title="option_name" data-type="form" type="text" value="${name}">
+              <input data-title="option_price" data-type="form" type="text" value="${price}">
               <button class="delete_btn" onclick="clickAddOptionBtn(event)">
                 <i class="ph ph-trash"></i>
               </button>
@@ -395,7 +351,7 @@ const setMenuHtml = ({imgList,name,price,description,category,options}) => {
     </div>
     <div class="bottom">
       <button class="delete">삭제</button>
-      <button class="save">저장</button>
+      <button class="save" onclick="clickSaveMenuData(event)">저장</button>
     </div>
   `
   return html
@@ -407,6 +363,8 @@ const createCategoryBoxHtml = (category,type,ko_category) => {
   const html = `
     <button 
       class="input_box btn-dropdown" 
+      data-type="form"
+      data-title="${type}_category"
       data-id="${checkedCategorys.length == 0 ? `` : `${checkedCategorys[0].id}`}" 
       data-name="${checkedCategorys.length == 0 ? `${ko_category}` : `${checkedCategorys[0].name}`}" 
       onclick="clickDropDownBtn(event)"
@@ -426,18 +384,38 @@ const createCategoryBoxHtml = (category,type,ko_category) => {
 // 테이블에서 메뉴 클릭 시
 const clickCallMenuData = (event) => {
   const target = event.currentTarget;
-  const menuId = Number(target.dataset.id);
-  console.log(menuId)
+  const menu_id = Number(findParentTarget(target, 'li').dataset.id);
   // 메뉴 id로 메뉴 데이터 호출 후 html 리로딩
-  const html = setMenuHtml(setMenuHtmlDataList);
+  
+  
   const _asideEl = document.querySelector('.set_menu_product main aside');
-  _asideEl.innerHTML = html;
+  const onSuccess = (data) => {
+    console.log(data)
+    const html = setMenuHtml(data);
+    _asideEl.innerHTML = html;
+  }
+  fetchData(`/store/get_menu`, 'GET', {menu_id}, onSuccess)
 }
 
 // 메뉴 추가 버튼 클릭 시
 const clickAddMenuBtn = (event) => {
+  setMenuHtmlEmptyData.category.main = mainCategoryData
   const html = setMenuHtml(setMenuHtmlEmptyData);
   const _asideEl = document.querySelector('.set_menu_product main aside');
+  const _tableHeader = document.querySelector('.table_header');
+  // 서버에 빈 메뉴 생성 요청 후 데이터 받기
+  // 받은 데이터로 테이블 생성
+  _tableHeader.insertAdjacentHTML('afterend', `
+
+    <li data-id="9" onclick="clickCallMenuData(event)">
+      <div><input type="checkbox"></div>
+      <div>식사류</div>
+      <div>메인</div>
+      <div>탕수육</div>
+      <div>소, 중, 대</div>
+      <div>16,000</div>
+    </li>
+  `);
   _asideEl.innerHTML = html;
 }
 
@@ -454,8 +432,8 @@ const clickAddOptionBtn = (event) => {
 const createMenuOptionHtml = (optionsData) => {
   return optionsData.map(({name, price})=> `
     <div class="flex_box">
-      <input type="text" value="${name}"  placeholder="옵션명">
-      <input type="text" value="${price}" placeholder="가격">
+      <input data-title="option_name" data-type="form" type="text" value="${name}"  placeholder="옵션명">
+      <input data-title="option_price" data-type="form" type="text" value="${price}" placeholder="가격">
       <button class="delete_btn" onclick="clickDeleteOptionBtn(event)">
         <i class="ph ph-trash"></i>
       </button>
@@ -469,16 +447,13 @@ const clickSetMenuCategory = (event) => {
   const target = event.currentTarget;
   const categoryType = target.dataset.category;
   if(categoryType == 'main'){
-    // sub category 조회 api call
-    const _subCategoryEl = document.querySelector('.sub_category_box');
-    const subData = {
-      sub: [
-        { id: 1, name: '메인', checked: false },
-        { id: 2, name: '면류', checked: false },
-        { id: 3, name: '밥류', checked: false }
-      ]
+    const submit_data = { 'main_category_id' : Number(target.dataset.id)};
+    const onSuccess = (data) => {
+      console.log(data);
+      const _subCategoryEl = document.querySelector('.sub_category_box');
+      _subCategoryEl.innerHTML = createCategoryBoxHtml({'sub': data},'sub','서브카테고리')
     }
-    _subCategoryEl.innerHTML = createCategoryBoxHtml(subData,'sub','서브카테고리')
+    fetchData(`/store/get_sub_category`, 'GET', submit_data, onSuccess)
   }
 }
 
@@ -487,4 +462,57 @@ const clickDeleteOptionBtn = (event) => {
   const target = event.currentTarget;
   const optionBox = target.closest(".flex_box");
   optionBox.remove();
+}
+
+// 메뉴 데이터 저장 버튼 클릭 시
+const clickSaveMenuData = (event) => {
+  const elements = document.querySelectorAll('*[data-type="form"]');
+  console.log(elements)
+  const new_data = {};
+  elements.forEach((element) => {
+    const title = element.dataset.title;
+    let value = element.value;
+    if(title == 'image'){
+      value = element.files[0];
+      if (!new_data[title]) {
+        new_data[title] = [];
+      }
+      if (value) {
+        new_data[title].push(value);
+      }
+    }
+    else if(title == 'main_category' || title == 'sub_category'){
+      value = Number(element.dataset.id);
+      new_data[title] = value;
+    }
+    else if(title == 'option_name' || title == 'option_price'){
+      
+    }
+    else{
+      new_data[title] = value;
+    }
+    
+  })
+  console.log(new_data);
+  // const form_data = getData(elements);
+  
+  // const name = document.querySelector('')
+  // const data = {
+  //   "json_data" : [{
+  //     "problem_id" : _targetLi.dataset.id,
+  //     "question_type" : Number(_targetLi.dataset.testtype),
+  //     "user_answer": Number(_targetLi.dataset.testtype) == 1 ? Number(userAnswer) : null,
+  //     "is_correct": isRight
+  //   }],
+  //   "form_data" : [{
+  //     key: `user_answer:${_targetLi.dataset.id}`,
+  //     value: setUserAnswer(this.$curData.dataList.find(data=>data.id == _targetLi.dataset.id),0)
+  //   }]
+  // }
+  // fetchData(`/store/set_menu`, 'POST', data, (data)=>{
+  //   console.log(data)
+  //   if(data.code == 200){
+      
+  //   }
+  // },true)
 }
