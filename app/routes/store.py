@@ -1,12 +1,12 @@
 import json
 from flask import render_template, request, jsonify
 from flask_login import login_required, current_user
-from app.models.menu_category import get_main_and_sub_category_by_menu_id
+from app.models.menu_category import get_main_and_sub_category_by_menu_id, select_main_and_sub_category_by_store_id
 from app.routes import store_bp
 
 from app.models import db, Store
 from app.models.store import create_store, update_store
-from app.models.menu import select_main_category, select_menu, select_sub_category, select_menu_option_all, find_all_menu
+from app.models.menu import create_menu, select_main_category, select_menu, select_sub_category, select_menu_option_all, find_all_menu
 from app.login_manager import update_store_session
 
 
@@ -241,3 +241,21 @@ def set_menu():
     # 기존 메뉴 수정
     if request.method == 'PATCH':
         return True
+    
+    
+# POS관리 -> 상품 정보 등록 페이지
+# '추가' 버튼 클릭 시 메뉴 id 생성
+@store_bp.route('/create_menu', methods=['POST'])
+def api_create_menu():
+    if request.method == 'POST':
+        # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
+        #store_id = 16
+        store_data = request.get_json()
+        store_id = store_data['store_id']
+
+        menu_category_id = select_main_and_sub_category_by_store_id(store_id)
+
+        menu = create_menu(store_id, menu_category_id)
+        print('DB 저장 후 컨트롤러까지 잘 왔음!!! :D')
+        print(menu)
+        return menu
