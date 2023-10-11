@@ -107,8 +107,8 @@ def get_main_category():
     '''
 
     # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
-    store_id = 1
-    # store_id = current_user.id
+    # store_id = 1
+    store_id = current_user.id
     items = select_main_category(store_id)
     main_category_list = []
     for i in items:
@@ -129,8 +129,8 @@ def get_sub_category():
     # 메인카테고리 아무것도 선택 안했을 때 기본값 설정
     if main_category_id is None:
         # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
-        store_id = 1
-        # store_id = current_user.id
+        # store_id = 1
+        store_id = current_user.id
         main_categorys = select_main_category(store_id)
         main_category_id = main_categorys[0].id
 
@@ -151,8 +151,8 @@ def get_sub_category():
 def all_menu_list():
 
     # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
-    store_id = 1
-    # store_id = current_user.id
+    # store_id = 1
+    store_id = current_user.id
 
     menu_items = find_all_menu(store_id)
     # print("@$#", menu_items)

@@ -272,5 +272,5 @@ class TablePaymentList(db.Model):
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
     
     order_details = db.Column(db.Text)  # 주문 내역 컬럼 (문자열로 저장됨), orderDetails.json
-    first_order_time = db.Column(db.DateTime) # 첫 주문 시간
-    payment_time = db.Column(db.DateTime)  # 결제 시간 컬럼(분할 시 최근 결제 마다 업데이트)
+    # first_order_time = db.Column(db.DateTime) # 첫 주문 시간
+    payment_time = db.Column(db.DateTime, default=datetime.now)  # 결제 시간 컬럼(분할 시 최근 결제 마다 업데이트)
