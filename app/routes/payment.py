@@ -6,6 +6,7 @@ from app.routes import payment_bp
 
 from app.models import db, Store
 from app.models.store import create_store, update_store
+from app.models.payment import create_payment
 from app.models.menu import select_main_category, select_menu, select_sub_category, select_menu_option_all, find_all_menu
 from app.login_manager import update_store_session
 
@@ -17,6 +18,11 @@ def api_payment():
     # 받을 더미 데이터
     dummy = {
         'table_id': 1,
+        'payment':  {
+            'discount': 0,  # 할인된 금액
+            'method': 1,    # 1-cash/2-card
+            'price': 35000,
+        },
         'order_list': [
             {
                 "count" : 1,
@@ -36,16 +42,21 @@ def api_payment():
                 "price" : 24000,
                 "option" : []
             }
-        ],
+        ]
+    }
 
-        'payment_list': [
-            {
+    # 분할결제중 전^^기^^ 나가고 결제클릭시 보내줄 데이터
+    new_dummy = {
+        'paid': True,   # 분할결제 이력 있는지-True/없는지-False
+        'discount': 0,
+        'payment': [    # paid False일 경우 빈 리스트
+            {   
                 'method': 1,    # 1-cash/2-card
                 'price': 35000,
             }
         ]
     }
-    
 
+    result = create_payment(dummy)
 
-    return True
+    return result

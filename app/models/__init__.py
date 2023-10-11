@@ -193,12 +193,12 @@ class OrderStatus(db.Model):
 class Order(db.Model):
     __tablename__ = 'order'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    ordered_at = db.Column(db.DateTime, default=datetime.now)
     order_status_id = db.Column(db.Integer, db.ForeignKey('order_status.id'))
     menu_id = db.Column(db.Integer, db.ForeignKey('menu.id'))
     table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
     order_list_id = db.Column(db.Integer, db.ForeignKey('table_order_list.id'))
     menu_options = db.Column(db.Text)
+    ordered_at = db.Column(db.DateTime, default=datetime.now)
     
     def set_menu_options(self, options_dict):
           # Python Dictionary를 JSON 형식으로 변환하여 저장
@@ -250,11 +250,11 @@ class Payment_status(db.Model):
 class Payment(db.Model):
     __tablename__ = 'payment'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    payment_amount = db.Column(db.Integer, nullable=False)  # 결제 금액 컬럼 (실수형)
+    table_payment_list_id = db.Column(db.Integer, db.ForeignKey('table_payment_list.id'))
     payment_method_id = db.Column(db.Integer, db.ForeignKey('payment_method.id'))  # 결제 수단 컬럼
     payment_status = db.Column(db.Integer, db.ForeignKey('payment_status.id'))  # 결제 상태 컬럼
+    payment_amount = db.Column(db.Integer, nullable=False)  # 결제 금액 컬럼 (실수형)
     payment_datetime = db.Column(db.DateTime, default=datetime.now)  # 결제 시간 컬럼
-    table_payment_list_id = db.Column(db.Integer, db.ForeignKey('table_payment_list.id'))
 
     
     # payment_amount = db.Column(db.Integer, nullable=False)
@@ -270,7 +270,8 @@ class TablePaymentList(db.Model):
     __tablename__ = 'table_payment_list'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
-    
+    table_id = db.Column(db.Integer, db.ForeignKey('table.id'), nullable=True)
     order_details = db.Column(db.Text)  # 주문 내역 컬럼 (문자열로 저장됨), orderDetails.json
-    # first_order_time = db.Column(db.DateTime) # 첫 주문 시간
+    discount = db.Column(db.Integer)
+    first_order_time = db.Column(db.DateTime) # 첫 주문 시간
     payment_time = db.Column(db.DateTime, default=datetime.now)  # 결제 시간 컬럼(분할 시 최근 결제 마다 업데이트)
