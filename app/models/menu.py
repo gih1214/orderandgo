@@ -3,6 +3,7 @@ from flask import session
 from app.models import MainCategory, SubCategory, db, Menu, MenuOption
 
 # 메뉴 id 생성
+'''
 def create_menu(store_id, menu_category_id):
     menu = Menu(store_id=store_id, menu_category_id=menu_category_id)
     db.session.add(menu)
@@ -10,29 +11,25 @@ def create_menu(store_id, menu_category_id):
     print('DB에 메뉴 생성 완료')
     print(menu)
     return menu
+'''
 
 # 메뉴 생성
-'''
-def create_menu(name, price, image, main_description, sub_description,
-                is_soldout, store_id, menu_category_id):
-    menu = Menu(name=name, price=price, image=image, main_description=main_description, sub_description=sub_description,
-                 is_soldout=is_soldout, store_id=store_id, menu_category_id=menu_category_id)
+def create_menu(name, price, main_description, sub_description, is_soldout, store_id, menu_category_id):
+    menu = Menu(name=name, price=price, main_description=main_description, sub_description=sub_description,
+                is_soldout=is_soldout, store_id=store_id, menu_category_id=menu_category_id)
     db.session.add(menu)
     db.session.commit()
-    return True
-'''
+    print('DB에 메뉴 생성 완료')
+    return menu
 
-# 메뉴 옵션 생성
-def create_menu_option(name, price, description, store_id, menu_id):
-    menu_option = MenuOption(
-        name=name, 
-        price=price, 
-        description=description, 
-        store_id=store_id, 
-        menu_id=menu_id
-    )
-    db.session.add(menu_option)
+# 메뉴 옵션 생성 (하는 중)
+def create_menu_option(option_list, menu_id):
+    for o in option_list:
+        menu_option = MenuOption(name=o['name'], price=o['price'], menu_id=menu_id)
+        db.session.add(menu_option)
     db.session.commit()
+    print('메뉴 옵션 생성 완료')
+    # 여러개의 옵션을 어떻게 리턴해줄건지? 커밋 후 select all?
     return True
 
 # 메뉴 옵션 조회 (SELECT ID)

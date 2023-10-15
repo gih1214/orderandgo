@@ -6,7 +6,7 @@ from app.routes import store_bp
 
 from app.models import db, Store
 from app.models.store import create_store, update_store
-from app.models.menu import create_menu, select_main_category, select_menu, select_sub_category, select_menu_option_all, find_all_menu
+from app.models.menu import create_menu, create_menu_option, select_main_category, select_menu, select_sub_category, select_menu_option_all, find_all_menu
 from app.login_manager import update_store_session
 
 
@@ -228,7 +228,7 @@ def get_menu():
     return menu_data
 
 
-
+# POS -> 매장관리 -> 상품 정보 수정 -> 조회, 생성, 수정 (진행중)
 @store_bp.route('/set_menu', methods=['GET', 'POST', 'PATCH'])
 def set_menu():
     if request.method == 'GET':
@@ -236,7 +236,33 @@ def set_menu():
 
     # 새 메뉴 추가
     if request.method == 'POST':
-        return True
+        # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
+        # TODO : image, page, position 데이터 받기, 현재 null 처리
+        #store_id = 16
+        menu_data = request.get_json()
+        name = menu_data['name']
+        price = menu_data['price']
+        #image = menu_data['image']
+        main_description = menu_data['main_description']
+        sub_description = menu_data['sub_description']
+        is_soldout = menu_data['is_soldout']
+        store_id = menu_data['store_id']
+        menu_category_id = menu_data['menu_category_id']
+        #page = menu_data['page']
+        #position = menu_data['position']
+        menu_category_id = menu_data['menu_category_id']
+        print('메뉴 넣기 전')
+        menu = create_menu(name, price, main_description, sub_description, is_soldout, store_id, menu_category_id)
+        print('메뉴 생성 후 컨트롤러')
+        print(menu)
+
+        print('옵션 시작')
+        menu_option = create_menu_option(menu_data['option'], menu.id)
+        print('옵션까지 완료')
+
+        ###### 메뉴 생성, 옵션 생성 완료 -> 리턴해줄 데이터 오류 해결하기
+        response = jsonify({'message': 'Success'})
+        return response
     
     # 기존 메뉴 수정
     if request.method == 'PATCH':
@@ -245,6 +271,7 @@ def set_menu():
     
 # POS관리 -> 상품 정보 등록 페이지
 # '추가' 버튼 클릭 시 메뉴 id 생성
+'''
 @store_bp.route('/create_menu', methods=['POST'])
 def api_create_menu():
     if request.method == 'POST':
@@ -259,3 +286,4 @@ def api_create_menu():
         print('DB 저장 후 컨트롤러까지 잘 왔음!!! :D')
         print(menu)
         return menu
+'''
