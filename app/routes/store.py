@@ -6,7 +6,7 @@ from app.routes import store_bp
 
 from app.models import db, Store
 from app.models.store import create_store, update_store
-from app.models.menu import create_menu, create_menu_option, select_main_category, select_menu, select_sub_category, select_menu_option_all, find_all_menu
+from app.models.menu import create_menu, create_menu_option, select_main_category, select_menu, select_menu_all, select_sub_category, select_menu_option_all, find_all_menu
 from app.login_manager import update_store_session
 
 
@@ -147,13 +147,53 @@ def get_sub_category():
     print("\n\n###sub_category_list",sub_category_list)
     return sub_category_list
 
+
+# POS -> 매장관리 -> 상품 정보 수정 -> 전체 메뉴 조회 기능
 @store_bp.route('/all_menu_list', methods=['GET'])
 def all_menu_list():
-
     # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
-    # store_id = 1
-    store_id = current_user.id
+    store_id = 16
+    #store_id = current_user.id
 
+    all_menu_list = []
+    main_categories = select_main_category(store_id) # 메인 카테고리 조회
+
+    for t in main_categories:
+        main_category_id = t.id # 메인 카테고리 ID
+        main_category_name = t.name # 메인 카테고리명
+        sub_categories = select_sub_category(main_category_id) # 서브 카테고리 조회
+
+        for s in sub_categories:
+            sub_category_id = s.id # 메인 카테고리 ID
+            sub_category_name = s.name # 메인 카테고리명
+            menus = select_menu_all(sub_category_id) # 메뉴 조회
+            #sorted_menus = sorted(menus, key=lambda menu: (menu.page, menu.position))
+
+            for m in menus:
+                option_list = []
+                all_option_list = select_menu_option_all(m.id)
+                for o in all_option_list:
+                    option_list.append({
+                        'option_id': o.id,
+                        'option_name': o.name,
+                        'option_price': o.price
+                    })
+
+                all_menu_list.append({
+                    'id': m.id,
+                    'name': m.name,
+                    'price': m.price,
+                    #'image': m.image,
+                    'main_description': m.main_description,
+                    'sub_description': m.sub_description,
+                    #'is_soldout': m.is_soldout,
+                    'main_category_id': main_category_id,
+                    'main_category_name': main_category_name,
+                    'sub_category_id': sub_category_id,
+                    'sub_category_name': sub_category_name,
+                    'option': option_list
+                })
+    '''
     menu_items = find_all_menu(store_id)
     # print("@$#", menu_items)
 
@@ -179,7 +219,9 @@ def all_menu_list():
         })
 
     print("@@@", all_menu_list)
-    return all_menu_list
+    '''
+    return jsonify(all_menu_list)
+
 
 @store_bp.route('/get_menu', methods=['GET'])
 def get_menu():
@@ -227,66 +269,8 @@ def get_menu():
     }
     return menu_data
 
-'''
-# 테이블 -> 메뉴리스트에 필요한 메뉴 데이터 (json)
-@pos_bp.route('/get_menu_list/<table_id>', methods=['GET'])
-def get_menu_list(table_id):
-    
-    store_id = current_user.id
-    all_menu_list = []
-    menu_categories = select_main_category(store_id) # 메인 카테고리 조회
-    for t in menu_categories:
-        category_name = t.name
-        category_id = t.id
-        menus = select_menu_all(category_id)
-        sorted_menus = sorted(menus, key=lambda menu: (menu.page, menu.position))
-        
-        def sort_menu(menu):
-            option_list = [];
-            menu_options = select_menu_option_all(menu.id)
-            if isinstance(menu_options, list):
-                for option in menu_options:
-                    option_data = {
-                        "optionId" : option.id,
-                        "option" : option.name,
-                        "price" : option.price
-                    }
-                    option_list.append(option_data)
-            return {
-                "menuId": menu.id, 
-                "menu": menu.name,
-                "price": menu.price,
-                "optionList" : option_list
-            }
 
-        # 페이지별로 그룹화
-        page_list = [];
-        current_page = None
-        if len(sorted_menus) > 0:    
-            for menu in sorted_menus:
-                if menu.page != current_page:
-                    current_page = menu.page
-                    page_list.append({
-                        "page": current_page, 
-                        "menuList": [sort_menu(menu)]
-                    })
-                else:
-                    page_list[-1]["menuList"].append(sort_menu(menu))
-        else:
-            page_list.append({
-                "page": 1, 
-                "menuList": []
-            })
-        all_menu_list.append({
-            "categoryId" : category_id,
-            "category" : category_name,
-            "pageList" : page_list
-        })
-
-    return jsonify(all_menu_list)
-'''
-
-# POS -> 매장관리 -> 상품 정보 수정 -> 조회, 생성, 수정 (진행중)
+# POS -> 매장관리 -> 상품 정보 수정 -> 생성(완료), 수정(진행중)
 @store_bp.route('/set_menu', methods=['GET', 'POST', 'PATCH'])
 def set_menu():
     if request.method == 'GET':

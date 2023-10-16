@@ -70,10 +70,9 @@ def select_menu(menu_id):
     return item
 
 # 메뉴 조회 (SELECT ALL)
-def select_menu_all(main_category_id):
+def select_menu_all(menu_category_id):
     item = Menu.query\
-        .filter(SubCategory.id == Menu.menu_category_id)\
-        .filter(SubCategory.main_category_id == main_category_id).all()
+        .filter(Menu.menu_category_id == menu_category_id).all()
     if not item:
         return [] # 카테고리에 메뉴가 하나도 없음, 오류 발생
     return item
