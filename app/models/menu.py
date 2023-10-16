@@ -19,17 +19,14 @@ def create_menu(name, price, main_description, sub_description, is_soldout, stor
                 is_soldout=is_soldout, store_id=store_id, menu_category_id=menu_category_id)
     db.session.add(menu)
     db.session.commit()
-    print('DB에 메뉴 생성 완료')
-    return menu
+    return menu # 커밋된 메뉴 리턴
 
-# 메뉴 옵션 생성 (하는 중)
+# 메뉴 옵션 생성
 def create_menu_option(option_list, menu_id):
     for o in option_list:
         menu_option = MenuOption(name=o['name'], price=o['price'], menu_id=menu_id)
         db.session.add(menu_option)
     db.session.commit()
-    print('메뉴 옵션 생성 완료')
-    # 여러개의 옵션을 어떻게 리턴해줄건지? 커밋 후 select all?
     return True
 
 # 메뉴 옵션 조회 (SELECT ID)

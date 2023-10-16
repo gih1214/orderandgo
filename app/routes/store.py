@@ -227,6 +227,64 @@ def get_menu():
     }
     return menu_data
 
+'''
+# 테이블 -> 메뉴리스트에 필요한 메뉴 데이터 (json)
+@pos_bp.route('/get_menu_list/<table_id>', methods=['GET'])
+def get_menu_list(table_id):
+    
+    store_id = current_user.id
+    all_menu_list = []
+    menu_categories = select_main_category(store_id) # 메인 카테고리 조회
+    for t in menu_categories:
+        category_name = t.name
+        category_id = t.id
+        menus = select_menu_all(category_id)
+        sorted_menus = sorted(menus, key=lambda menu: (menu.page, menu.position))
+        
+        def sort_menu(menu):
+            option_list = [];
+            menu_options = select_menu_option_all(menu.id)
+            if isinstance(menu_options, list):
+                for option in menu_options:
+                    option_data = {
+                        "optionId" : option.id,
+                        "option" : option.name,
+                        "price" : option.price
+                    }
+                    option_list.append(option_data)
+            return {
+                "menuId": menu.id, 
+                "menu": menu.name,
+                "price": menu.price,
+                "optionList" : option_list
+            }
+
+        # 페이지별로 그룹화
+        page_list = [];
+        current_page = None
+        if len(sorted_menus) > 0:    
+            for menu in sorted_menus:
+                if menu.page != current_page:
+                    current_page = menu.page
+                    page_list.append({
+                        "page": current_page, 
+                        "menuList": [sort_menu(menu)]
+                    })
+                else:
+                    page_list[-1]["menuList"].append(sort_menu(menu))
+        else:
+            page_list.append({
+                "page": 1, 
+                "menuList": []
+            })
+        all_menu_list.append({
+            "categoryId" : category_id,
+            "category" : category_name,
+            "pageList" : page_list
+        })
+
+    return jsonify(all_menu_list)
+'''
 
 # POS -> 매장관리 -> 상품 정보 수정 -> 조회, 생성, 수정 (진행중)
 @store_bp.route('/set_menu', methods=['GET', 'POST', 'PATCH'])
@@ -240,29 +298,26 @@ def set_menu():
         # TODO : image, page, position 데이터 받기, 현재 null 처리
         #store_id = 16
         menu_data = request.get_json()
+
         name = menu_data['name']
         price = menu_data['price']
         #image = menu_data['image']
         main_description = menu_data['main_description']
         sub_description = menu_data['sub_description']
-        is_soldout = menu_data['is_soldout']
+        is_soldout = menu_data['is_soldout'] # null 허용X -> false 기본값으로 넣고 있음
         store_id = menu_data['store_id']
         menu_category_id = menu_data['menu_category_id']
         #page = menu_data['page']
         #position = menu_data['position']
         menu_category_id = menu_data['menu_category_id']
-        print('메뉴 넣기 전')
+
+        # 메뉴 create
         menu = create_menu(name, price, main_description, sub_description, is_soldout, store_id, menu_category_id)
-        print('메뉴 생성 후 컨트롤러')
-        print(menu)
 
-        print('옵션 시작')
+        # 메뉴 옵션 create
         menu_option = create_menu_option(menu_data['option'], menu.id)
-        print('옵션까지 완료')
 
-        ###### 메뉴 생성, 옵션 생성 완료 -> 리턴해줄 데이터 오류 해결하기
-        response = jsonify({'message': 'Success'})
-        return response
+        return jsonify({'message': '메뉴가 성공적으로 생성되었습니다.'}), 201
     
     # 기존 메뉴 수정
     if request.method == 'PATCH':
