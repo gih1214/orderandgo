@@ -299,4 +299,28 @@ const createCompletedPaymentModal = (event, type) => {
     </div>
   `
   _modalBody.innerHTML = html;
+  setPayment(type == 'CASH' ? 1 : 2)
+}
+
+const setOrderList = () => {
+  const items = deepCopy(setBasketData(order_history));
+  return order_list = items.map((item)=>{
+    delete item.data.id;
+    item.data.options.forEach((option)=>{
+      delete option.id
+    })
+    return item.data
+  })
+}
+
+const setPayment = (method) => {
+  const tableId = lastPath;
+  const order_list = setOrderList();
+  const price = Number(document.querySelector('.payment main section article .top .total_price span').textContent);
+  const payment = {
+    'discount': 0,  
+    'method': method,
+    'price': price
+  }
+  console.log(tableId,order_list)
 }

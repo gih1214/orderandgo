@@ -68,18 +68,18 @@
       <article>
         <div class="article_top">
           <div class="buttons">
-            <button><span>전체</span></button>
-            <button><span>전체 취소</span></button>
+            <button onclick="clickAllSeleteBtn(event)"><span>전체</span></button>
+            <button onclick="clickAllCnacelSeleteBtn(event)"><span>전체 취소</span></button>
           </div>
           <div class="buttons">
-            <button class="delete_btn"><span>삭제</span></button>
+            <button class="delete_btn" onclick="clickDeleteMenu(event)"><span>삭제</span></button>
             <button class="add_btn" onclick="clickAddMenuBtn(event)"><span>추가</span></button>
           </div>
         </div>
         <div class="article_bottom scrollbar_hidden">
           <ul class="scrollbar_hidden">
-            <li>
-              <div><input type="checkbox"></div>
+            <li class="table_header">
+              <div><input type="checkbox" onclick="clickAllCheckBox(event)"></div>
               <div>메인카테고리</div>
               <div>서브카테고리</div>
               <div>메뉴명</div>

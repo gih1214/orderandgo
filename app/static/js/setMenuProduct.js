@@ -41,7 +41,7 @@ callAllMenuList();
 const createMenuTable = (data) => {
   const html = `
     <li class="table_header">
-      <div><input type="checkbox"></div>
+      <div><input type="checkbox" onclick="clickAllCheckBox(event)"></div>
       <div>메인카테고리</div>
       <div>서브카테고리</div>
       <div>메뉴명</div>
@@ -149,6 +149,7 @@ function previewImage(event) {
 // 멀티 이미지 프리뷰 만들기 
 function multiPreviewImage(event) {
   event.preventDefault();
+  const _mainInput = document.querySelector('#main_menu_img');
   if(_mainInput.files.length > 4) {
     alert('메뉴 이미지는 최대 4개까지 설정이 가능합니다.')
     return;
@@ -162,12 +163,14 @@ function multiPreviewImage(event) {
       _img.setAttribute('src', e.target.result);
       menuImgData[i] = e.target.result;
       if(i == 0) {
+        const _mainImg = _mainImgBox.querySelector('img');
         _mainImg.setAttribute('src',e.target.result)
       }
       _imgBox.classList.add('active');    
     }
     reader.readAsDataURL(_mainInput.files[i]);
   }
+  const _mainImgBox = document.querySelector('.main_img');
   _mainImgBox.classList.add('active');
   _mainImgBox.dataset.index = 1;
   
@@ -306,11 +309,11 @@ const setMenuHtml = ({imgList,name,price,description,category,options}) => {
       <div class="left">
         <label for="">
           <span>메뉴명</span>
-          <input data-title="name" data-type="form" type="text" value="${name}">
+          <input data-title="name" data-required="true" data-type="form" type="text" value="${name}">
         </label>
         <label for="">
           <span>판매가</span>
-          <input data-title="price" data-type="form" type="text" value="${price}">
+          <input data-title="price" data-required="true" data-type="form" type="text" value="${price}">
         </label>
         <label for="">
           <span>메뉴 설명</span>
@@ -403,20 +406,25 @@ const clickAddMenuBtn = (event) => {
   const html = setMenuHtml(setMenuHtmlEmptyData);
   const _asideEl = document.querySelector('.set_menu_product main aside');
   const _tableHeader = document.querySelector('.table_header');
-  // 서버에 빈 메뉴 생성 요청 후 데이터 받기
-  // 받은 데이터로 테이블 생성
-  _tableHeader.insertAdjacentHTML('afterend', `
 
-    <li data-id="9" onclick="clickCallMenuData(event)">
-      <div><input type="checkbox"></div>
-      <div>식사류</div>
-      <div>메인</div>
-      <div>탕수육</div>
-      <div>소, 중, 대</div>
-      <div>16,000</div>
-    </li>
-  `);
+  clickResponsiveBtn(event) // 메뉴 편집 창 열기
   _asideEl.innerHTML = html;
+  const _inputName = document.querySelector('input[data-title="name"]');
+  _inputName.focus();
+
+  // // 서버에 빈 메뉴 생성 요청 후 데이터 받기
+  // // 받은 데이터로 테이블 생성
+  // _tableHeader.insertAdjacentHTML('afterend', `
+  //   <li data-id="9" onclick="clickCallMenuData(event)">
+  //     <div><input type="checkbox"></div>
+  //     <div>식사류</div>
+  //     <div>메인</div>
+  //     <div>탕수육</div>
+  //     <div>소, 중, 대</div>
+  //     <div>16,000</div>
+  //   </li>
+  // `);
+  
 }
 
 // 메뉴 옵션 추가 버튼 클릭 시
@@ -467,33 +475,48 @@ const clickDeleteOptionBtn = (event) => {
 // 메뉴 데이터 저장 버튼 클릭 시
 const clickSaveMenuData = (event) => {
   const elements = document.querySelectorAll('*[data-type="form"]');
-  console.log(elements)
   const new_data = {};
+  const form_data = [];
+  let optionsCount = 0;
   elements.forEach((element) => {
     const title = element.dataset.title;
     let value = element.value;
     if(title == 'image'){
-      value = element.files[0];
       if (!new_data[title]) {
         new_data[title] = [];
       }
-      if (value) {
-        new_data[title].push(value);
-      }
+      const _imgBox = findParentTarget(element, '.img_box');
+      const _img = _imgBox?.querySelector('img');
+      const imgData = _img?.getAttribute('src');
+      if(imgData == '') return
+      form_data.push({
+        key : element.id,
+        value : getUriToBlobToFile(imgData)
+      })
+      new_data[title].push(element.id);
     }
     else if(title == 'main_category' || title == 'sub_category'){
       value = Number(element.dataset.id);
       new_data[title] = value;
     }
-    else if(title == 'option_name' || title == 'option_price'){
-      
+    else if(title == 'option_name'){
+      if(optionsCount == 0) new_data.options = [];
+      new_data.options.push({});
+      new_data.options[optionsCount].name = element.value;
+    }
+    else if(title == 'option_price'){
+      new_data.options[optionsCount].price = element.value;
+      optionsCount += 1;
     }
     else{
       new_data[title] = value;
     }
-    
   })
-  console.log(new_data);
+  const data = {
+    json_data : new_data,
+    form_data : form_data
+  }
+  console.log(data);
   // const form_data = getData(elements);
   
   // const name = document.querySelector('')
@@ -515,4 +538,36 @@ const clickSaveMenuData = (event) => {
       
   //   }
   // },true)
+}
+
+// 체크박스 전체 토글
+const clickAllCheckBox = (event) => {
+  const isChecked = event.target.checked;
+  const _checkBoxs = document.querySelectorAll('.set_menu_product main article .article_bottom ul li div:first-child input' );
+  _checkBoxs.forEach((_checkBox) => _checkBox.checked = isChecked)
+}
+
+// 전체 선택 버튼 클릭 시
+const clickAllSeleteBtn = (e) => {
+  const _checkBoxs = document.querySelectorAll('.set_menu_product main article .article_bottom ul li div:first-child input' );
+  _checkBoxs.forEach((_checkBox) => _checkBox.checked = true)
+}
+
+// 전체 취소 버튼 클릭 시
+const clickAllCnacelSeleteBtn = (e) => {
+  const _checkBoxs = document.querySelectorAll('.set_menu_product main article .article_bottom ul li div:first-child input' );
+  _checkBoxs.forEach((_checkBox) => _checkBox.checked = false)
+}
+
+// 메뉴 삭제 버튼 클릭 시
+const clickDeleteMenu = (e) => {
+  const _checkBoxs = document.querySelectorAll('.set_menu_product main article .article_bottom ul li:not(.table_header) div:first-child input:checked');
+  
+  const menuList = [..._checkBoxs].map((checkBox) => findParentTarget(checkBox, 'li'));
+  const menuIdList = menuList.map((menu) => Number(menu.dataset.id));
+
+  // 삭제 api 연결,
+  menuList.forEach((menu)=>{menu.remove()});
+
+
 }
