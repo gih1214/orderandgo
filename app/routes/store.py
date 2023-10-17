@@ -6,7 +6,7 @@ from app.routes import store_bp
 
 from app.models import db, Store
 from app.models.store import create_store, update_store
-from app.models.menu import create_menu, select_main_category, select_menu, select_sub_category, select_menu_option_all, find_all_menu
+from app.models.menu import create_menu, create_menu_option, select_main_category, select_menu, select_menu_all, select_sub_category, select_menu_option_all, find_all_menu
 from app.login_manager import update_store_session
 
 
@@ -147,13 +147,53 @@ def get_sub_category():
     
     return sub_category_list
 
+
+# POS -> 매장관리 -> 상품 정보 수정 -> 전체 메뉴 조회 기능
 @store_bp.route('/all_menu_list', methods=['GET'])
 def all_menu_list():
-
     # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
-    # store_id = 1
-    store_id = current_user.id
+    store_id = 16
+    #store_id = current_user.id
 
+    all_menu_list = []
+    main_categories = select_main_category(store_id) # 메인 카테고리 조회
+
+    for t in main_categories:
+        main_category_id = t.id # 메인 카테고리 ID
+        main_category_name = t.name # 메인 카테고리명
+        sub_categories = select_sub_category(main_category_id) # 서브 카테고리 조회
+
+        for s in sub_categories:
+            sub_category_id = s.id # 메인 카테고리 ID
+            sub_category_name = s.name # 메인 카테고리명
+            menus = select_menu_all(sub_category_id) # 메뉴 조회
+            #sorted_menus = sorted(menus, key=lambda menu: (menu.page, menu.position))
+
+            for m in menus:
+                option_list = []
+                all_option_list = select_menu_option_all(m.id)
+                for o in all_option_list:
+                    option_list.append({
+                        'option_id': o.id,
+                        'option_name': o.name,
+                        'option_price': o.price
+                    })
+
+                all_menu_list.append({
+                    'id': m.id,
+                    'name': m.name,
+                    'price': m.price,
+                    #'image': m.image,
+                    'main_description': m.main_description,
+                    'sub_description': m.sub_description,
+                    #'is_soldout': m.is_soldout,
+                    'main_category_id': main_category_id,
+                    'main_category_name': main_category_name,
+                    'sub_category_id': sub_category_id,
+                    'sub_category_name': sub_category_name,
+                    'option': option_list
+                })
+    '''
     menu_items = find_all_menu(store_id)
     # print("@$#", menu_items)
 
@@ -179,7 +219,9 @@ def all_menu_list():
         })
 
     print("@@@", all_menu_list)
-    return all_menu_list
+    '''
+    return jsonify(all_menu_list)
+
 
 @store_bp.route('/get_menu', methods=['GET'])
 def get_menu():
@@ -228,7 +270,7 @@ def get_menu():
     return menu_data
 
 
-
+# POS -> 매장관리 -> 상품 정보 수정 -> 생성(완료), 수정(진행중)
 @store_bp.route('/set_menu', methods=['GET', 'POST', 'PATCH'])
 def set_menu():
     if request.method == 'GET':
@@ -236,7 +278,30 @@ def set_menu():
 
     # 새 메뉴 추가
     if request.method == 'POST':
-        return True
+        # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
+        # TODO : image, page, position 데이터 받기, 현재 null 처리
+        #store_id = 16
+        menu_data = request.get_json()
+
+        name = menu_data['name']
+        price = menu_data['price']
+        #image = menu_data['image']
+        main_description = menu_data['main_description']
+        sub_description = menu_data['sub_description']
+        is_soldout = menu_data['is_soldout'] # null 허용X -> false 기본값으로 넣고 있음
+        store_id = menu_data['store_id']
+        menu_category_id = menu_data['menu_category_id']
+        #page = menu_data['page']
+        #position = menu_data['position']
+        menu_category_id = menu_data['menu_category_id']
+
+        # 메뉴 create
+        menu = create_menu(name, price, main_description, sub_description, is_soldout, store_id, menu_category_id)
+
+        # 메뉴 옵션 create
+        menu_option = create_menu_option(menu_data['option'], menu.id)
+
+        return jsonify({'message': '메뉴가 성공적으로 생성되었습니다.'}), 201
     
     # 기존 메뉴 수정
     if request.method == 'PATCH':
@@ -245,6 +310,7 @@ def set_menu():
     
 # POS관리 -> 상품 정보 등록 페이지
 # '추가' 버튼 클릭 시 메뉴 id 생성
+'''
 @store_bp.route('/create_menu', methods=['POST'])
 def api_create_menu():
     if request.method == 'POST':
@@ -259,3 +325,4 @@ def api_create_menu():
         print('DB 저장 후 컨트롤러까지 잘 왔음!!! :D')
         print(menu)
         return menu
+'''

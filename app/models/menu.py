@@ -3,6 +3,7 @@ from flask import session
 from app.models import MainCategory, SubCategory, db, Menu, MenuOption
 
 # 메뉴 id 생성
+'''
 def create_menu(store_id, menu_category_id):
     menu = Menu(store_id=store_id, menu_category_id=menu_category_id)
     db.session.add(menu)
@@ -10,28 +11,21 @@ def create_menu(store_id, menu_category_id):
     print('DB에 메뉴 생성 완료')
     print(menu)
     return menu
+'''
 
 # 메뉴 생성
-'''
-def create_menu(name, price, image, main_description, sub_description,
-                is_soldout, store_id, menu_category_id):
-    menu = Menu(name=name, price=price, image=image, main_description=main_description, sub_description=sub_description,
-                 is_soldout=is_soldout, store_id=store_id, menu_category_id=menu_category_id)
+def create_menu(name, price, main_description, sub_description, is_soldout, store_id, menu_category_id):
+    menu = Menu(name=name, price=price, main_description=main_description, sub_description=sub_description,
+                is_soldout=is_soldout, store_id=store_id, menu_category_id=menu_category_id)
     db.session.add(menu)
     db.session.commit()
-    return True
-'''
+    return menu # 커밋된 메뉴 리턴
 
 # 메뉴 옵션 생성
-def create_menu_option(name, price, description, store_id, menu_id):
-    menu_option = MenuOption(
-        name=name, 
-        price=price, 
-        description=description, 
-        store_id=store_id, 
-        menu_id=menu_id
-    )
-    db.session.add(menu_option)
+def create_menu_option(option_list, menu_id):
+    for o in option_list:
+        menu_option = MenuOption(name=o['name'], price=o['price'], menu_id=menu_id)
+        db.session.add(menu_option)
     db.session.commit()
     return True
 
@@ -76,10 +70,9 @@ def select_menu(menu_id):
     return item
 
 # 메뉴 조회 (SELECT ALL)
-def select_menu_all(main_category_id):
+def select_menu_all(menu_category_id):
     item = Menu.query\
-        .filter(SubCategory.id == Menu.menu_category_id)\
-        .filter(SubCategory.main_category_id == main_category_id).all()
+        .filter(Menu.menu_category_id == menu_category_id).all()
     if not item:
         return [] # 카테고리에 메뉴가 하나도 없음, 오류 발생
     return item
