@@ -61,6 +61,10 @@ main section article .item{
   overflow: hidden;
   transition: all .25s;
 }
+main section article .item.disabled{
+  visibility: hidden;
+  opacity: 0;
+}
 main section article .item:hover {
   border: 1px solid #1FAA9C;
   background: #F3FAFA;
@@ -354,6 +358,8 @@ main section > aside .custom_btns button{
 /* ##### order ##### */
 #container.order main section article .menus {
   grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 1fr;
+  height:100%;
 }
 #container.order main {
   display: flex;
@@ -743,6 +749,18 @@ main section > aside .custom_btns button{
   border: 1px solid #CCC;
   font-size: 14px;
   font-weight: 500;
+}
+.payment .modal-content .modal-body .top .content .percent_num_btns {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.payment .modal-content .modal-body .top .content .percent_num_btns button {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #1FAA9C;
+  color : #1FAA9C;
 }
 .payment .modal-content .modal-body .top .content .split_payment_amount,
 .payment .modal-content .modal-body .top .content .cash_amount,

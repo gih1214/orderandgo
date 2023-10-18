@@ -48,11 +48,11 @@ const createMenuTable = (data) => {
       <div>옵션</div>
       <div>가격</div>
     </li>
-    ${data.map(({ id, main_category, sub_category, name, price, option })=>`
+    ${data.map(({ id, main_category_id, main_category_name, sub_category_id, sub_category_name, name, price, option })=>`
     <li data-id="${id}" onclick="clickCallMenuData(event)">
       <div><input type="checkbox"></div>
-      <div>${main_category}</div>
-      <div>${sub_category}</div>
+      <div>${main_category_name}</div>
+      <div>${sub_category_name}</div>
       <div>${name}</div>
       <div>${option.length == 0 ? `-` : `${option.map((data)=>data.option_name).join(', ')}`}</div>
       <div>${price.toLocaleString()}</div>

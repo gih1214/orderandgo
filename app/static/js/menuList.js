@@ -111,18 +111,21 @@ const changeMenuCategory = (event, index) => {
 
 // 메뉴 html 변경
 const changeMenuHtml = (menus) => {
-  let html = '';
-  menus.forEach((menu, index)=>{
-    html += `
+  menus.sort((a,b)=> a.position-b.position);
+  const forArray = Array.from({ length: 24 }, () => false);
+  menus.forEach((menu)=>forArray[menu.position-1] = menu);
+  return forArray.map((menu)=> `
+    ${menu == false ? `
+      <button class="menu item disabled"></button>` 
+      : `
       <button class="menu item" data-id="${menu.menuId}" onclick="clickMenu(event)">
         <div class="title">
           <h2 class="ellipsis">${menu.menu}</h2>
         </div>
         <span class="price">${menu.price.toLocaleString()}원</span>
       </button>
-    `
-  })
-  return html;
+    ` }
+  `).join('');
 }
 
 

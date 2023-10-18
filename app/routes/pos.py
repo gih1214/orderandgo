@@ -1,5 +1,5 @@
 from flask import render_template, jsonify, request
-from app.models.menu import select_main_category, select_menu_all, select_menu, select_menu_option, select_menu_option_all
+from app.models.menu import select_main_category, select_menu_all, select_menu, select_menu_option, select_menu_option_all, select_menu_all_to_main_category
 from app.models.order import find_order_list, get_orders_by_store_id
 from flask_login import login_required, current_user
 
@@ -35,7 +35,7 @@ def get_table_page():
 
     # 실행할 코드
     orders = get_orders_by_store_id(store_id)
-    print('orders,',orders)
+    
 
     # # 가져온 데이터 사용 예시
     # for order in orders:
@@ -51,7 +51,7 @@ def get_table_page():
     
     all_table_list = []
     
-    print('store_id,',store_id)
+    
     table_categories = select_table_category(store_id)
 
     
@@ -193,7 +193,8 @@ def get_menu_list(table_id):
     for t in menu_categories:
         category_name = t.name
         category_id = t.id
-        menus = select_menu_all(category_id)
+        menus = select_menu_all_to_main_category(category_id)
+        
         sorted_menus = sorted(menus, key=lambda menu: (menu.page, menu.position))
         
         def sort_menu(menu):
@@ -211,6 +212,8 @@ def get_menu_list(table_id):
                 "menuId": menu.id, 
                 "menu": menu.name,
                 "price": menu.price,
+                "page": menu.page,
+                "position" : menu.position,
                 "optionList" : option_list
             }
 

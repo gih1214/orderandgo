@@ -31,27 +31,29 @@ const clickDiscount = (event) => {
   _modalTitle.innerHTML = '할인'
   let html = `
   <div class="top ">
-    <div class="content direct" data-type="direct">
+    <div class="content won" data-type="won">
       <div class="tab_btns">
-        <button class="direct_btn" onclick="">금액(￦)</button>
-        <button class="dutch_btn" onclick="">퍼센트(%)</button>
+        <button class="won_btn" onclick="">원</button>
+        <button class="percent_btn" onclick="">%</button>
       </div>
       <div class="receive_amount">
-          <h3>받을 금액</h3>
-          <span>94,000원</span>
-        </div>
-      <div class="dutch_content">
-        <h3>할인 퍼센트(%)</h3>
-        <input type="text" oninput="updatePaymentAmount(event)"/>
+        <h3>받을 금액</h3>
+        <span>94,000원</span>
       </div>
-      <div class="direct_content">
+      <div class="won_content">
         <div class="payment_amount">
-          <h3>할인 금액(￦)</h3>
+          <h3>할인 금액</h3>
           <input type="text" oninput="updatePaymentAmount(event)"/>
+        </div>
+        <div class="percent_num_btns">
+          <button>10%</button>
+          <button>20%</button>
+          <button>30%</button>
+          <button>50%</button>
         </div>
       </div>
       <div class="split_payment_amount">
-          <h3>결제 금액</h3>
+          <h3>할인 적용 금액</h3>
           <span>94,000원</span>
         </div>
     </div>
