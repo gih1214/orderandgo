@@ -721,6 +721,16 @@ main section > aside .custom_btns button{
   font-size: 14px;
   font-weight: 600;
 }
+.payment .modal-content .modal-body .top .content.won .tab_btns button.won_btn {
+  color: #1FAA9C;
+  border: 1px solid #1FAA9C;
+  background: #F3FAFA;
+}
+.payment .modal-content .modal-body .top .content.percent .tab_btns button.percent_btn {
+  color: #1FAA9C;
+  border: 1px solid #1FAA9C;
+  background: #F3FAFA;
+}
 .payment .modal-content .modal-body .top .content h3 {
   font-size: 16px;
   font-weight: 700;
@@ -736,13 +746,18 @@ main section > aside .custom_btns button{
   font-size: 16px;
   font-weight: 700;
 }
+.payment .modal-content .modal-body .top .content .won_content {
+  flex: 1;
+}
 .payment .modal-content .modal-body .top .content .payment_amount {
+  position: relative;
   flex: 1;
 }
 .payment .modal-content .modal-body .top .content .payment_amount h3 {
   margin-bottom: 10px;
 }
 .payment .modal-content .modal-body .top .content .payment_amount input {
+  display: none;
   width: 100%;
   padding: 12px; 
   border-radius: 5px;
@@ -750,17 +765,46 @@ main section > aside .custom_btns button{
   font-size: 14px;
   font-weight: 500;
 }
+.payment .modal-content .modal-body .top .content .payment_amount span {
+  display: none;
+}
+.payment .modal-content .modal-body .top .content.direct .payment_amount .direct_input {
+  display: block;
+}
+.payment .modal-content .modal-body .top .content.percent .payment_amount .percent_input {
+  display: block;
+}
+.payment .modal-content .modal-body .top .content.won .payment_amount .won_input {
+  display: block;
+}
+.payment .modal-content .modal-body .top .content.cash .payment_amount .cash_input {
+  display: block;
+}
+.payment .modal-content .modal-body .top .content .payment_amount span{
+  position: absolute;
+  top: 57.5px;
+  left: 15px;
+  transform: translateY(-50%);
+}
 .payment .modal-content .modal-body .top .content .percent_num_btns {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  padding-top: 10px;
+}
+.payment .modal-content .modal-body .top .content.won .percent_num_btns {
+  display: none
 }
 .payment .modal-content .modal-body .top .content .percent_num_btns button {
   flex: 1;
   padding: 10px;
+  text-align: center;
+  border-radius: 5px;
   border: 1px solid #1FAA9C;
-  color : #1FAA9C;
+  color: #1FAA9C;
+  font-size: 14px;
+  font-weight: 700;
 }
 .payment .modal-content .modal-body .top .content .split_payment_amount,
 .payment .modal-content .modal-body .top .content .cash_amount,

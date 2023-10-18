@@ -96,6 +96,16 @@ const getUriToBlobToFile = (dataURL, fileName) => {
 
   return new Blob([arrayBuffer], { type: mimeString });
 }
+// 입력 받은 텍스트 길이 계산하기
+function calculateTextWidth(text) {
+  const hiddenSpan = document.createElement('span');
+  hiddenSpan.className = 'hiddenSpan';
+  hiddenSpan.textContent = text;
+  document.body.appendChild(hiddenSpan);
+  const textWidth = hiddenSpan.offsetWidth;
+  document.body.removeChild(hiddenSpan);
+  return textWidth;
+}
 
 // 모달 배경 및 닫기 클릭 시 모달 닫기
 window.onclick = function (event) {

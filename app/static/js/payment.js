@@ -31,10 +31,10 @@ const clickDiscount = (event) => {
   _modalTitle.innerHTML = '할인'
   let html = `
   <div class="top ">
-    <div class="content won" data-type="won">
+    <div class="content won" data-type="won" data-total="94000">
       <div class="tab_btns">
-        <button class="won_btn" onclick="">원</button>
-        <button class="percent_btn" onclick="">%</button>
+        <button class="won_btn" onclick="clickWonBtn(event)">원</button>
+        <button class="percent_btn" onclick="clickPercentBtn(event)">%</button>
       </div>
       <div class="receive_amount">
         <h3>받을 금액</h3>
@@ -43,7 +43,14 @@ const clickDiscount = (event) => {
       <div class="won_content">
         <div class="payment_amount">
           <h3>할인 금액</h3>
-          <input type="text" oninput="updatePaymentAmount(event)"/>
+          <input class="direct_input" type="text" oninput="updatePaymentAmount(event)"/>
+          <span class="direct_input">원</span>
+          <input class="percent_input" type="text" oninput="updatePaymentAmount(event)" />
+          <span class="percent_input">%</span>
+          <input class="won_input" type="text" oninput="updatePaymentAmount(event)" />
+          <span class="won_input">원</span>
+          <input class="cash_input" type="text" oninput="updatePaymentAmount(event)" />
+          <span class="cash_input">원</span>
         </div>
         <div class="percent_num_btns">
           <button>10%</button>
@@ -88,7 +95,7 @@ const clickSplitPayment = (event) => {
   _modalTitle.innerHTML = '분할 결제'
   let html = `
     <div class="top ">
-      <div class="content direct" data-type="direct">
+      <div class="content direct" data-total="94000" data-type="direct">
         <div class="tab_btns">
           <button class="direct_btn" onclick="clickDirectBtn(event)">직접 입력</button>
           <button class="dutch_btn" onclick="clickDutchBtn(event)">더치 페이</button>
@@ -107,7 +114,14 @@ const clickSplitPayment = (event) => {
         <div class="direct_content">
           <div class="payment_amount">
             <h3>결제 금액</h3>
-            <input type="text" oninput="updatePaymentAmount(event)"/>
+            <input class="direct_input" type="text" oninput="updatePaymentAmount(event)"/>
+            <span class="direct_input">원</span>
+            <input class="percent_input" type="text" oninput="updatePaymentAmount(event)" />
+            <span class="percent_input">%</span>
+            <input class="won_input" type="text" oninput="updatePaymentAmount(event)" />
+            <span class="won_input">원</span>
+            <input class="cash_input" type="text" oninput="updatePaymentAmount(event)" />
+            <span class="cash_input">원</span>
           </div>
         </div>
         <div class="split_payment_amount">
@@ -157,12 +171,12 @@ const clickDutchBtn = (event) => {
 const clickNumberPad = (event) => {
   const _modalLeftEl = document.querySelector('.payment .modal-content .modal-body .top .content');
   const curType = _modalLeftEl.dataset.type;
-
+  const total = Number(_modalLeftEl.dataset.total);
   const target = event.target;
   const targetValue = target.dataset.value;
 
-  if(curType == 'direct'){ // 직접 입력 
-    const _input = document.querySelector('.payment .modal-content .modal-body .top .content .payment_amount input');
+  if(curType == 'direct' || curType == 'won' || curType == 'percent' || curType == 'cash'){ // 직접 입력 
+    const _input = document.querySelector(`.payment .modal-content .modal-body .top .content.${curType} .payment_amount input.${curType}_input`);
     const value = _input.value;
     
     if(targetValue == undefined) return;
@@ -174,8 +188,21 @@ const clickNumberPad = (event) => {
       _input.value = '';
     }
     if(targetValue != '←' && targetValue != 'C'){
-      _input.value = setReplaceNumberPad(value + targetValue);
+      if(curType != 'cash') {
+        _input.value = Math.min(Number(setReplaceNumberPad(value + targetValue)
+                        .replace(/,/g, '')),total)
+                        .toLocaleString();
+      }else{
+        _input.value = Number(setReplaceNumberPad(value + targetValue).replace(/,/g, '')).toLocaleString();
+      }
     }
+    if(curType == 'won'){ // 할인 원
+      
+    }
+    if(curType == 'percent'){ // 할인 원
+      _input.value = Math.min(Number(_input.value.replace(/,/g, '')), 100);
+    }
+    changePaymentAmount(curType, _input)
   }
   if(curType == 'dutch'){ // 더치 페이
     const _input = document.querySelector('.payment .modal-content .modal-body .top .content .dutch_content .count_btns span');
@@ -194,6 +221,7 @@ const clickNumberPad = (event) => {
       _input.innerText = setReplaceNumberPad(value + targetValue);
     }
   }
+  
 
 }
 
@@ -204,8 +232,27 @@ const setReplaceNumberPad = (str) => {
 
 // 받을 금액에 입력 값이 변경 될 때
 const updatePaymentAmount = (event) => {
-  const curValue = event.target.value;
+  let curValue = event.target.value;
+  const _content = findParentTarget(event.target, '.content');
+  const type = _content.dataset.type;
+  const total = type == 'percent' ? 100 : Number(_content.dataset.total);
+  if(type != 'cash'){
+    curValue = String(Math.min(Number(curValue.replace(/,/g, '')),total));
+  }
   event.target.value = curValue.replace(/[^0-9]/g, '').toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  changePaymentAmount(type, event.target)
+}
+
+// 가격 입력 창에 값 변경될 경우
+const changePaymentAmount = (type, input) => {
+  if(type=="direct"){}
+  if(type=="dutch"){}
+  if(type=="won"){}
+  if(type=="percent"){}
+  if(type=="cash"){}
+  // 단위 위치 변경
+  const _span = input.nextElementSibling;
+  _span.style.left = `${15 + calculateTextWidth(input.value)}px`
 }
 
 // 더치 페이 - 클릭 시
@@ -232,7 +279,7 @@ const clickCashPayment = (event) => {
   _modalTitle.innerHTML = '현금 결제'
   let html = `
     <div class="top ">
-      <div class="content direct" data-type="direct">
+      <div class="content cash" data-total="94000" data-type="cash">
         <div class="receive_amount">
           <h3>받을 금액</h3>
           <span>94,000원</span>
@@ -240,7 +287,14 @@ const clickCashPayment = (event) => {
         <div class="direct_content">
           <div class="payment_amount">
             <h3>결제 금액</h3>
-            <input type="text" oninput="updatePaymentAmount(event)"/>
+            <input class="direct_input" type="text" oninput="updatePaymentAmount(event)"/>
+            <span class="direct_input">원</span>
+            <input class="percent_input" type="text" oninput="updatePaymentAmount(event)" />
+            <span class="percent_input">%</span>
+            <input class="won_input" type="text" oninput="updatePaymentAmount(event)" />
+            <span class="won_input">원</span>
+            <input class="cash_input" type="text" oninput="updatePaymentAmount(event)" />
+            <span class="cash_input">원</span>
           </div>
         </div>
         <div class="cash_amount ">
@@ -325,4 +379,21 @@ const setPayment = (method) => {
     'price': price
   }
   console.log(tableId,order_list)
+}
+
+// 할인 원 버튼 클릭 시
+const clickWonBtn = (event) => {
+  const _content = findParentTarget(event.target, '.content ');
+  _content.classList.remove('percent');
+  _content.classList.add('won');
+  _content.dataset.type = 'won';
+  
+}
+// 할인 퍼센트 버튼 클릭 시
+const clickPercentBtn = (event) => {
+  const _content = findParentTarget(event.target, '.content ');
+  _content.classList.remove('won');
+  _content.classList.add('percent');
+  _content.dataset.type = 'percent';
+
 }
