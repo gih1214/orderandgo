@@ -33,6 +33,7 @@ main section nav ul li button{
   font-size: 15px;
   font-weight: 700;
   color: #1FAA9C;
+  z-index: 1;
 }
 main section nav .btn_set {
   color: #ccc;
@@ -61,7 +62,7 @@ main section article .item{
   overflow: hidden;
   transition: all .25s;
 }
-main section article .item.disabled{
+main section article .item.hidden{
   visibility: hidden;
   opacity: 0;
 }
@@ -133,6 +134,7 @@ main section article .item{
   border-radius: 10px;
   text-align: start;
   overflow: hidden;
+  z-index: 2;
 }
 main section article .item.active {
   border-color: #1FAA9C;
@@ -236,7 +238,7 @@ main section article .table .body i.ph-plus{
 main section article .change_page_btn {
   position: absolute;
   top: 50%;
-  z-index: 1;
+  z-index: 2;
   align-items: center;
   justify-content:center;
   display: none;
@@ -287,6 +289,20 @@ main section > aside.active{
   visibility: visible;
   opacity: 1;
   transform: translate(0, 0);
+  z-index: 2;
+}
+main section > .option_background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0);
+  z-index: 1;
+}
+main section > .option_background.active {
+  display: block;
 }
 main section > aside .left {
   
@@ -397,15 +413,23 @@ main section > aside .custom_btns button{
   font-size: 14px;
   line-height: 17px;
   color: #ccc;
-  
+  z-index: 1;
 }
-.basket_container > .count_btns button.delete{
+.basket_container > .count_btns button[data-active="true"].minus,
+.basket_container > .count_btns button[data-active="true"].plus{
+  color: #111;
+  border: 1px solid #111;
+}
+.basket_container > .count_btns button[data-active="true"].delete{
   color: #F43E25;
   border-color: #F43E25;
 }
 .basket_container > .count_btns button.order_history,
 .basket_container > .count_btns button.new_order{
   flex: 1;
+}
+.basket_container > .count_btns button[data-active="true"].order_history,
+.basket_container > .count_btns button[data-active="true"].new_order{
   color: #111;
   border-color: #111;
 }
@@ -434,6 +458,7 @@ main section > aside .custom_btns button{
   flex-flow: column;
   gap: 10px;
   padding: 12px 20px;
+  z-index: 1;
   /* background: #F3FAFA; */
   /* border-bottom: 1px solid #fff; */
 }
@@ -613,14 +638,21 @@ main section > aside .custom_btns button{
   justify-content: space-between;
 }
 .payment main section article .top .other_btns {
+  position: absolute;
+  top: 0;
+  right: 0;
   display: flex;
   flex-flow: column;
   flex: 1;
   gap: 10px;
-  max-width: 140px;
+  padding: 20px;
+  max-width: 210px;
+  width: 100%;
+  color: #111;
 }
 .payment main section article .top .other_btns button{
-  flex: 1;
+  height: 50px;
+  padding: 8px 20px;
   border-radius: 10px;
   border: 1px solid #CCC;
   background: #FFF;

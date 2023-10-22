@@ -208,6 +208,7 @@ const clickChagePageBtn = (event, type) => {
 
   if(0 < newPageIndex){_article.classList.add('hasPrevPage')};
   if(newPageIndex < pageLen-1){_article.classList.add('hasNextPage')};
+  closeOptionContainer();
 }
 
 const groupColors = [

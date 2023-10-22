@@ -145,10 +145,23 @@ const clickSplitPayment = (event) => {
       </div>
     </div>
     <div class="bottom">
-      <button>적용</button>
+      <button onclick="clickSaveSplitPayment(event)">적용</button>
     </div>
   `
   _modalBody.innerHTML = html;
+}
+
+// 분할 결제 적용 버튼 클릭 시
+const clickSaveSplitPayment = (event) => {
+  const _modal = findParentTarget(event.target,'.modal');
+  const type = _modal.querySelector('.content').dataset.type;
+  if(type == 'direct'){ // 금액 입력
+    price = _modal.querySelector('.direct_input').value;
+  }
+  if(type == 'dutch'){ // 더치 페이
+
+  }
+  console.log(price, type)
 }
 
 // 직접 입력 버튼 클릭 시
