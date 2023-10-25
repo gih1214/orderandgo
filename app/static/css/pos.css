@@ -508,6 +508,9 @@ main section > aside .custom_btns button{
   font-size: 16px;
   font-weight: 500;
 }
+.basket_container .basket li > .menu .count.addition {
+  background: #F46325;
+}
 .basket_container .basket li > .menu h2{
   font-weight: 700;
 }
@@ -659,15 +662,41 @@ main section > aside .custom_btns button{
   font-size: 18px;
   font-weight: 700;
 }
+.payment main section article .top .other_btns.paid button.addtion_btn,
+.payment main section article .top .other_btns.paid button.discount_btn{
+  pointer-events: none;
+  background: #e5e5e5;
+  color: #c1c1c1;
+}
 .payment main section article .top .total_price h2{
   margin-bottom: 20px;
   font-size: 20px;
   font-weight: 700;
+
 }
-.payment main section article .top .total_price span{
+.payment main section article .top .total_price .cur_price {
+  position: relative;
+}
+.payment main section article .top .total_price .cur_price > span{
   color: #1FAA9C;
   font-size: 40px;
   font-weight: 700;
+}
+.payment main section article .top .total_price .cur_price > .dutch{
+  position: absolute;
+  top: 10px;
+  right: -5px;
+  display: none;
+  padding: 3px 10px;
+  border-radius: 50px;
+  border: 1px solid #1FAA9C;
+  transform: translateX(100%);
+  color: #1FAA9C;
+  font-size: 12px;
+  font-weight: 600;
+}
+.payment main section article .top .total_price.dutch .cur_price > .dutch {
+  display: block;
 }
 .payment main section article .payment_btns {
   display: flex;
@@ -763,6 +792,12 @@ main section > aside .custom_btns button{
   border: 1px solid #1FAA9C;
   background: #F3FAFA;
 }
+.payment .modal-content .modal-body .top .content.won {
+
+}
+.payment .modal-content .modal-body .top .content.percent {
+  
+}
 .payment .modal-content .modal-body .top .content h3 {
   font-size: 16px;
   font-weight: 700;
@@ -812,6 +847,9 @@ main section > aside .custom_btns button{
 .payment .modal-content .modal-body .top .content.cash .payment_amount .cash_input {
   display: block;
 }
+.payment .modal-content .modal-body .top .content.addition .payment_amount .addition_input {
+  display: block;
+}
 .payment .modal-content .modal-body .top .content .payment_amount span{
   position: absolute;
   top: 57.5px;
@@ -850,8 +888,20 @@ main section > aside .custom_btns button{
 .payment .modal-content .modal-body .top .content .cash_amount{
   margin-bottom: -10px;
 }
-.payment .modal-content .modal-body .top .content .split_payment_amount span{
+.payment .modal-content .modal-body .top .content .split_payment_amount span {
   color: #1FAA9C;
+}
+.payment .modal-content .modal-body .top .content.won .split_payment_amount span,
+.payment .modal-content .modal-body .top .content.percent .split_payment_amount span,
+.payment .modal-content .modal-body .top .content.direct .split_payment_amount span,
+.payment .modal-content .modal-body .top .content.dutch .split_payment_amount span{
+  display: none;
+}
+.payment .modal-content .modal-body .top .content.won .split_payment_amount span.won,
+.payment .modal-content .modal-body .top .content.percent .split_payment_amount span.percent,
+.payment .modal-content .modal-body .top .content.direct .split_payment_amount span.direct,
+.payment .modal-content .modal-body .top .content.dutch .split_payment_amount span.dutch{
+  display: inline;
 }
 .payment .modal-content .modal-body .top .content .change_amount span{
   color: #1FAA9C;

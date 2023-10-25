@@ -331,8 +331,6 @@ const changeBasketHtml = (datas) => {
     _vat.innerHTML = `${vat.toLocaleString()} 원`;
     _totalPrice.innerHTML = `${totalPrice.toLocaleString()} 원`;
     _sectionTotalPrice.innerHTML = `${totalPrice.toLocaleString()} 원`;
-
   }
-  
-  
+  return totalPrice;
 }

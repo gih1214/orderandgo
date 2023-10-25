@@ -269,5 +269,25 @@ def set_table_list():
 # 테이블 -> 메뉴리스트 페이지
 @pos_bp.route('/payment/<table_id>', methods=['GET'])
 def payment(table_id): 
-    # JSON 데이터를 프론트에 반환
+    
     return render_template('/pos/payment.html')
+
+# 테이블 결제 내역 조회
+@pos_bp.route('/payment_history/<table_id>', methods=['GET'])
+def payment_history(table_id): 
+    table_payment_data = {
+        'paid': False, 
+        'discount': 0,
+        'addition': 0,
+        'payment': [
+            # {   
+            #     'method': 1,    # 1-cash/2-card
+            #     'price': 5000,
+            # },
+            # {   
+            #     'method': 1,    # 1-cash/2-card
+            #     'price': 5000,
+            # }
+        ]
+    }
+    return jsonify(table_payment_data)
