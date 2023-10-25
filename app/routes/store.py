@@ -6,7 +6,7 @@ from app.routes import store_bp
 
 from app.models import db, Store
 from app.models.store import create_store, update_store
-from app.models.menu import create_menu, create_menu_option, select_main_category, select_menu, select_menu_all, select_sub_category, select_menu_option_all, find_all_menu
+from app.models.menu import create_menu, create_menu_option, select_main_category, select_menu, select_menu_all, select_sub_category, select_menu_option_all, find_all_menu, update_menu, update_menu_option
 from app.login_manager import update_store_session
 
 
@@ -293,7 +293,6 @@ def set_menu():
         menu_category_id = menu_data['menu_category_id']
         #page = menu_data['page']
         #position = menu_data['position']
-        menu_category_id = menu_data['menu_category_id']
 
         # 메뉴 create
         menu = create_menu(name, price, main_description, sub_description, is_soldout, store_id, menu_category_id)
@@ -305,7 +304,35 @@ def set_menu():
     
     # 기존 메뉴 수정
     if request.method == 'PATCH':
-        return True
+        # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
+        # TODO : image, page, position 데이터 받기, 현재 null 처리
+        #store_id = 16
+        menu_data = request.get_json()
+
+        menu_id = menu_data['id']
+        name = menu_data['name']
+        price = menu_data['price']
+        #image = menu_data['image']
+        main_description = menu_data['main_description']
+        sub_description = menu_data['sub_description']
+        #is_soldout = menu_data['is_soldout'] # 수정란에 없음
+        store_id = menu_data['store_id']
+        menu_category_id = menu_data['menu_category_id']
+        #page = menu_data['page']
+        #position = menu_data['position']
+
+        # 메뉴 update
+        menu = update_menu(menu_id, name, price, main_description, sub_description, store_id, menu_category_id)
+        
+        if not menu_data['option']:
+            return jsonify({'message': '메뉴가 성공적으로 업데이트되었습니다.'}), 200
+        # 메뉴 옵션 update
+
+        menu_option = create_menu_option(menu_data['option'], menu.id)
+        
+        print("메뉴수정 성공", menu)
+
+        return jsonify({'message': '메뉴가 성공적으로 업데이트되었습니다.'}), 200
     
     
 # POS관리 -> 상품 정보 등록 페이지
