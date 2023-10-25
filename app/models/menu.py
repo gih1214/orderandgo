@@ -82,6 +82,7 @@ def select_menu(menu_id):
         return '없는 메뉴입니다.'
     return item
 
+
 # 메뉴 조회 (SELECT ALL)
 def select_menu_all(menu_category_id):
     item = Menu.query\
@@ -90,6 +91,15 @@ def select_menu_all(menu_category_id):
         return [] # 카테고리에 메뉴가 하나도 없음, 오류 발생
     return item
 
+# 메뉴 조회 (메인 카테고리 아이디)
+def select_menu_all_to_main_category(main_category_id):
+    sub_categories = SubCategory.query\
+        .filter_by(main_category_id=main_category_id).all()
+    item = Menu.query\
+        .filter(Menu.menu_category_id.in_([sub_category.id for sub_category in sub_categories])).all()
+    if not item:
+        return [] # 카테고리에 메뉴가 하나도 없음, 오류 발생
+    return item
 # 메뉴 수정
 def update_menu(menu_id, name, price, main_description, sub_description, menu_category_id):
     item = Menu.query.filter(Menu.id == menu_id).first()

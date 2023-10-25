@@ -53,8 +53,8 @@
               <span class="vat">원</span>
             </div>
             <div>
-              <span>면세물품가액</span>
-              <span >0 원</span>
+              <span>할인</span>
+              <span class="discount">0 원</span>
             </div> 
           </div>
 
@@ -72,10 +72,18 @@
           <div class="top">
             <div class="total_price">
               <h2>결제 금액</h2>
-              <span class="price">94,000원</span>
+              <div class="cur_price">
+                <span class="price">94,000원</span>
+                <div class="dutch"></div>
+              </div>
+              <div class="paid">
+                <span class="remaining"></span>
+                <span class="received"></span>
+              </div>
             </div>
             <div class="other_btns">
-              <button onclick="clickDiscount(event)">할인</button>
+              <button class="addtion_btn" onclick="clickAdditionPrice(event)">추가 금액</button>
+              <button class="discount_btn" onclick="clickDiscount(event)">할인</button>
               <button onclick="clickSplitPayment(event)">분할 결제</button>
             </div>
           </div>

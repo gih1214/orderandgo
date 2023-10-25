@@ -33,6 +33,7 @@ main section nav ul li button{
   font-size: 15px;
   font-weight: 700;
   color: #1FAA9C;
+  z-index: 1;
 }
 main section nav .btn_set {
   color: #ccc;
@@ -60,6 +61,10 @@ main section article .item{
   position: relative;
   overflow: hidden;
   transition: all .25s;
+}
+main section article .item.hidden{
+  visibility: hidden;
+  opacity: 0;
 }
 main section article .item:hover {
   border: 1px solid #1FAA9C;
@@ -129,6 +134,7 @@ main section article .item{
   border-radius: 10px;
   text-align: start;
   overflow: hidden;
+  z-index: 2;
 }
 main section article .item.active {
   border-color: #1FAA9C;
@@ -232,7 +238,7 @@ main section article .table .body i.ph-plus{
 main section article .change_page_btn {
   position: absolute;
   top: 50%;
-  z-index: 1;
+  z-index: 2;
   align-items: center;
   justify-content:center;
   display: none;
@@ -283,6 +289,20 @@ main section > aside.active{
   visibility: visible;
   opacity: 1;
   transform: translate(0, 0);
+  z-index: 2;
+}
+main section > .option_background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0);
+  z-index: 1;
+}
+main section > .option_background.active {
+  display: block;
 }
 main section > aside .left {
   
@@ -354,6 +374,8 @@ main section > aside .custom_btns button{
 /* ##### order ##### */
 #container.order main section article .menus {
   grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 1fr;
+  height:100%;
 }
 #container.order main {
   display: flex;
@@ -391,15 +413,23 @@ main section > aside .custom_btns button{
   font-size: 14px;
   line-height: 17px;
   color: #ccc;
-  
+  z-index: 1;
 }
-.basket_container > .count_btns button.delete{
+.basket_container > .count_btns button[data-active="true"].minus,
+.basket_container > .count_btns button[data-active="true"].plus{
+  color: #111;
+  border: 1px solid #111;
+}
+.basket_container > .count_btns button[data-active="true"].delete{
   color: #F43E25;
   border-color: #F43E25;
 }
 .basket_container > .count_btns button.order_history,
 .basket_container > .count_btns button.new_order{
   flex: 1;
+}
+.basket_container > .count_btns button[data-active="true"].order_history,
+.basket_container > .count_btns button[data-active="true"].new_order{
   color: #111;
   border-color: #111;
 }
@@ -428,6 +458,7 @@ main section > aside .custom_btns button{
   flex-flow: column;
   gap: 10px;
   padding: 12px 20px;
+  z-index: 1;
   /* background: #F3FAFA; */
   /* border-bottom: 1px solid #fff; */
 }
@@ -476,6 +507,9 @@ main section > aside .custom_btns button{
   color: #FFF;
   font-size: 16px;
   font-weight: 500;
+}
+.basket_container .basket li > .menu .count.addition {
+  background: #F46325;
 }
 .basket_container .basket li > .menu h2{
   font-weight: 700;
@@ -607,29 +641,62 @@ main section > aside .custom_btns button{
   justify-content: space-between;
 }
 .payment main section article .top .other_btns {
+  position: absolute;
+  top: 0;
+  right: 0;
   display: flex;
   flex-flow: column;
   flex: 1;
   gap: 10px;
-  max-width: 140px;
+  padding: 20px;
+  max-width: 210px;
+  width: 100%;
+  color: #111;
 }
 .payment main section article .top .other_btns button{
-  flex: 1;
+  height: 50px;
+  padding: 8px 20px;
   border-radius: 10px;
   border: 1px solid #CCC;
   background: #FFF;
   font-size: 18px;
   font-weight: 700;
 }
+.payment main section article .top .other_btns.paid button.addtion_btn,
+.payment main section article .top .other_btns.paid button.discount_btn{
+  pointer-events: none;
+  background: #e5e5e5;
+  color: #c1c1c1;
+}
 .payment main section article .top .total_price h2{
   margin-bottom: 20px;
   font-size: 20px;
   font-weight: 700;
+
 }
-.payment main section article .top .total_price span{
+.payment main section article .top .total_price .cur_price {
+  position: relative;
+}
+.payment main section article .top .total_price .cur_price > span{
   color: #1FAA9C;
   font-size: 40px;
   font-weight: 700;
+}
+.payment main section article .top .total_price .cur_price > .dutch{
+  position: absolute;
+  top: 10px;
+  right: -5px;
+  display: none;
+  padding: 3px 10px;
+  border-radius: 50px;
+  border: 1px solid #1FAA9C;
+  transform: translateX(100%);
+  color: #1FAA9C;
+  font-size: 12px;
+  font-weight: 600;
+}
+.payment main section article .top .total_price.dutch .cur_price > .dutch {
+  display: block;
 }
 .payment main section article .payment_btns {
   display: flex;
@@ -715,6 +782,22 @@ main section > aside .custom_btns button{
   font-size: 14px;
   font-weight: 600;
 }
+.payment .modal-content .modal-body .top .content.won .tab_btns button.won_btn {
+  color: #1FAA9C;
+  border: 1px solid #1FAA9C;
+  background: #F3FAFA;
+}
+.payment .modal-content .modal-body .top .content.percent .tab_btns button.percent_btn {
+  color: #1FAA9C;
+  border: 1px solid #1FAA9C;
+  background: #F3FAFA;
+}
+.payment .modal-content .modal-body .top .content.won {
+
+}
+.payment .modal-content .modal-body .top .content.percent {
+  
+}
 .payment .modal-content .modal-body .top .content h3 {
   font-size: 16px;
   font-weight: 700;
@@ -730,19 +813,68 @@ main section > aside .custom_btns button{
   font-size: 16px;
   font-weight: 700;
 }
+.payment .modal-content .modal-body .top .content .won_content {
+  flex: 1;
+}
 .payment .modal-content .modal-body .top .content .payment_amount {
+  position: relative;
   flex: 1;
 }
 .payment .modal-content .modal-body .top .content .payment_amount h3 {
   margin-bottom: 10px;
 }
 .payment .modal-content .modal-body .top .content .payment_amount input {
+  display: none;
   width: 100%;
   padding: 12px; 
   border-radius: 5px;
   border: 1px solid #CCC;
   font-size: 14px;
   font-weight: 500;
+}
+.payment .modal-content .modal-body .top .content .payment_amount span {
+  display: none;
+}
+.payment .modal-content .modal-body .top .content.direct .payment_amount .direct_input {
+  display: block;
+}
+.payment .modal-content .modal-body .top .content.percent .payment_amount .percent_input {
+  display: block;
+}
+.payment .modal-content .modal-body .top .content.won .payment_amount .won_input {
+  display: block;
+}
+.payment .modal-content .modal-body .top .content.cash .payment_amount .cash_input {
+  display: block;
+}
+.payment .modal-content .modal-body .top .content.addition .payment_amount .addition_input {
+  display: block;
+}
+.payment .modal-content .modal-body .top .content .payment_amount span{
+  position: absolute;
+  top: 57.5px;
+  left: 15px;
+  transform: translateY(-50%);
+}
+.payment .modal-content .modal-body .top .content .percent_num_btns {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 10px;
+}
+.payment .modal-content .modal-body .top .content.won .percent_num_btns {
+  display: none
+}
+.payment .modal-content .modal-body .top .content .percent_num_btns button {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  border: 1px solid #1FAA9C;
+  color: #1FAA9C;
+  font-size: 14px;
+  font-weight: 700;
 }
 .payment .modal-content .modal-body .top .content .split_payment_amount,
 .payment .modal-content .modal-body .top .content .cash_amount,
@@ -756,8 +888,20 @@ main section > aside .custom_btns button{
 .payment .modal-content .modal-body .top .content .cash_amount{
   margin-bottom: -10px;
 }
-.payment .modal-content .modal-body .top .content .split_payment_amount span{
+.payment .modal-content .modal-body .top .content .split_payment_amount span {
   color: #1FAA9C;
+}
+.payment .modal-content .modal-body .top .content.won .split_payment_amount span,
+.payment .modal-content .modal-body .top .content.percent .split_payment_amount span,
+.payment .modal-content .modal-body .top .content.direct .split_payment_amount span,
+.payment .modal-content .modal-body .top .content.dutch .split_payment_amount span{
+  display: none;
+}
+.payment .modal-content .modal-body .top .content.won .split_payment_amount span.won,
+.payment .modal-content .modal-body .top .content.percent .split_payment_amount span.percent,
+.payment .modal-content .modal-body .top .content.direct .split_payment_amount span.direct,
+.payment .modal-content .modal-body .top .content.dutch .split_payment_amount span.dutch{
+  display: inline;
 }
 .payment .modal-content .modal-body .top .content .change_amount span{
   color: #1FAA9C;

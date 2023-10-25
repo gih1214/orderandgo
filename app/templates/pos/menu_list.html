@@ -60,11 +60,39 @@
               </div>
               <span class="price">16,000원</span>
             </button>
+            <button class="menu item hidden"></button>
+            <button class="menu item hidden"></button>
+            <button class="menu item hidden"></button>
+
+            <button class="menu item hidden"></button>
+            <button class="menu item hidden"></button>
+            <button class="menu item hidden"></button>
+            <button class="menu item hidden"></button>
+
+            <button class="menu item hidden"></button>
+            <button class="menu item hidden"></button>
+            <button class="menu item hidden"></button>
+            <button class="menu item hidden"></button>
+
+            <button class="menu item hidden"></button>
+            <button class="menu item hidden"></button>
+            <button class="menu item hidden"></button>
+            <button class="menu item hidden"></button>
+            
+            <button class="menu item hidden"></button>
+            <button class="menu item hidden"></button>
+            <button class="menu item hidden"></button>
+            <button class="menu item hidden"></button>
+            
+            <button class="menu item hidden"></button>
+            <button class="menu item hidden"></button>
+            <button class="menu item hidden"></button>
+            <button class="menu item hidden"></button>
           </div>
 
         </article>
         <!-- 메뉴판 페이지에서 메뉴 옵션 선택 영역 -->
-        <aside>
+        <aside class="option_container">
           <div class="menus items">
             <button class="menu item">
               <div class="title">
@@ -74,18 +102,19 @@
             </button>
           </div>
         </aside>
+        <div class="option_background" onclick="closeOptionContainer(event)"></div>
       </section>
       <!-- 메뉴판 페이지에서 장바구니 영역 -->
-      <aside class="basket_container">
+      <aside class="basket_container" data-type="basket">
         <!-- <h1>POS - aside</h1> -->
         <div class="count_btns top">
-          <button onclick="minusBasketMenu()">
+          <button onclick="minusBasketMenu(event)" data-active="false" class="minus">
             <i class="ph ph-minus"></i>
           </button>
-          <button onclick="plusBasketMenu()">
+          <button onclick="plusBasketMenu(event)" data-active="false" class="plus">
             <i class="ph ph-plus"></i>
           </button>
-          <button onclick="deleteBasketMenu()" class="delete">
+          <button onclick="deleteBasketMenu(event)" class="delete">
             <i class="ph ph-trash"></i>
           </button>
           <button onclick="clickOrderHistoryBtn(event)" data-check="false" class="order_history">

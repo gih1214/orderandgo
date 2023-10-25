@@ -83,6 +83,30 @@ function deepCopy(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
+// uri 데이터를 blob 데이터로 변환
+const getUriToBlobToFile = (dataURL, fileName) => {
+  const byteString = atob(dataURL.split(',')[1]);
+  const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+  const arrayBuffer = new ArrayBuffer(byteString.length);
+  const uint8Array = new Uint8Array(arrayBuffer);
+
+  for (let i = 0; i < byteString.length; i++) {
+    uint8Array[i] = byteString.charCodeAt(i);
+  }
+
+  return new Blob([arrayBuffer], { type: mimeString });
+}
+// 입력 받은 텍스트 길이 계산하기
+function calculateTextWidth(text) {
+  const hiddenSpan = document.createElement('span');
+  hiddenSpan.className = 'hiddenSpan';
+  hiddenSpan.textContent = text;
+  document.body.appendChild(hiddenSpan);
+  const textWidth = hiddenSpan.offsetWidth;
+  document.body.removeChild(hiddenSpan);
+  return textWidth;
+}
+
 // 모달 배경 및 닫기 클릭 시 모달 닫기
 window.onclick = function (event) {
   if (event.target.id == 'modal' || event.target.closest('.close') != undefined) {
@@ -184,6 +208,7 @@ const clickChagePageBtn = (event, type) => {
 
   if(0 < newPageIndex){_article.classList.add('hasPrevPage')};
   if(newPageIndex < pageLen-1){_article.classList.add('hasNextPage')};
+  closeOptionContainer();
 }
 
 const groupColors = [
@@ -306,8 +331,6 @@ const changeBasketHtml = (datas) => {
     _vat.innerHTML = `${vat.toLocaleString()} 원`;
     _totalPrice.innerHTML = `${totalPrice.toLocaleString()} 원`;
     _sectionTotalPrice.innerHTML = `${totalPrice.toLocaleString()} 원`;
-
   }
-  
-  
+  return totalPrice;
 }

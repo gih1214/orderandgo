@@ -18,6 +18,8 @@ def api_payment():
     # 받을 더미 데이터
     dummy = {
         'table_id': 1,
+        'total_price': 35000,   # 추가됨!
+        'table_order_list_id': 1,   # 추가됨!
         'payment':  {
             'discount': 0,  # 할인된 금액
             'method': 1,    # 1-cash/2-card

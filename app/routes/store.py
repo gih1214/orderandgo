@@ -144,7 +144,7 @@ def get_sub_category():
             "checked" : False,
         })
 
-    print("\n\n###sub_category_list",sub_category_list)
+    
     return sub_category_list
 
 

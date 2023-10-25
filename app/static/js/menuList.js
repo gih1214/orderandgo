@@ -27,6 +27,10 @@ fetch(`/pos/get_table_order_list/${lastPath}`, {
 .then(data => {
   // 받은 데이터 처리
   console.log(data)
+  if(data.length != 0){
+    const _orderListBtns = document.querySelectorAll('.basket_container > .count_btns button.order_history, .basket_container > .count_btns button.new_order')
+    _orderListBtns.forEach(btn => btn.dataset.active = true);
+  }
   order_history=data.map((order)=>({
     id: order.id,
     masterName : setMasterName(order),
@@ -44,13 +48,25 @@ fetch(`/pos/get_table_order_list/${lastPath}`, {
 const clickOrderHistoryBtn = (event) => {
   const _orderHistoryBtn = event.currentTarget;
   _orderHistoryBtn.dataset.check = true;
+  const _basketContainer = document.querySelector('.basket_container');
+
+  _basketContainer.dataset.type="order_list";
   changeBasketHtml(setBasketData(order_history))
+  const _countBtns = document.querySelectorAll('.count_btns button.minus, .count_btns button.plus, .count_btns button.delete');
+  _countBtns.forEach(btn=>btn.dataset.active=false);
+  closeOptionContainer();
 }
 // 장바구니 버튼 클릭 시
 const clickBasketBtn = (event) => {
-  changeBasketHtml(setBasketData(menuAllData))
-  const _orderHistoryBtn = document.querySelector('.basket_container > .count_btns button.order_history')
+  changeBasketHtml(setBasketData(menuAllData));
+  const _basketContainer = document.querySelector('.basket_container');
+  _basketContainer.dataset.type="basket";
+  const _orderHistoryBtn = document.querySelector('.basket_container > .count_btns button.order_history');
+
   _orderHistoryBtn.dataset.check = false;
+  const _countBtns = document.querySelectorAll('.count_btns button.minus, .count_btns button.plus, .count_btns button.delete');
+  _countBtns.forEach(btn=>btn.dataset.active=false);
+  closeOptionContainer();
 }
 
 const createHtml = (menuPageData) => {
@@ -111,23 +127,27 @@ const changeMenuCategory = (event, index) => {
 
 // 메뉴 html 변경
 const changeMenuHtml = (menus) => {
-  let html = '';
-  menus.forEach((menu, index)=>{
-    html += `
+  menus.sort((a,b)=> a.position-b.position);
+  const forArray = Array.from({ length: 24 }, () => false);
+  menus.forEach((menu)=>forArray[menu.position-1] = menu);
+  return forArray.map((menu)=> `
+    ${menu == false ? `
+      <button class="menu item hidden"></button>` 
+      : `
       <button class="menu item" data-id="${menu.menuId}" onclick="clickMenu(event)">
         <div class="title">
           <h2 class="ellipsis">${menu.menu}</h2>
         </div>
         <span class="price">${menu.price.toLocaleString()}원</span>
       </button>
-    `
-  })
-  return html;
+    ` }
+  `).join('');
 }
 
 
 // 메뉴 클릭 시
 const clickMenu = (event) => {
+  clickBasketBtn();
   const categoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
   const page = document.querySelector('main section article .items').dataset.page;
   const menuId = event.currentTarget.dataset.id;
@@ -167,10 +187,20 @@ const clickMenu = (event) => {
   if(menu.optionList.length != 0){
     showMenuOptionHtml(menu.optionList)
     _optionHtml.classList.add('active');
-    setMenuDisabled(__menu, event.currentTarget)
+    setMenuDisabled(__menu, event.currentTarget);
+    document.querySelector('.option_background').classList.add('active');
+    
   }else {
     _optionHtml.classList.remove('active');
   }
+}
+
+// 옵션 상자 외부 클릭 시 옵션 상자 닫기
+const closeOptionContainer = (event) => {
+  document.querySelector('.option_container').classList.remove('active');
+  document.querySelector('.option_background').classList.remove('active');
+  const __menu = document.querySelectorAll('main section article .item');
+    resetMenuBackground(__menu)
 }
 
 
@@ -272,94 +302,115 @@ const clickBasketMenu = (event) => {
     _basketMenu.classList.remove('active');
   })
   target.classList.add('active');
+  const _countBtns = document.querySelectorAll('.count_btns button.minus, .count_btns button.plus, .count_btns button.delete');
+  _countBtns.forEach(btn=>btn.dataset.active=true);
+  closeOptionContainer();
 }
 
 // 장바구니 - 클릭 시
-const minusBasketMenu = () => {
-  if(menuAllData.length == 0) return;
-  const basketItems = document.querySelectorAll('.basket li');
-  let menuIndex;
-  menuIndex = Array
-    .from(basketItems)
-    .findIndex(el => el.querySelector('div').classList.contains('active'))
-  if(menuIndex == -1) {
+const minusBasketMenu = (event) => {
+  const type = findParentTarget(event.currentTarget, 'aside').dataset.type
+  if(type == 'order_list'){
+    console.log('주문내역에서 마이너스 클릭함')
+  }
+  if(type == 'basket'){
+    if(menuAllData.length == 0) return;
+    const basketItems = document.querySelectorAll('.basket li');
+    let menuIndex;
     menuIndex = Array
       .from(basketItems)
-      .findIndex((el)=>el.querySelector('div.active[data-type="menu_option"]') != undefined)
-  }
-
-  const target = document.querySelector('.basket li div.active');
-  const targetType = target.dataset.type;
-  const pargetEl = target.closest('li').querySelector('[data-type="menu"]')
-  const masterName = targetType == "menu" ? target.dataset.master : pargetEl.dataset.master;
-
-  let optionIndex = undefined;
-
-  if(targetType == 'menu'){
-    const dataIndex = menuAllData.findIndex(data=>data.masterName == masterName)
-    menuAllData.splice(dataIndex, 1);
-  }
-  if(targetType == 'menu_option'){
-    const filterData = menuAllData
-      .filter(data=>data.masterName == masterName);
-    optionIndex = filterData[0].options
-      .findIndex(option => Number(option.id) == Number(target.dataset.id));
-    if(filterData[0].options[optionIndex].count > 1) {
-      filterData.forEach(({options}) => options[optionIndex].count -= 1 );
-    }else{
-      filterData.forEach((data)=>data.options.splice(optionIndex, 1))
+      .findIndex(el => el.querySelector('div').classList.contains('active'))
+    if(menuIndex == -1) {
+      menuIndex = Array
+        .from(basketItems)
+        .findIndex((el)=>el.querySelector('div.active[data-type="menu_option"]') != undefined)
     }
+  
+    const target = document.querySelector('.basket li div.active');
+    const targetType = target.dataset.type;
+    const pargetEl = target.closest('li').querySelector('[data-type="menu"]')
+    const masterName = targetType == "menu" ? target.dataset.master : pargetEl.dataset.master;
+  
+    let optionIndex = undefined;
+  
+    if(targetType == 'menu'){
+      const dataIndex = menuAllData.findIndex(data=>data.masterName == masterName)
+      menuAllData.splice(dataIndex, 1);
+    }
+    if(targetType == 'menu_option'){
+      const filterData = menuAllData
+        .filter(data=>data.masterName == masterName);
+      optionIndex = filterData[0].options
+        .findIndex(option => Number(option.id) == Number(target.dataset.id));
+      if(filterData[0].options[optionIndex].count > 1) {
+        filterData.forEach(({options}) => options[optionIndex].count -= 1 );
+      }else{
+        filterData.forEach((data)=>data.options.splice(optionIndex, 1))
+      }
+    }
+    menuAllData.forEach(data =>data.masterName = setMasterName(data))
+    changeBasketHtml(setBasketData(menuAllData))
+    maintainActive(targetType, menuIndex, optionIndex);
+    closeOptionContainer();
   }
-  menuAllData.forEach(data =>data.masterName = setMasterName(data))
-  changeBasketHtml(setBasketData(menuAllData))
-  maintainActive(targetType, menuIndex, optionIndex);
 
 }
 
 // 장바구니 + 클릭 시
-const plusBasketMenu = () => {
-  if(menuAllData.length == 0) return;
-  const basketItems = document.querySelectorAll('.basket li');
-  let menuIndex;
-  menuIndex = Array
-    .from(basketItems)
-    .findIndex(el => el.querySelector('div').classList.contains('active'))
-  if(menuIndex == -1) {
+const plusBasketMenu = (event) => {
+  const type = findParentTarget(event.currentTarget, 'aside').dataset.type
+  if(type == 'order_list'){
+    console.log('주문내역에서 플러스 클릭함')
+  }
+  if(type == 'basket'){
+    if(menuAllData.length == 0) return;
+    const basketItems = document.querySelectorAll('.basket li');
+    let menuIndex;
     menuIndex = Array
       .from(basketItems)
-      .findIndex((el)=>el.querySelector('div.active[data-type="menu_option"]') != undefined)
-  }
-
-  const target = document.querySelector('.basket li div.active');
-  const targetType = target.dataset.type;
-  const pargetEl = target.closest('li').querySelector('div[data-type="menu"]')
-  const masterName = targetType == "menu" ? target.dataset.master : pargetEl.dataset.master;
-  let optionIndex = undefined;
-  if(targetType == 'menu'){
-    const data = menuAllData.find(data=>data.masterName == masterName);
-    menuAllData.push(deepCopy(data));
-  }
-  if(targetType == 'menu_option'){
-    const filterData = menuAllData
-      .filter(data =>data.masterName == masterName);
-    optionIndex = filterData[0].options
-      .findIndex(option => Number(option.id) == Number(target.dataset.id));
-    filterData.forEach(({options}) => options[optionIndex].count+=1 );
-
+      .findIndex(el => el.querySelector('div').classList.contains('active'))
+    if(menuIndex == -1) {
+      menuIndex = Array
+        .from(basketItems)
+        .findIndex((el)=>el.querySelector('div.active[data-type="menu_option"]') != undefined)
+    }
+  
+    const target = document.querySelector('.basket li div.active');
+    const targetType = target.dataset.type;
+    const pargetEl = target.closest('li').querySelector('div[data-type="menu"]')
+    const masterName = targetType == "menu" ? target.dataset.master : pargetEl.dataset.master;
+    let optionIndex = undefined;
+    if(targetType == 'menu'){
+      const data = menuAllData.find(data=>data.masterName == masterName);
+      menuAllData.push(deepCopy(data));
+    }
+    if(targetType == 'menu_option'){
+      const filterData = menuAllData
+        .filter(data =>data.masterName == masterName);
+      optionIndex = filterData[0].options
+        .findIndex(option => Number(option.id) == Number(target.dataset.id));
+      filterData.forEach(({options}) => options[optionIndex].count+=1 );
+  
+    }
+    
+    menuAllData.forEach(data =>data.masterName = setMasterName(data))
+    changeBasketHtml(setBasketData(menuAllData))
+    
+    maintainActive(targetType, menuIndex, optionIndex);
+    closeOptionContainer();
   }
   
-  menuAllData.forEach(data =>data.masterName = setMasterName(data))
-  changeBasketHtml(setBasketData(menuAllData))
-  
-  maintainActive(targetType, menuIndex, optionIndex);
 }
 
 // 장바구니 클릭 상태 유지
 const maintainActive = (targetType, menuIndex, optionIndex) => {
   const basketItems = document.querySelectorAll('.basket li');
   const basketLength = basketItems.length;
-  
-  if (basketLength === 0) return;
+  const _countBtns = document.querySelectorAll('.count_btns button.minus, .count_btns button.plus, .count_btns button.delete');
+  if (basketLength === 0) {
+    _countBtns.forEach( btn => btn.dataset.active = false);
+    return
+  };
   let targetEl;
   if(targetType == 'menu'){
     targetEl = basketItems[menuIndex]?.querySelector('[data-type="menu"]');
@@ -387,31 +438,54 @@ const maintainActive = (targetType, menuIndex, optionIndex) => {
       }
     }
   }
+  _countBtns.forEach( btn => btn.dataset.active = true);
   targetEl.classList.add('active');
 }
 
 // 장바구니 삭제 클릭 시
-const deleteBasketMenu = () => {
-  if(menuAllData.length == 0) return;
-  const target = document.querySelector('.basket .active');
-  const targetType = target.dataset.type;
-  const pargetEl = target.closest('li').querySelector('[data-type="menu"]')
-  const masterName = targetType == "menu" ? target.dataset.master : pargetEl.dataset.master;
-
-  if(targetType == 'menu'){
-    menuAllData = deepCopy(menuAllData.filter(data => data.masterName != masterName))
+const deleteBasketMenu = (event) => {
+  const type = findParentTarget(event.currentTarget, 'aside').dataset.type
+  if(type == 'order_list'){
+    console.log('주문내역에서 휴지통 클릭함')
   }
-  if(targetType == 'menu_option'){
-    const filterData = menuAllData
-      .filter(data => data.masterName == masterName);
-    const optionIndex = filterData[0].options
-      .findIndex(option => Number(option.id) == Number(target.dataset.id));
-
-    filterData.forEach((data)=>data.options.splice(optionIndex, 1))
+  if(type == 'basket'){
+    if(menuAllData.length == 0) return;
+  
+    const target = document.querySelector('.basket .active');
+    const targetType = target.dataset.type;
+    const pargetEl = target.closest('li').querySelector('[data-type="menu"]')
+    const masterName = targetType == "menu" ? target.dataset.master : pargetEl.dataset.master;
+  
+    const basketItems = document.querySelectorAll('.basket li');
+    let menuIndex;
+    menuIndex = Array
+      .from(basketItems)
+      .findIndex(el => el.querySelector('div').classList.contains('active'))
+    if(menuIndex == -1) {
+      menuIndex = Array
+        .from(basketItems)
+        .findIndex((el)=>el.querySelector('div.active[data-type="menu_option"]') != undefined)
+    }
+  
+    let optionIndex = undefined;
+    if(targetType == 'menu'){
+      menuAllData = deepCopy(menuAllData.filter(data => data.masterName != masterName))
+    }
+    if(targetType == 'menu_option'){
+      const filterData = menuAllData
+        .filter(data => data.masterName == masterName);
+      optionIndex = filterData[0].options
+        .findIndex(option => Number(option.id) == Number(target.dataset.id));
+  
+      filterData.forEach((data)=>data.options.splice(optionIndex, 1))
+    }
+    menuAllData.forEach(data =>data.masterName = setMasterName(data))
+    changeBasketHtml(setBasketData(menuAllData))
+    
+    maintainActive(targetType, menuIndex, optionIndex);
+    closeOptionContainer();
   }
-  menuAllData.forEach(data =>data.masterName = setMasterName(data))
-  changeBasketHtml(setBasketData(menuAllData))
-
+  
 }
 
 // 주문하기 클릭 시
@@ -431,7 +505,9 @@ const clickOrder = (event) => {
   .then(data => {
     // 받은 데이터 처리
     console.log(data);
-    // window.location.href = '/pos/tableList'
+    if(data == 'Success'){
+      window.location.href = '/pos/tableList'
+    }
   })
   .catch(error => {
     console.error('Error:', error);
