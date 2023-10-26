@@ -195,7 +195,7 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     order_status_id = db.Column(db.Integer, db.ForeignKey('order_status.id'))
     menu_id = db.Column(db.Integer, db.ForeignKey('menu.id'))
-    table_id = db.Column(db.Integer, db.ForeignKey('table.id'), nullable=True)
+    table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
     order_list_id = db.Column(db.Integer, db.ForeignKey('table_order_list.id'))
     menu_options = db.Column(db.Text)
     ordered_at = db.Column(db.DateTime, default=datetime.now)
@@ -223,7 +223,7 @@ class TableOrderList(db.Model):
     __tablename__ = 'table_order_list'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
-    table_id = db.Column(db.Integer, db.ForeignKey('table.id'), nullable=True)
+    table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
     checkingin_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     checkingout_at = db.Column(db.DateTime, index=True, nullable=True)
 
@@ -269,14 +269,15 @@ class Payment(db.Model):
 
 class TablePaymentList(db.Model):
     __tablename__ = 'table_payment_list'
-    __table_args__ = (db.UniqueConstraint('store_id', 'table_id', 'table_order_list_id'),)
+    __table_args__ = (db.UniqueConstraint('store_id', 'table_id', 'first_order_time'),)
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
     table_id = db.Column(db.Integer, db.ForeignKey('table.id'), nullable=True)
-    table_order_list_id = db.Column(db.Integer, db.ForeignKey('table_order_list.id'))
+    # table_order_list_id = db.Column(db.Integer, db.ForeignKey('table_order_list.id'))
     first_order_time = db.Column(db.DateTime) # 첫 주문 시간
     order_details = db.Column(db.Text)  # 주문 내역 컬럼 (문자열로 저장됨), orderDetails.json
-    discount = db.Column(db.Integer)
+    discount = db.Column(db.Integer)        # 할인 금액
+    extra_charge = db.Column(db.Integer)    # 추가 금액 # 추가됨
     payment_time = db.Column(db.DateTime, default=datetime.now)  # 결제 시간 컬럼(분할 시 최근 결제 마다 업데이트)
 
     ### store_id/table_id/first_order_time을 unique key로 걸자!
