@@ -281,11 +281,12 @@ def set_menu():
         # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
         # TODO : image, page, position 데이터 받기, 현재 null 처리
         #store_id = 16
-        menu_data = request.get_json()
+        menu_images = request.files['file'] # 이미지 파일 받기
+        menu_data = request.get_json() # 데이터 받기
 
         name = menu_data['name']
         price = menu_data['price']
-        #image = menu_data['image']
+        image = menu_data['image']
         main_description = menu_data['main_description']
         sub_description = menu_data['sub_description']
         is_soldout = menu_data['is_soldout'] # null 허용X -> false 기본값으로 넣고 있음
@@ -294,8 +295,24 @@ def set_menu():
         #page = menu_data['page']
         #position = menu_data['position']
 
+        # 이미지 저장
+        images_file_path = 'app/static/images/menu/' # 파일 경로 설정
+        menu_images.save(images_file_path + image)
+        '''
+        for f in menu_images:
+            f.save(images_file_path + filename)
+            #return render_template('set_menu_product.html')
+        '''
+
+        '''
+        with open(images_file_path, 'r', encoding='UTF-8') as file: # 이미지 파일 로드
+            images_data = json.load(file)
+        # 이미지 데이터를 프론트에 반환
+        return jsonify(json_data)
+        '''
+
         # 메뉴 create
-        menu = create_menu(name, price, main_description, sub_description, is_soldout, store_id, menu_category_id)
+        menu = create_menu(name, price, image, main_description, sub_description, is_soldout, store_id, menu_category_id)
 
         # 메뉴 옵션 create
         menu_option = create_menu_option(menu_data['option'], menu.id)

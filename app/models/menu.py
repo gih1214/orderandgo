@@ -55,7 +55,6 @@ def select_menu_option_all(menu_id):
     return item
 
 # 메뉴 옵션 수정
-'''
 def update_menu_option(id, name, price, description, menu_id):
     item = MenuOption.query.filter(MenuOption.id == id).first()
     if not item:
@@ -65,7 +64,6 @@ def update_menu_option(id, name, price, description, menu_id):
     item.main_description = description
     db.session.commit()
     return True
-'''
 
 # 메뉴 카테고리 조회 (SELECT ALL)
 def select_main_category(store_id):
