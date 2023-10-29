@@ -14,6 +14,7 @@ callTableList();
 
 // 테이블 html 만들기
 const createTableHtml = (data, categoryNum, pageNum) => {
+  console.log(categoryNum, pageNum)
   const curData = data[categoryNum].pages[pageNum].tables
   const tableList = new Array(20).fill(false);
   curData.forEach(data=>tableList[data.position-1] = data);
