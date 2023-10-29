@@ -278,7 +278,13 @@ def payment_history(table_id):
     table_payment_data = {
         'paid': False, 
         'discount': 0,
-        'addition': 0,
+        'extra_charge': 0,
+        'isDirect' : False,
+        'direct' : 0,
+        'isDutch' : False,
+        'totalDutch' : 1,
+        'curDutch' : 1,
+        'dutchPrice' : 0,
         'payment': [
             # {   
             #     'method': 1,    # 1-cash/2-card

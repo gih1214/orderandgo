@@ -517,27 +517,12 @@ const clickSaveMenuData = (event) => {
     form_data : form_data
   }
   console.log(data);
-  // const form_data = getData(elements);
-  
-  // const name = document.querySelector('')
-  // const data = {
-  //   "json_data" : [{
-  //     "problem_id" : _targetLi.dataset.id,
-  //     "question_type" : Number(_targetLi.dataset.testtype),
-  //     "user_answer": Number(_targetLi.dataset.testtype) == 1 ? Number(userAnswer) : null,
-  //     "is_correct": isRight
-  //   }],
-  //   "form_data" : [{
-  //     key: `user_answer:${_targetLi.dataset.id}`,
-  //     value: setUserAnswer(this.$curData.dataList.find(data=>data.id == _targetLi.dataset.id),0)
-  //   }]
-  // }
-  // fetchData(`/store/set_menu`, 'POST', data, (data)=>{
-  //   console.log(data)
-  //   if(data.code == 200){
+  fetchData(`/store/set_menu`, 'POST', data, (data)=>{
+    console.log(data)
+    if(data.code == 200){
       
-  //   }
-  // },true)
+    }
+  },true)
 }
 
 // 체크박스 전체 토글

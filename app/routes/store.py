@@ -2,13 +2,13 @@ import json
 from flask import render_template, request, jsonify
 from flask_login import login_required, current_user
 from app.models.menu_category import get_main_and_sub_category_by_menu_id, select_main_and_sub_category_by_store_id
+from app.models.table import select_table, select_table_category
 from app.routes import store_bp
 
-from app.models import db, Store
+
 from app.models.store import create_store, update_store
 from app.models.menu import create_menu, create_menu_option, select_main_category, select_menu, select_menu_all, select_sub_category, select_menu_option_all, find_all_menu, update_menu, update_menu_option
 from app.login_manager import update_store_session
-
 
 # 매장 생성
 @login_required
@@ -370,3 +370,44 @@ def api_create_menu():
         print(menu)
         return menu
 '''
+
+# POS -> 매장관리 -> 상품 정보 수정 -> 생성(완료), 수정(진행중)
+@store_bp.route('/set_table', methods=['GET', 'POST', 'PATCH'])
+def set_table():
+    if request.method == 'GET':
+        return render_template('set_table_product.html')
+    
+@store_bp.route('/get_table', methods=['GET'])
+def get_table():
+    store_id = current_user.id
+    table_categorys = select_table_category(store_id)
+    data=[]
+    for table_category in table_categorys:
+        tables = select_table(table_category.id)
+        table_list = [];
+        for table in tables:
+            table_list.append({
+                'id' : table.id,
+                'name' : table.name,
+                'page' : table.page,
+                'position' : table.position
+            })
+        # page 그룹화, position 정렬
+        grouped_data = {}
+        for item in table_list:
+            page = item['page']
+            if page not in grouped_data:
+                grouped_data[page] = []
+            grouped_data[page].append(item)
+        for page, tables in grouped_data.items():
+            grouped_data[page] = sorted(tables, key=lambda x: x['position'])
+        page_list = [{'page': page, 'tables': tables} for page, tables in grouped_data.items()]
+          
+        data.append({
+            'id' : table_category.id,
+            'name': table_category.category_name,
+            'position': table_category.position,
+            'pages': page_list
+        })
+    return data;
+    
