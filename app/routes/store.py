@@ -278,9 +278,8 @@ def set_menu():
 
     # 새 메뉴 추가
     if request.method == 'POST':
-        # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
+        store_id = current_user.id
         # TODO : image, page, position 데이터 받기, 현재 null 처리
-        #store_id = 16
         menu_images = request.files['file'] # 이미지 파일 받기
         menu_data = request.get_json() # 데이터 받기
 
@@ -290,7 +289,6 @@ def set_menu():
         main_description = menu_data['main_description']
         sub_description = menu_data['sub_description']
         is_soldout = menu_data['is_soldout'] # null 허용X -> false 기본값으로 넣고 있음
-        store_id = menu_data['store_id']
         menu_category_id = menu_data['menu_category_id']
         #page = menu_data['page']
         #position = menu_data['position']
