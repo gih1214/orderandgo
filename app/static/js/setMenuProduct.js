@@ -60,6 +60,7 @@ const createMenuTable = (data) => {
   `
   const _menuTable = document.querySelector('.set_menu_product main article .article_bottom ul');
   _menuTable.innerHTML = html;
+  _menuTable.querySelector(`li:nth-child(2)`).click();
 }
 
 // 셀렉트 박스 html 만들기
@@ -219,62 +220,6 @@ const setMenuHtmlEmptyData = {
   },
   options: []
 }
-const setMenuHtmlDataList = {
-  imgList : [
-    '/static/images/user/menu/id/1',
-    '/static/images/user/menu/id/2',
-    '/static/images/user/menu/id/3',
-    '/static/images/user/menu/id/4',
-  ],
-  name: '탕수육',
-  price: 16000,
-  description: '',
-  category : {
-    main: [
-      {
-        id: 1,
-        name: '식사류',
-        checked: true
-      },
-      {
-        id: 2,
-        name: '주류',
-        checked: false
-      }
-    ],
-    sub: [
-      {
-        id: 1,
-        name: '메인',
-        checked: true
-      },
-      {
-        id: 2,
-        name: '면류',
-        checked: false
-      },
-      {
-        id: 3,
-        name: '밥류',
-        checked: false
-      }
-    ]
-  },
-  options: [
-    {
-      name: '소',
-      price: 0,
-    },
-    {
-      name: '중',
-      price: 5000,
-    },
-    {
-      name: '대',
-      price: 10000,
-    }
-  ]
-}
 // 메뉴데이터 수정 html 만들기
 const setMenuHtml = ({imgList,name,price,description,category,options}) => {
   const imgCountArray = new Array(4).fill(false);
@@ -410,21 +355,7 @@ const clickAddMenuBtn = (event) => {
   clickResponsiveBtn(event) // 메뉴 편집 창 열기
   _asideEl.innerHTML = html;
   const _inputName = document.querySelector('input[data-title="name"]');
-  _inputName.focus();
-
-  // // 서버에 빈 메뉴 생성 요청 후 데이터 받기
-  // // 받은 데이터로 테이블 생성
-  // _tableHeader.insertAdjacentHTML('afterend', `
-  //   <li data-id="9" onclick="clickCallMenuData(event)">
-  //     <div><input type="checkbox"></div>
-  //     <div>식사류</div>
-  //     <div>메인</div>
-  //     <div>탕수육</div>
-  //     <div>소, 중, 대</div>
-  //     <div>16,000</div>
-  //   </li>
-  // `);
-  
+  _inputName.focus();  
 }
 
 // 메뉴 옵션 추가 버튼 클릭 시
