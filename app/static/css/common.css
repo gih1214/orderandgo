@@ -288,7 +288,7 @@ main section article .items{
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 15px;
-  grid-auto-rows: minmax(0, auto);
+  grid-auto-rows: minmax(0, 1fr);
 }
 main section article .item{
   position: relative;
@@ -305,18 +305,12 @@ main section article .item{
   z-index: 2;
   transition: all .25s;
 }
-main section article .change_page_btn.prev_page_btn {
-  left: 10px;
-}
-main section article .change_page_btn.next_page_btn {
-  right: 10px;
-}
 main section article .change_page_btn {
   position: absolute;
   top: 50%;
   z-index: 2;
   align-items: center;
-  justify-content: center;
+  justify-content:center;
   display: none;
   width: 35px;
   height: 35px;
@@ -328,6 +322,20 @@ main section article .change_page_btn {
   color: #1FAA9C;
   transform: translateY(-50%);
   transition: all .25s;
+}
+main section article .change_page_btn:hover{
+  background: #1FAA9C;
+  color: #fff;
+}
+main section article.hasPrevPage .prev_page_btn,
+main section article.hasNextPage .next_page_btn {
+  display: flex;
+}
+main section article .change_page_btn.prev_page_btn {
+  left: 10px;
+}
+main section article .change_page_btn.next_page_btn {
+  right: 10px;
 }
 /* ######### 메인 영역 ########## */
 /* ############################## */
