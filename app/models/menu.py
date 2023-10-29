@@ -14,8 +14,8 @@ def create_menu(store_id, menu_category_id):
 '''
 
 # 메뉴 생성
-def create_menu(name, price, main_description, sub_description, is_soldout, store_id, menu_category_id):
-    menu = Menu(name=name, price=price, main_description=main_description, sub_description=sub_description,
+def create_menu(name, price, image, main_description, is_soldout, store_id, menu_category_id):
+    menu = Menu(name=name, price=price, image=image, main_description=main_description,
                 is_soldout=is_soldout, store_id=store_id, menu_category_id=menu_category_id)
     db.session.add(menu)
     db.session.commit()

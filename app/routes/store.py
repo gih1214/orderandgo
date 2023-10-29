@@ -270,7 +270,7 @@ def get_menu():
     return menu_data
 
 
-# POS -> 매장관리 -> 상품 정보 수정 -> 생성(완료), 수정(진행중)
+# POS -> 매장관리 -> 상품 정보 수정 -> 생성, 수정
 @store_bp.route('/set_menu', methods=['GET', 'POST', 'PATCH'])
 def set_menu():
     if request.method == 'GET':
@@ -278,42 +278,34 @@ def set_menu():
 
     # 새 메뉴 추가
     if request.method == 'POST':
+        # TODO : page, position 데이터 받기, 현재 null 처리
         store_id = current_user.id
-        # TODO : image, page, position 데이터 받기, 현재 null 처리
-        menu_images = request.files['file'] # 이미지 파일 받기
-        menu_data = request.get_json() # 데이터 받기
-
-        name = menu_data['name']
-        price = menu_data['price']
-        image = menu_data['image']
-        main_description = menu_data['main_description']
-        sub_description = menu_data['sub_description']
-        is_soldout = menu_data['is_soldout'] # null 허용X -> false 기본값으로 넣고 있음
-        menu_category_id = menu_data['menu_category_id']
-        #page = menu_data['page']
-        #position = menu_data['position']
+        json_data = json.loads(request.form.get('json_data'))
+        images_file_path = 'app/static/images/menu/' # 파일 경로 설정
 
         # 이미지 저장
-        images_file_path = 'app/static/images/menu/' # 파일 경로 설정
-        menu_images.save(images_file_path + image)
-        '''
-        for f in menu_images:
-            f.save(images_file_path + filename)
-            #return render_template('set_menu_product.html')
-        '''
+        for name in json_data['image']:
+            #print(request.files.get(name))
+            file = request.files.get(name)
+            file.save(images_file_path + name) # 텍스트로 저장된다..
 
-        '''
-        with open(images_file_path, 'r', encoding='UTF-8') as file: # 이미지 파일 로드
-            images_data = json.load(file)
-        # 이미지 데이터를 프론트에 반환
-        return jsonify(json_data)
-        '''
+        name = json_data['name']
+        price = json_data['price']
+        image_list = json_data['image']
+        main_description = json_data['main_description']
+        #sub_description = json_data['sub_description']
+        is_soldout = False # null 허용X -> false 기본값으로 넣고 있음
+        print(type(json_data['main_category']))
+        menu_category_id = json_data['main_category']
+        #page = menu_data['page']
+        #position = menu_data['position']
+        image = json.dumps(image_list) # 리스트를 json 문자열로 변환
 
         # 메뉴 create
-        menu = create_menu(name, price, image, main_description, sub_description, is_soldout, store_id, menu_category_id)
+        menu = create_menu(name, price, image, main_description, is_soldout, store_id, menu_category_id)
 
         # 메뉴 옵션 create
-        menu_option = create_menu_option(menu_data['option'], menu.id)
+        create_menu_option(json_data['options'], menu.id)
 
         return jsonify({'message': '메뉴가 성공적으로 생성되었습니다.'}), 201
     
