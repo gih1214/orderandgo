@@ -58,6 +58,10 @@
   font-size: 14px;
   font-weight: 600;
 }
+.store_product section ul li a.disabled {
+  visibility: hidden;
+  opacity: 0;
+}
 .store_product section ul li a i {
   font-size: 24px;
 }
@@ -577,3 +581,48 @@ section ul li .submit_btn {
 
 /* 매장 메뉴 관리 페이지 */
 /*************************/
+
+
+/***************************/
+/* 매장 테이블 관리 페이지 */
+.set_table_product main {
+  display: initial;
+  height: auto;
+  background: initial;
+}
+.set_table_product main section{
+  position: initial;
+  overflow: initial;
+}
+
+.set_table_product section{
+  width: auto;
+  height: auto;
+  padding: initial;
+  background: initial;
+  border-bottom: initial;
+
+}
+.set_table_product main section nav {
+  height: 50px;
+}
+.set_table_product main section article{
+  background: rgba(0, 0, 0, 0.50);
+}
+.set_table_product main section article .items{
+  height: 100%;
+}
+.set_table_product main section article .item{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px dashed #CCC;
+  background: none;
+}
+.set_table_product main section article .item .ph-plus {
+  font-size: 25px;
+  color: #ccc;
+}
+/* 매장 테이블 관리 페이지 */
+/***************************/

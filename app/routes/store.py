@@ -326,3 +326,13 @@ def api_create_menu():
         print(menu)
         return menu
 '''
+
+# POS -> 매장관리 -> 상품 정보 수정 -> 생성(완료), 수정(진행중)
+@store_bp.route('/set_table', methods=['GET', 'POST', 'PATCH'])
+def set_table():
+    if request.method == 'GET':
+        return render_template('set_table_product.html')
+    
+@store_bp.route('/get_table', methods=['GET'])
+def get_table():
+    
