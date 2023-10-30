@@ -65,7 +65,6 @@ const createMenuTable = (data) => {
 
 // 셀렉트 박스 html 만들기
 const createSeleteBox = (category, fun, target, type, ko_category) => {
-
   const checkedCategorys = category[type].filter(({checked})=>checked);
   const html = `
     <button 
@@ -307,6 +306,7 @@ const setMenuHtml = ({imgList,name,price,description,category,options}) => {
 
 // 메뉴 설정에서 카테고리 html 만들기
 const createCategoryBoxHtml = (category,type,ko_category) => {
+  console.log(category,type,ko_category)
   const checkedCategorys = category[type].filter(({checked})=>checked);
   const html = `
     <button 
