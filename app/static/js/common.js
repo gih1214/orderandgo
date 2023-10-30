@@ -107,6 +107,21 @@ function calculateTextWidth(text) {
   return textWidth;
 }
 
+// 시간 최신화
+function displayCurrentDateTime() {
+  const now = new Date();
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  const formattedDate = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}(${days[now.getDay()]})`;
+  const formattedTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+  const formattedDateTime = `${formattedDate} ${formattedTime}`;
+  document.querySelector('header .center .header_info .cur_time').textContent = formattedDateTime;
+  // 다음 업데이트를 위해 남은 시간을 계산
+  const secondsUntilNextUpdate = 60 - now.getSeconds();
+  setTimeout(displayCurrentDateTime, secondsUntilNextUpdate * 1000);
+}
+displayCurrentDateTime();
+
+
 // 모달 배경 및 닫기 클릭 시 모달 닫기
 window.onclick = function (event) {
   if (event.target.id == 'modal' || event.target.closest('.close') != undefined) {
