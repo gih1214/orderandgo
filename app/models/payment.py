@@ -58,10 +58,10 @@ def create_payment_database(data):
 
     '''
     1. 일반결제
-    2. 분할결제 - 판단 근거 : TablePaymentList의 유무 / Payment의 총 합계
+    2. 분할결제 : TablePaymentList의 유무 / Payment의 총 합계
         2-1. 첫번째 분할결제 - TablePaymentList을 만든다. + Payment를 추가한다.
-        2-2. 분할결제중     -  Payment를 추가한다.
-        2-3. 마지막 분할결제 - table에 관련된 order db를 삭제시킨다. + Payment를 추가한다.
+        2-2. 분할결제중     -  Payment를 추가한다. + TablePaymentList payment_history 업데이트
+        2-3. 마지막 분할결제 - table에 관련된 order db를 삭제시킨다. + Payment를 추가한다. + TablePaymentList payment_history 업데이트
     '''
 
     try:
@@ -107,6 +107,11 @@ def create_payment_database(data):
                     
                     # Table과 관련된 Order, TableOrderList 삭제하기
                     delete_order_tableorderlist(store_id, table_id)
+                
+                # TablePaymentList payment_history 업데이트
+                check_table_payment_list.payment_history = p['payment_history']
+                session.commit()
+
         return jsonify({'status':'success'}), 200
     except:
         db.session.rollback()
