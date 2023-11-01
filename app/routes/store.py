@@ -1,4 +1,5 @@
 import json
+import os
 from flask import render_template, request, jsonify
 from flask_login import login_required, current_user
 from app.models.menu_category import get_main_and_sub_category_by_menu_id, select_main_and_sub_category_by_store_id
@@ -7,7 +8,7 @@ from app.routes import store_bp
 
 
 from app.models.store import create_store, update_store
-from app.models.menu import create_menu, create_menu_option, select_main_category, select_menu, select_menu_all, select_sub_category, select_menu_option_all, find_all_menu, update_menu, update_menu_option
+from app.models.menu import check_image_exsit, create_menu, create_menu_option, select_main_category, select_menu, select_menu_all, select_sub_category, select_menu_option_all, find_all_menu, update_menu, update_menu_option
 from app.login_manager import update_store_session
 
 # 매장 생성
@@ -281,14 +282,6 @@ def set_menu():
         # TODO : page, position 데이터 받기, 현재 null 처리
         store_id = current_user.id
         json_data = json.loads(request.form.get('json_data'))
-        images_file_path = 'app/static/images/menu/' # 파일 경로 설정
-
-        # 이미지 저장
-        for name in json_data['image']:
-            #print(request.files.get(name))
-            file = request.files.get(name)
-            file.save(images_file_path + name) # 텍스트로 저장된다..
-
         name = json_data['name']
         price = json_data['price']
         image_list = json_data['image']
@@ -299,10 +292,27 @@ def set_menu():
         menu_category_id = json_data['main_category']
         #page = menu_data['page']
         #position = menu_data['position']
-        image = json.dumps(image_list) # 리스트를 json 문자열로 변환
+        images = []
 
+        # 이미지 저장
+        for index, menu_name in enumerate(json_data['image']):
+            file = request.files.get(menu_name)
+            UPLOAD_FOLDER = 'app/static/images/store_'
+            upload_path = f'{UPLOAD_FOLDER}{store_id}/' # app/static/images/store_16
+            
+            # 서버에 스토어 아이디에 해당하는 폴더 유무 확인 후 생성
+            if not os.path.exists(upload_path):
+                os.makedirs(upload_path)
+            file_name = f'{name}_{index}.png'
+
+            # 저장
+            file.save(os.path.join(upload_path, file_name))
+
+            # 디비에 저장할 이미지 경로
+            images.append(upload_path + file_name)
+        
         # 메뉴 create
-        menu = create_menu(name, price, image, main_description, is_soldout, store_id, menu_category_id)
+        menu = create_menu(name, price, images, main_description, is_soldout, store_id, menu_category_id)
 
         # 메뉴 옵션 create
         create_menu_option(json_data['options'], menu.id)
@@ -311,55 +321,57 @@ def set_menu():
     
     # 기존 메뉴 수정
     if request.method == 'PATCH':
-        # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
-        # TODO : image, page, position 데이터 받기, 현재 null 처리
-        #store_id = 16
-        menu_data = request.get_json()
-
-        menu_id = menu_data['id']
-        name = menu_data['name']
-        price = menu_data['price']
-        #image = menu_data['image']
-        main_description = menu_data['main_description']
-        sub_description = menu_data['sub_description']
-        #is_soldout = menu_data['is_soldout'] # 수정란에 없음
-        store_id = menu_data['store_id']
-        menu_category_id = menu_data['menu_category_id']
+        # TODO : page, position 데이터 받기, 현재 null 처리
+        store_id = current_user.id
+        json_data = json.loads(request.form.get('json_data'))
+        menu_id = json_data['id']
+        name = json_data['name']
+        price = json_data['price']
+        image_list = json_data['image']
+        main_description = json_data['main_description']
+        #sub_description = json_data['sub_description']
+        is_soldout = False # null 허용X -> false 기본값으로 넣고 있음
+        print(type(json_data['main_category']))
+        menu_category_id = json_data['main_category']
         #page = menu_data['page']
         #position = menu_data['position']
+        images = []
+
+        # 기존 이미지 있으면 삭제
+        ck_image_name = check_image_exsit(menu_id)
+        if ck_image_name:
+            UPLOAD_FOLDER = 'app/static/images/store_'
+            upload_path = f'{UPLOAD_FOLDER}{store_id}/'
+            for index, menu_name in enumerate(ck_image_name):
+                os.remove(upload_path + menu_name)
+                print('이미지 삭제 완료')
+                
+        # 이미지 저장
+        for index, menu_name in enumerate(json_data['image']):
+            file = request.files.get(menu_name)
+            UPLOAD_FOLDER = 'app/static/images/store_'
+            upload_path = f'{UPLOAD_FOLDER}{store_id}/' # app/static/images/store_16
+            
+            # 서버에 스토어 아이디에 해당하는 폴더 유무 확인 후 생성
+            if not os.path.exists(upload_path):
+                os.makedirs(upload_path)
+            file_name = f'{name}_{index}.png'
+
+            # 저장
+            file.save(os.path.join(upload_path, file_name))
+
+            # 디비에 저장할 이미지 경로
+            images.append(upload_path + file_name)
 
         # 메뉴 update
-        menu = update_menu(menu_id, name, price, main_description, sub_description, store_id, menu_category_id)
+        menu = update_menu(menu_id, name, price, images, main_description, is_soldout, store_id, menu_category_id)
         
-        if not menu_data['option']:
-            return jsonify({'message': '메뉴가 성공적으로 업데이트되었습니다.'}), 200
         # 메뉴 옵션 update
+        check_menu_option(menu.id)
+        create_menu_option(json_data['options'], menu.id)
 
-        menu_option = create_menu_option(menu_data['option'], menu.id)
-        
-        print("메뉴수정 성공", menu)
+        return jsonify({'message': '메뉴가 성공적으로 수정되었습니다.'}), 200
 
-        return jsonify({'message': '메뉴가 성공적으로 업데이트되었습니다.'}), 200
-    
-    
-# POS관리 -> 상품 정보 등록 페이지
-# '추가' 버튼 클릭 시 메뉴 id 생성
-'''
-@store_bp.route('/create_menu', methods=['POST'])
-def api_create_menu():
-    if request.method == 'POST':
-        # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
-        #store_id = 16
-        store_data = request.get_json()
-        store_id = store_data['store_id']
-
-        menu_category_id = select_main_and_sub_category_by_store_id(store_id)
-
-        menu = create_menu(store_id, menu_category_id)
-        print('DB 저장 후 컨트롤러까지 잘 왔음!!! :D')
-        print(menu)
-        return menu
-'''
 
 # POS -> 매장관리 -> 상품 정보 수정 -> 생성(완료), 수정(진행중)
 @store_bp.route('/set_table', methods=['GET', 'POST', 'PATCH'])
@@ -374,7 +386,7 @@ def get_table():
     data=[]
     for table_category in table_categorys:
         tables = select_table(table_category.id)
-        table_list = [];
+        table_list = []
         for table in tables:
             table_list.append({
                 'id' : table.id,
@@ -399,5 +411,5 @@ def get_table():
             'position': table_category.position,
             'pages': page_list
         })
-    return data;
+    return data
     
