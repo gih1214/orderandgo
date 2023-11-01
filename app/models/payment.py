@@ -52,9 +52,7 @@ def delete_order_tableorderlist(store_id, table_id):
 
 # 결제정보 저장
 def create_payment_database(data):    
-    # store_id = current_user.id
-    store_id = 16   # temp
-    print("@#$@#$#@$", store_id)
+    store_id = current_user.id
 
     '''
     1. 일반결제
