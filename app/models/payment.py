@@ -4,6 +4,7 @@ from app.models import db, User, Store, Payment, Payment_method, Payment_status,
 import bcrypt
 from sqlalchemy import func
 
+import json
 from datetime import datetime
 from flask_login import login_user, logout_user
 
@@ -50,10 +51,60 @@ def delete_order_tableorderlist(store_id, table_id):
     db.session.commit()
 
 
+# 결제 통신 json
+def make_payment_history(store_id, table_id, paid, is_finished):
+    first_order_time = db.session.query(func.min(Order.ordered_at))\
+                                .filter(Order.table_id == table_id)\
+                                .scalar()
+
+    check_table_payment_list = db.session.query(TablePaymentList)\
+                                        .filter(TablePaymentList.store_id == store_id)\
+                                        .filter(TablePaymentList.table_id == table_id)\
+                                        .filter(TablePaymentList.first_order_time == first_order_time)\
+                                        .first()
+    
+    if check_table_payment_list is None:    # 다 기본값으로 넘겨줌
+        all_payment_list = None
+
+        payment_history = {
+            'isDirect' : False,
+            'direct' : 0,
+            'isDutch' : False,
+            'totalDutch' : 0,
+            'curDutch' : 0,
+            'dutchPrice' : 0
+        }
+    else:
+        all_payment_list = db.session.query(Payment.payment_amount, Payment_method.method)\
+                                    .join(Payment_method, Payment_method.id == Payment.payment_method_id)\
+                                    .filter(Payment.table_payment_list_id == check_table_payment_list.id)\
+                                    .all()
+        
+        payment_history = json.loads(check_table_payment_list.payment_history)
+
+    if all_payment_list is None:
+        payment = []
+    else:
+        payment = [{'method':p.method, 'price':p.payment_amount} for p in all_payment_list]
+
+    table_payment_data = {
+        'is_finished': is_finished,
+        'paid': paid,
+        'first_order_time': first_order_time,
+        'discount': check_table_payment_list.discount if check_table_payment_list is not None else 0,
+        'extra_charge': check_table_payment_list.extra_charge if check_table_payment_list is not None else 0,
+        'payment_history': payment_history,
+        'payment': payment
+    }
+
+    print('@@@table_payment_data@@@', table_payment_data)
+    return jsonify(table_payment_data)
+
+
 # 결제정보 저장
-def create_payment_database(data):    
+def create_payment_database(store_id, data):    
     # store_id = current_user.id
-    store_id = 16   # temp
+    # store_id = 16   # temp
     print("@#$@#$#@$", store_id)
 
     '''
@@ -82,6 +133,10 @@ def create_payment_database(data):
             # Table과 관련된 Order, TableOrderList 삭제하기
             delete_order_tableorderlist(store_id, table_id)
 
+            # paid, is_finished
+            paid = False
+            is_finished = True
+
         else:                                   # 2. 분할 결제
             check_table_payment_list = db.session.query(TablePaymentList)\
                                             .filter(TablePaymentList.store_id == store_id)\
@@ -93,6 +148,11 @@ def create_payment_database(data):
                 # TablePaymentList, Payment 생성하기
                 table_payment_list_item = create_table_payment_list(store_id, table_id, first_ordered_time, str(data['order_list']), p['discount'], p['extra_charge'], payment_time)
                 create_payment(table_payment_list_item.id, p['method'], 1, p['price'], payment_time)
+            
+                # paid, is_finished
+                paid = True
+                is_finished = False
+            
             else:
                 sum_payment = db.session.query(func.sum(Payment.payment_amount))\
                                     .filter(Payment.table_payment_list_id == check_table_payment_list.id)\
@@ -101,18 +161,27 @@ def create_payment_database(data):
                 if sum_payment+p['price']+p['extra_charge']-p['discount'] != data['total_price']:  # 2-2. 분할결제중
                     print("@@@@222-2")
                     create_payment(check_table_payment_list.id, p['method'], 1, p['price'], payment_time)
+
+                    # paid, is_finished
+                    paid = True
+                    is_finished = False
+
                 else:                                   # 2-3. 마지막 분할결제
                     print("@@@@222-3")
                     create_payment(check_table_payment_list.id, p['method'], 1, p['price'], payment_time)
                     
                     # Table과 관련된 Order, TableOrderList 삭제하기
                     delete_order_tableorderlist(store_id, table_id)
+
+                    # paid, is_finished
+                    paid = True
+                    is_finished = True
                 
                 # TablePaymentList payment_history 업데이트
                 check_table_payment_list.payment_history = p['payment_history']
                 session.commit()
 
-        return jsonify({'status':'success'}), 200
+        return make_payment_history(store_id, table_id, paid, is_finished)
     except:
         db.session.rollback()
         return jsonify({'status':'fail'}), 500

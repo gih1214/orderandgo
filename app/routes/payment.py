@@ -23,7 +23,7 @@ def api_payment():
         'total_price': 22000,   # 추가됨!
         'first_order_time': '2023-10-18 17:11:08',   # 추가됨!
         'payment':  {
-            'payment_history': '\{\}',  # 추가됨!
+            'payment_history': {},  # 추가됨!
             'extra_charge': 0,  # 추가됨!
             'discount': 0,  # 할인된 금액
             'method': 1,    # 1-cash/2-card

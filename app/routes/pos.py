@@ -136,6 +136,7 @@ def get_table_page():
             "pageList" : page_list
         })
 
+    print("@@@@", all_table_list)
     return jsonify(all_table_list)
 
     # # JSON 파일 경로 설정
@@ -269,22 +270,40 @@ def set_table_list():
 # 테이블 -> 메뉴리스트 페이지
 @pos_bp.route('/payment/<table_id>', methods=['GET'])
 def payment(table_id): 
-    
+
     return render_template('/pos/payment.html')
 
 # 테이블 결제 내역 조회
-@pos_bp.route('/payment_history/<table_id>', methods=['GET'])
+@pos_bp.route('/payment_history/<table_id>', methods=['GET', 'POST'])
 def payment_history(table_id): 
+
+    from app.models.payment import make_payment_history, create_payment_database
+    store_id = current_user.id
+
+    if request.method == 'GET':     # 첫 결제하기 들어왔을 때
+        print("###",'get')
+        table_payment_data = make_payment_history(store_id, table_id, False, False)
+    else:                           # 결제중
+        print("###",'post')
+        payment_data = request.get_json()
+        data = payment_data['data']
+        table_id = payment_data['table_id']
+        table_payment_data = create_payment_database(store_id, table_id, data)
+
+    '''
     table_payment_data = {
-        'paid': False, 
+        'is_finished': False,  # 추가됨. 결제끝났는지아닌지
+        'paid': False,  # 분할결제 이력 있는지-True/없는지-False
+        'first_order_time': 0,   # 추가됨
         'discount': 0,
         'extra_charge': 0,
-        'isDirect' : False,
-        'direct' : 0,
-        'isDutch' : False,
-        'totalDutch' : 1,
-        'curDutch' : 1,
-        'dutchPrice' : 0,
+        'payment_history': {},
+        # 'payment_history': {'isDirect' : False, # 분할결제 - 직접입력이면 True
+        #     'direct' : 0,
+        #     'isDutch' : False,
+        #     'totalDutch' : 1,
+        #     'curDutch' : 1,
+        #     'dutchPrice' : 0},
         'payment': [
             # {   
             #     'method': 1,    # 1-cash/2-card
@@ -296,4 +315,5 @@ def payment_history(table_id):
             # }
         ]
     }
-    return jsonify(table_payment_data)
+    '''
+    return table_payment_data
