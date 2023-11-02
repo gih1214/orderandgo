@@ -14,8 +14,8 @@ def create_menu(store_id, menu_category_id):
 '''
 
 # 메뉴 생성
-def create_menu(name, price, image, main_description, is_soldout, store_id, menu_category_id):
-    menu = Menu(name=name, price=price, image=image, main_description=main_description,
+def create_menu(name, price, images, main_description, is_soldout, store_id, menu_category_id):
+    menu = Menu(name=name, price=price, image=images, main_description=main_description,
                 is_soldout=is_soldout, store_id=store_id, menu_category_id=menu_category_id)
     db.session.add(menu)
     db.session.commit()
@@ -29,16 +29,35 @@ def create_menu_option(option_list, menu_id):
     db.session.commit()
     return True
 
+# 이미지 조회
+def check_image_exsit(menu_id):
+    item = Menu.query.filter(Menu.id == menu_id).first()
+    if not item.image:
+        return '해당 메뉴에 이미지가 없습니다.'
+    return item.image
+
+# 메뉴 수정
+def update_menu(menu_id, name, price, images, main_description, is_soldout, store_id, menu_category_id):
+    item = Menu.query.filter(Menu.id == menu_id).first()
+    if not item:
+        return '해당 메뉴가 없습니다.'
+    item.name = name
+    item.price = price
+    item.image = images
+    item.main_description = main_description
+    item.is_soldout = is_soldout
+    item.menu_category_id = menu_category_id
+    db.session.commit()
+    return item
+
 # 메뉴 옵션 삭제
 def delete_menu_option(option_id):
     item = MenuOption.query.filter(MenuOption.id == option_id).all()
     if not item:
         return '메뉴 옵션이 없습니다.'
-    
     db.session.delete(item)
     db.session.commit()
     return True
-
 
 # 메뉴 옵션 조회 (SELECT ID)
 def select_menu_option(option_id):
@@ -97,18 +116,6 @@ def select_menu_all_to_main_category(main_category_id):
         .filter(Menu.menu_category_id.in_([sub_category.id for sub_category in sub_categories])).all()
     if not item:
         return [] # 카테고리에 메뉴가 하나도 없음, 오류 발생
-    return item
-# 메뉴 수정
-def update_menu(menu_id, name, price, main_description, sub_description, menu_category_id):
-    item = Menu.query.filter(Menu.id == menu_id).first()
-    if not item:
-        return '해당 메뉴가 없습니다.'
-    item.name = name
-    item.price = price
-    item.main_description = main_description
-    item.sub_description = sub_description
-    item.menu_category_id = menu_category_id
-    db.session.commit()
     return item
 
 # 메뉴 삭제

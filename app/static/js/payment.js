@@ -39,7 +39,7 @@ const paymentHtml = () => {
     dutchPrice : 0,
   }
   let totalPrice = payment_history.orderTotalPrice;
-
+  console.log(payment_history)
   // 할인 영역 처리
   const _discount = document.querySelector('.payment .basket_container .order_btns span.discount');
   _discount.innerHTML = `${payment_history.discount.toLocaleString()} 원`
@@ -47,17 +47,17 @@ const paymentHtml = () => {
   totalPrice -= payment_history.discount;
 
   // 추가 금액 영역 처리
-  if(payment_history.addition > 0){
+  if(payment_history.extra_charge > 0){
     const _basket = document.querySelector('.payment .basket_container .basket');
     _basket.insertAdjacentHTML('beforeend', `
     <li class="addition_data">
       <div data-id="" data-type="" data-count="" data-master="" class="menu" onclick="">
         <div class="count addition"><i class="ph ph-plus"></i></div>
         <h2>추가 금액</h2>
-        <span class="price">${payment_history.addition.toLocaleString()} 원</span>
+        <span class="price">${payment_history.extra_charge.toLocaleString()} 원</span>
       </div>  
     </li>`)
-    totalPrice += payment_history.addition;
+    totalPrice += payment_history.extra_charge;
   }
 
 
@@ -97,13 +97,13 @@ const clickAdditionPrice = (event) => {
       <div class="addition_content">
         <div class="payment_amount">
           <h3>추가 금액</h3>
-          <input class="addition_input" type="text" oninput="updatePaymentAmount(event)" value="${payment_history.addition}"/>
+          <input class="addition_input" type="text" oninput="updatePaymentAmount(event)" value="${payment_history.extra_charge}"/>
           <span class="addition_input">원</span>
         </div>
       </div>
       <div class="split_payment_amount">
           <h3>추가 적용 금액</h3>
-          <span>${payment_history.addition}원</span>
+          <span>${payment_history.extra_charge}원</span>
         </div>
     </div>
     <div class="number_pad" onclick="clickNumberPad(event)">
@@ -134,7 +134,7 @@ const clickAdditionPrice = (event) => {
 const clickApplyAddition = (event) => {
   const _input = document.querySelector('.addition_input');
   const additionPrice = Number(_input.value.replace(/,/g, ''));
-  payment_history.addition = additionPrice;
+  payment_history.extra_charge = additionPrice;
   setPaymentData();
   findParentTarget(event.target, '.modal').click();
 }
@@ -144,14 +144,14 @@ const setPaymentData = (curPaymentPrice=false) => {
   // 추가 금액 최신화
   const _additionLi = document.querySelector('.addition_data'); // 추가 금액
   _additionLi?.remove();
-  if(payment_history.addition > 0) {
+  if(payment_history.extra_charge > 0) {
     const _basket = document.querySelector('.payment .basket_container .basket');
     _basket.insertAdjacentHTML('beforeend', `
     <li class="addition_data">
       <div data-id="" data-type="" data-count="" data-master="" class="menu" onclick="">
         <div class="count addition"><i class="ph ph-plus"></i></div>
         <h2>추가 금액</h2>
-        <span class="price">${payment_history.addition.toLocaleString()} 원</span>
+        <span class="price">${payment_history.extra_charge.toLocaleString()} 원</span>
       </div>  
     </li>`)
   }
@@ -161,7 +161,7 @@ const setPaymentData = (curPaymentPrice=false) => {
 
   // 총 금액 최신화
   const _totalPrice = document.querySelector('.payment .basket_container .order_btns .price'); // 총 금액
-  const totalPrice = payment_history.orderTotalPrice + payment_history.addition - payment_history.discount;
+  const totalPrice = payment_history.orderTotalPrice + payment_history.extra_charge - payment_history.discount;
   _totalPrice.innerHTML = `${totalPrice.toLocaleString() }원`  
 
   // 받은 금액 최신화
@@ -180,8 +180,10 @@ const setPaymentData = (curPaymentPrice=false) => {
   const _currentPrice = document.querySelector('.payment main section article .top .total_price .cur_price > span'); // 현재 결제할 금액
   if(!curPaymentPrice){
     _currentPrice.innerHTML = `${(totalPrice-receivedTotalPrice).toLocaleString()} 원`;
+    payment_history.curPaymentPrice = totalPrice-receivedTotalPrice
   }else{
     _currentPrice.innerHTML = `${curPaymentPrice.toLocaleString()} 원`;
+    payment_history.curPaymentPrice = curPaymentPrice
   };  
 
   // 더치 페이 최신화
@@ -210,7 +212,7 @@ const clickDiscount = (event) => {
   const _modalTitle = document.querySelector('.modal-content h1');
   const _modalBody = document.querySelector('.modal-content .modal-body');
 
-  const totalPrice = payment_history.orderTotalPrice + payment_history.addition;
+  const totalPrice = payment_history.orderTotalPrice + payment_history.extra_charge;
   const receivedTotalPrice = payment_history.payment.reduce((accumulator, item) => accumulator + item.price, 0);
   
   const dicountPercent = (payment_history.discount/totalPrice) * 100
@@ -289,7 +291,7 @@ const clickSplitPayment = (event) => {
   const _modalTitle = document.querySelector('.modal-content h1');
   const _modalBody = document.querySelector('.modal-content .modal-body');
 
-  const totalPrice = payment_history.orderTotalPrice + payment_history.addition - payment_history.discount;
+  const totalPrice = payment_history.orderTotalPrice + payment_history.extra_charge - payment_history.discount;
   const receivedTotalPrice = payment_history.payment.reduce((accumulator, item) => accumulator + item.price, 0);
 
 
@@ -664,11 +666,14 @@ const setOrderList = () => {
 const setPayment = (method) => {
   const tableId = lastPath;
   const order_list = setOrderList();
-  const price = Number(document.querySelector('.payment main section article .top .total_price span').textContent);
+  const total_price = payment_history.orderTotalPrice;
+  const first_order_time = '2023-10-18 17:11:08';
+  
   const payment = {
-    'discount': 0,  
+    'discount': payment_history.discount,  
+    'extra_charge': payment_history.extra_charge,
     'method': method,
-    'price': price
+    'price': payment_history.curPaymentPrice
   }
   console.log(tableId,order_list)
 }
