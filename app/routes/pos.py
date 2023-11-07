@@ -286,9 +286,7 @@ def payment_history(table_id):
     else:                           # 결제중
         print("###",'post')
         payment_data = request.get_json()
-        data = payment_data['data']
-        table_id = payment_data['table_id']
-        table_payment_data = create_payment_database(store_id, table_id, data)
+        table_payment_data = create_payment_database(store_id, payment_data)
 
     '''
     table_payment_data = {

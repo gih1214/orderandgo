@@ -121,6 +121,10 @@ function displayCurrentDateTime() {
 }
 displayCurrentDateTime();
 
+function historyBack(event){
+  location.href=`${event.currentTarget.dataset.href}${lastPath}`
+}
+
 
 // 모달 배경 및 닫기 클릭 시 모달 닫기
 window.onclick = function (event) {

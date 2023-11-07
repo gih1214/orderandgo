@@ -477,6 +477,16 @@ main section > aside .custom_btns button{
   right: -20px;
   background: #F3FAFA;
 }
+.basket_container .basket li .menu.cancel::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -12px;
+  bottom: -12px;
+  left: -20px;
+  right: -20px;
+  background: #FEECEA;
+}
 .basket_container .basket li .menu_option.active::after {
   content: '';
   position: absolute;
@@ -507,6 +517,9 @@ main section > aside .custom_btns button{
   color: #FFF;
   font-size: 16px;
   font-weight: 500;
+}
+.basket_container .basket li > .menu.cancel .count{
+  background: #F43E25;
 }
 .basket_container .basket li > .menu .count.addition {
   background: #F46325;
@@ -664,6 +677,11 @@ main section > aside .custom_btns button{
 }
 .payment main section article .top .other_btns.paid button.addtion_btn,
 .payment main section article .top .other_btns.paid button.discount_btn{
+  pointer-events: none;
+  background: #e5e5e5;
+  color: #c1c1c1;
+}
+.payment main section article .top .other_btns.has_history button{
   pointer-events: none;
   background: #e5e5e5;
   color: #c1c1c1;

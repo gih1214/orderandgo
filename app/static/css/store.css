@@ -269,7 +269,20 @@ section ul li .submit_btn {
   flex: 2;
 }
 .set_menu_product main article .article_bottom ul li:not(:first-child) div:nth-child(4){
+  display: flex;
+  align-items: center;
+  gap: 5px;
   text-align: start;
+}
+.set_menu_product main article .article_bottom ul li:not(:first-child) div:nth-child(4) .is_soldout{
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border-radius: 50%;
+  background: #07E044;
+}
+.set_menu_product main article .article_bottom ul li:not(:first-child) div:nth-child(4) .is_soldout.true{
+  background: #F43E25;
 }
 .set_menu_product main article .article_bottom ul li div:nth-child(5){
   flex: 1;
@@ -410,10 +423,43 @@ section ul li .submit_btn {
   gap: 15px;
 }
 .set_menu_product main aside .middle label {
+  position: relative;
   display: flex;
   flex-flow: column;
   gap: 10px;
   transition: all .4s;
+}
+.set_menu_product main aside .middle label .is_soldout {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.set_menu_product main aside .middle label .is_soldout button{
+  width: 40px;
+  height: 20px;
+  padding: 2px;
+  border-radius: 10px;
+  background: #07E044;
+  transition: all .25s;
+}
+.set_menu_product main aside .middle label .is_soldout button[data-soldout="true"]{
+  background: #F43E25;
+}
+.set_menu_product main aside .middle label .is_soldout button .ball{
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  transition: all .25s;
+}
+.set_menu_product main aside .middle label .is_soldout button[data-soldout="true"] .ball {
+  transform: translateX(20px);
+}
+.set_menu_product main aside .middle label .is_soldout input[type="checkbox"] {
+  display: none;
 }
 .set_menu_product main aside .middle label .flex_box{
   display: flex;
@@ -444,6 +490,11 @@ section ul li .submit_btn {
   border-radius: 5px;
   border: 1px solid #F43E25;
   color:#F43E25;;
+}
+.set_menu_product main aside .middle label .flex_box .drag_btn {
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 .set_menu_product main aside .middle label .add_option_btn {
   display: flex;

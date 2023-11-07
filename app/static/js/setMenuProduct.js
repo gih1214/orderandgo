@@ -53,7 +53,10 @@ const createMenuTable = (data) => {
       <div><input type="checkbox"></div>
       <div>${main_category_name}</div>
       <div>${sub_category_name}</div>
-      <div>${name}</div>
+      <div>
+        <div class="is_soldout"></div>
+        <span>${name}</span>
+      </div>
       <div>${option.length == 0 ? `-` : `${option.map((data)=>data.option_name).join(', ')}`}</div>
       <div>${price.toLocaleString()}</div>
     </li>`).join('')}
@@ -221,7 +224,7 @@ const setMenuHtmlEmptyData = {
   options: []
 }
 // 메뉴데이터 수정 html 만들기
-const setMenuHtml = ({imgList,name,price,description,category,options}) => {
+const setMenuHtml = ({imgList,name,price,description,category,options, is_soldout}) => {
   const imgCountArray = new Array(4).fill(false);
   const checkedMainCategory = category.main.filter(({checked})=>checked);
   const checkedSubCategory = category.sub.filter(({checked})=>checked);
@@ -253,6 +256,13 @@ const setMenuHtml = ({imgList,name,price,description,category,options}) => {
       <div class="left">
         <label for="">
           <span>메뉴명</span>
+          <div class="is_soldout ${is_soldout?'true':''}">
+            <span>Sold out</span>
+            <button onclick="toggleSoldOut(event)" data-soldout="${is_soldout}">
+              <div class="ball"></div>
+            </button>
+            <input type="checkbox" ${is_soldout?'checked':''}>
+          </div>
           <input data-title="name" data-required="true" data-type="form" type="text" value="${name}">
         </label>
         <label for="">
@@ -281,6 +291,7 @@ const setMenuHtml = ({imgList,name,price,description,category,options}) => {
           <div class="menu_options">
             ${options.map(({name, price})=>`
             <div class="flex_box">
+              <div class="drag_btn"><i class="ph-fill ph-caret-up-down"></i></div>
               <input data-title="option_name" data-type="form" type="text" value="${name}">
               <input data-title="option_price" data-type="form" type="text" value="${price}">
               <button class="delete_btn" onclick="clickAddOptionBtn(event)">
@@ -341,8 +352,19 @@ const clickCallMenuData = (event) => {
     console.log(data)
     const html = setMenuHtml(data);
     _asideEl.innerHTML = html;
+    setMenuOptionDrag()
   }
   fetchData(`/store/get_menu`, 'GET', {menu_id}, onSuccess)
+}
+
+const setMenuOptionDrag = () => {
+  const el = document.querySelector('.menu_options');
+  const option = {
+    animation: 150,
+    handle: ".drag_btn"
+  }
+  const sortable = Sortable.create(el,option);
+  console.log(sortable)
 }
 
 // 메뉴 추가 버튼 클릭 시
@@ -371,6 +393,7 @@ const clickAddOptionBtn = (event) => {
 const createMenuOptionHtml = (optionsData) => {
   return optionsData.map(({name, price})=> `
     <div class="flex_box">
+      <div class="drag_btn"><i class="ph-fill ph-caret-up-down"></i></div>
       <input data-title="option_name" data-type="form" type="text" value="${name}"  placeholder="옵션명">
       <input data-title="option_price" data-type="form" type="text" value="${price}" placeholder="가격">
       <button class="delete_btn" onclick="clickDeleteOptionBtn(event)">
@@ -486,4 +509,12 @@ const clickDeleteMenu = (e) => {
   menuList.forEach((menu)=>{menu.remove()});
 
 
+}
+
+const toggleSoldOut = (event) => {
+  const _soldOutBtn = event.currentTarget;
+  const isSoldOut = JSON.parse(_soldOutBtn.dataset.soldout);
+  _soldOutBtn.dataset.soldout = !isSoldOut;
+  const _checkBox = _soldOutBtn.nextElementSibling;
+  _checkBox.checked = !_checkBox.checked;
 }
