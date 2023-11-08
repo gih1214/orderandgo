@@ -312,6 +312,44 @@ const minusBasketMenu = (event) => {
   const type = findParentTarget(event.currentTarget, 'aside').dataset.type
   if(type == 'order_list'){
     console.log('주문내역에서 마이너스 클릭함')
+    const basketItems = document.querySelectorAll('.basket li');
+    let menuIndex;
+    menuIndex = Array
+      .from(basketItems)
+      .findIndex(el => el.querySelector('div').classList.contains('active'))
+    
+    const target = document.querySelector('.basket li div.active');
+    const isCancel = target.classList.contains('cancel');
+    if(isCancel) return; // 선택한 메뉴가 취소 데이터 일 때
+    const targetType = target.dataset.type;
+    const _targetLi = target.closest('li');
+    const _nextLi = _targetLi.nextElementSibling;
+    const isHasCancel = _nextLi.querySelector('.menu').classList.contains('cancel');
+    if(isHasCancel)return; // 선택한 메뉴가 이미 취소 데이터를 가지고 있을 때
+    const pargetEl = target.closest('li').querySelector('[data-type="menu"]')
+    const masterName = targetType == "menu" ? target.dataset.master : pargetEl.dataset.master;
+    if(targetType == 'menu'){
+      const basketDatas = setBasketData(order_history);
+      const basket = basketDatas.find(data => data.masterName == masterName)
+      const liHtml = `
+        <li>
+          <div 
+            data-id="${basket.data.id}" 
+            data-type="menu" 
+            data-count="${basket.length}" 
+            data-master="${basket.masterName}" 
+            class="menu cancel" 
+            onclick="clickBasketMenu(event)"
+            >
+            <div class="count"><span>${basket.length}</span></div>
+            <h2>${basket.data.name}</h2>
+            <span class="price">-${basket.data.price.toLocaleString()}원</span>
+          </div>
+        </li>`
+      _targetLi.insertAdjacentHTML("afterend", liHtml);
+
+    }
+
   }
   if(type == 'basket'){
     if(menuAllData.length == 0) return;

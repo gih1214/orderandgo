@@ -20,7 +20,7 @@
   <div id="container" class="order">
     <header>
       <!-- <h1>POS - Header</h1>-->
-      <a class="back_btn" onclick="history.back();">
+      <a class="back_btn" data-href="/pos/menuList/" onclick="historyBack(event)">
         <i class="ph-bold ph-caret-left"></i>
       </a>
       <div class="center">
@@ -89,7 +89,7 @@
           </div>
           <div class="payment_btns">
             <button onclick="clickCashPayment(event)" class="cash_btn">현금 결제</button>
-            <button onclick="createCompletedPaymentModal(event, 'CARD')" class="card_btn">카드 결제</button>
+            <button onclick="clickCardPayment(event)" class="card_btn">카드 결제</button>
           </div>
         </article>
       </section>

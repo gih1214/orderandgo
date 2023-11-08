@@ -153,9 +153,7 @@ def get_sub_category():
 @store_bp.route('/all_menu_list', methods=['GET'])
 def all_menu_list():
     # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
-    store_id = 16
-    #store_id = current_user.id
-
+    store_id = current_user.id
     all_menu_list = []
     main_categories = select_main_category(store_id) # 메인 카테고리 조회
 
@@ -192,6 +190,7 @@ def all_menu_list():
                     'main_category_name': main_category_name,
                     'sub_category_id': sub_category_id,
                     'sub_category_name': sub_category_name,
+                    'is_soldout': m.is_soldout,
                     'option': option_list
                 })
     '''
@@ -260,6 +259,7 @@ def get_menu():
         'id' : menu.id,
         'name' : menu.name,
         'price': menu.price,
+        'is_soldout' : menu.is_soldout,
         'imgList' : [],
         'description': menu.main_description,
         'options' : option_data,
@@ -377,7 +377,7 @@ def set_menu():
 @store_bp.route('/set_table', methods=['GET', 'POST', 'PATCH'])
 def set_table():
     if request.method == 'GET':
-        return render_template('set_table_product.html')
+        return render_template('set_table_position.html')
     
 @store_bp.route('/get_table', methods=['GET'])
 def get_table():
@@ -413,3 +413,8 @@ def get_table():
         })
     return data
     
+# POS -> 매장관리 -> 메뉴 위치 설정 
+@store_bp.route('/set_menu_position', methods=['GET', 'POST', 'PATCH'])
+def set_menu_position():
+    if request.method == 'GET':
+        return render_template('set_menu_position.html')

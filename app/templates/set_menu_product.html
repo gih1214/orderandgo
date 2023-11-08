@@ -15,6 +15,10 @@
 
   <!-- 전용 css -->
   <link rel="stylesheet" href="/static/css/store.css">
+
+  <!-- sortable.js -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  
 </head>
 <body class="set_menu_product">
   <div id="container">
@@ -275,6 +279,13 @@
           <div class="left">
             <label for="">
               <span>메뉴명</span>
+              <div class="is_soldout">
+                <span>Sold out</span>
+                <button onclick="toggleSoldOut(event)" data-soldout="false">
+                  <div class="ball"></div>
+                </button>
+                <input type="checkbox">
+              </div>
               <input type="text" placeholder="메뉴명">
             </label>
             <label for="">
