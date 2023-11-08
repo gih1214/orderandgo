@@ -7,6 +7,7 @@ from app.models import db, Store, TableCategory, Table
 from app.models.menu_category import create_main_category, create_sub_category
 from app.models.store import create_store, delete_store, update_store
 from app.models.menu import create_menu, create_menu_option, delete_menu, update_menu
+from app.models.table import update_table_name, update_table_position, create_table
 
 @adm_bp.route('/')
 def index():
@@ -350,28 +351,6 @@ def delete_table_category(table_category_id):
 
 ####################
 ### 테이블 시작 ###
-@adm_bp.route('/table', methods=['POST'])
-def create_table():
-    # 테이블 생성 로직 수행
-    table_data = request.get_json()
-    print('Received JSON data:', table_data)
-
-    name = table_data['tableName']
-    number = table_data['tableNumber']
-    seat_count = table_data['seatCount']
-    table_category_id = table_data['tableCategory']
-
-    store_id = 1    # temp
-    x_axis = 1    # temp
-    y_axis = 1    # temp
-    page = 1    # temp
-    table_category_id=1 #temp
-
-    table = Table(name=name, number=number, seat_count=seat_count, x_axis=x_axis, y_axis=y_axis, page=page, table_category_id=table_category_id)
-    db.session.add(table)
-    db.session.commit()
-
-    return jsonify({'message': '테이블을 성공적으로 생성되었습니다.'}), 201
 
 @adm_bp.route('/table/<table_id>', methods=['GET'])
 def get_table(table_id):
@@ -391,5 +370,30 @@ def delete_table(table_id):
     # 테이블 삭제 로직 수행
     # ...
     return jsonify({'message': '테이블을 성공적으로 삭제되었습니다.'}), 204
+
+
+
+@adm_bp.route('/create_table', methods=['POST'])
+def api_create_table():
+    data = request.get_json()
+    return create_table(data)
+
+@adm_bp.route('/update_table_name', methods=['PATCH'])
+def api_update_table_name():
+    data = request.get_json()
+    table_id = data.table_id
+    name = data.name
+
+    return update_table_name(table_id, name)
+
+
+@adm_bp.route('/update_table_position', methods=['PATCH'])
+def api_update_table_position():
+    data = request.get_json()
+    table_id_fir = data.table_id_fir
+    table_id_sec = data.table_id_sec
+
+    return update_table_position(table_id_fir, table_id_sec)
+
 ### 테이블 끝 ###
 ####################

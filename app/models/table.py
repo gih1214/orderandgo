@@ -46,14 +46,6 @@ def delete_table_category(table_category_id):
 # 테이블
 #########
 
-# 테이블 생성
-def create_table(data):
-    item = Table(data['name'], data['number'], data['seat_count'], data['table_category'], data['x_axis'], data['y_axis'], data['page'], data['is_group'])
-    db.session.add(item)
-    db.session.commit()
-    db.session.refresh(item)
-    return item
-
 # 테이블 조회
 def select_table(table_category_id):
     item = Table.query.filter(Table.table_category_id == table_category_id).all()
@@ -117,3 +109,42 @@ def set_table_group(table_list):
         db.session.commit()
 
     return jsonify({'message': 'User updated successfully'}), 200  
+
+
+# 테이블 이름 수정
+def update_table_name(table_id, name):
+    table_item = db.session.query(Table)\
+                        .filter(Table.id == table_id)\
+                        .first()
+    if not table_item:
+        return jsonify({'message': 'Not found table id'}), 400
+    table_item.name = name
+    db.session.commit()
+    return jsonify({'message': 'Table name updated successfully'}), 200  
+
+
+# 테이블 위치 수정
+def update_table_position(table_id_fir, table_id_sec):
+    fir_table_item = db.session.query(Table)\
+                        .filter(Table.id == table_id_fir)\
+                        .first()
+    
+    sec_table_item = db.session.query(Table)\
+                        .filter(Table.id == table_id_sec)\
+                        .first()
+    if fir_table_item is None or sec_table_item is None:
+        return jsonify({'message': 'Not found table id'}), 400
+    
+    fir_table_item.position = sec_table_item.position
+    sec_table_item.position = fir_table_item.position
+    db.session.commit()
+    return jsonify({'message': 'Table position updated successfully'}), 200  
+
+
+# 테이블 생성
+def create_table(data):
+    item = Table(name=data['name'], seat_count=data['seat_count'], is_group=0, table_category_id=data['table_category'], page=data['page'], position=data['position'])
+    db.session.add(item)
+    db.session.commit()
+    db.session.refresh(item)
+    return jsonify({'message': 'Table position updated successfully'}), 200
