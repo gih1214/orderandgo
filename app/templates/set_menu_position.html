@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OrderAndGo</title>
+
+  <!-- 시작 초기 css 설정 -->
+  <link rel="stylesheet" href="/static/css/responsive.css">
+  <link rel="stylesheet" href="/static/css/reset.css">
+  <link rel="stylesheet" href="/static/css/common.css">
+  <link rel="stylesheet" href="/static/css/animation.css">
+  <!-- 아이콘 -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <!-- 전용 css -->
+  <link rel="stylesheet" href="/static/css/pos.css">
+</head>
+<body>
+  <div id="container" class="set_menu_position order">
+    <header>
+      <!-- <h1>POS - Header</h1>-->
+      <a class="back_btn" href="/pos/tableList">
+        <i class="ph-bold ph-caret-left"></i>
+      </a>
+      <div class="center">
+        <a onclick="location.reload();">
+          <h1>
+            <img src="/static/images/common/logo-order&go-white.png" alt="">
+          </h1>
+        </a>
+        <div class="header_info">
+          <span class="cur_time">2023-05-01(월) 14:00</span>
+          <span class="store_state" data-state="open">영업중</span>
+        </div>
+      </div>
+    </header>
+    <main>
+      <section>
+        <!-- <h1>POS - section</h1> -->
+        <nav>
+          <!-- <h1>POS - Nav</h1> -->
+          <ul>
+            <li data-state="active">
+              <button>카테고리 1</button>
+            </li>
+            <li>
+              <button>카테고리 2</button>
+            </li>
+            <li>
+              <button>카테고리 3</button>
+            </li>
+          </ul>
+        </nav>
+        <article>
+          <div class="menus items">
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+            
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+            
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+            <button class="menu item"></button>
+          </div>
+
+        </article>
+        <!-- 메뉴판 페이지에서 메뉴 옵션 선택 영역 -->
+        <aside class="option_container">
+          <div class="menus items">
+            <button class="menu item">
+              <div class="title">
+                <h2>옵션명</h2>
+              </div>
+              <span class="price">16,000원</span>
+            </button>
+          </div>
+        </aside>
+        <div class="option_background" onclick="closeOptionContainer(event)"></div>
+      </section>
+      <!-- 메뉴판 페이지에서 장바구니 영역 -->
+      <aside class="basket_container" data-type="basket">
+        <!-- <h1>POS - aside</h1> -->
+        <div class="count_btns top">
+          <button onclick="minusBasketMenu(event)" data-active="false" class="minus">
+            <i class="ph ph-minus"></i>
+          </button>
+          <button onclick="plusBasketMenu(event)" data-active="false" class="plus">
+            <i class="ph ph-plus"></i>
+          </button>
+          <button onclick="deleteBasketMenu(event)" class="delete">
+            <i class="ph ph-trash"></i>
+          </button>
+          <button onclick="clickOrderHistoryBtn(event)" data-check="false" class="order_history">
+            주문내역
+          </button>
+          <button onclick="clickBasketBtn(event)" class="new_order">
+            장바구니
+          </button>
+        </div>
+        <ul class="basket middle">
+          <!-- <li>
+            <div class="menu">
+              <h2>메뉴명</h2>
+              <span>1</span>
+              <span class="price">18,000원</span>
+            </div>
+            <div class="menu_option">
+              <h2>옵션명</h2>
+              <span>1</span>
+              <span class="price">2,000원</span>
+            </div>
+          </li> -->
+        </ul>
+        <div class="order_btns bottom">
+          <div class="total_price">
+            <h2>총액</h2>
+            <span class="price">원</span>
+          </div>
+          <ul>
+            <li><button onclick="clickOrder(event)">주문하기</button></li>
+            <li class="pay" onclick="clickPayment(event)"><button>결제하기</button></li>
+          </ul>
+        </div>
+      </aside>
+    </main>
+  </div>
+  
+  <!-- 직원 요청 및 호출에 대한 처리 영역 -->
+  <div id="alarm"></div>
+
+  <!-- 공통 스크립트 -->
+  <script src="/static/js/common.js"></script>
+  <!-- 전용 스크립트 -->
+  <script src="/static/js/setMenuPosition.js"></script>
+</body>
+</html>

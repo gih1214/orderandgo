@@ -377,7 +377,7 @@ def set_menu():
 @store_bp.route('/set_table', methods=['GET', 'POST', 'PATCH'])
 def set_table():
     if request.method == 'GET':
-        return render_template('set_table_product.html')
+        return render_template('set_table_position.html')
     
 @store_bp.route('/get_table', methods=['GET'])
 def get_table():
@@ -413,3 +413,8 @@ def get_table():
         })
     return data
     
+# POS -> 매장관리 -> 메뉴 위치 설정 
+@store_bp.route('/set_menu_position', methods=['GET', 'POST', 'PATCH'])
+def set_menu_position():
+    if request.method == 'GET':
+        return render_template('set_menu_position.html')

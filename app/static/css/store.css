@@ -636,17 +636,17 @@ section ul li .submit_btn {
 
 /***************************/
 /* 매장 테이블 관리 페이지 */
-.set_table_product main {
+.set_table_position main {
   display: initial;
   height: auto;
   background: initial;
 }
-.set_table_product main section{
+.set_table_position main section{
   position: initial;
   overflow: initial;
 }
 
-.set_table_product section{
+.set_table_position section{
   width: auto;
   height: auto;
   padding: initial;
@@ -654,16 +654,16 @@ section ul li .submit_btn {
   border-bottom: initial;
 
 }
-.set_table_product main section nav {
+.set_table_position main section nav {
   height: 50px;
 }
-.set_table_product main section article{
+.set_table_position main section article{
   background: rgba(0, 0, 0, 0.50);
 }
-.set_table_product main section article .items{
+.set_table_position main section article .items{
   height: 100%;
 }
-.set_table_product main section article .item{
+.set_table_position main section article .item{
   position: relative;
   display: flex;
   align-items: start;
@@ -674,22 +674,22 @@ section ul li .submit_btn {
   border: 1px dashed #CCC;
   background: none;
 }
-.set_table_product main section article .item h2{
+.set_table_position main section article .item h2{
   color: #000;
   font-size: 16px;
   font-weight: 700;
 }
-.set_table_product main section article .item[data-has="true"]{
+.set_table_position main section article .item[data-has="true"]{
   border: 1px solid #CCC;
   background: #FFF;
 }
-.set_table_product main section article .item .active {
+.set_table_position main section article .item .active {
   display: none;
 }
-.set_table_product main section article .item[data-active="true"]{
+.set_table_position main section article .item[data-active="true"]{
   border: 1px dashed #1FAA9C;
 }
-.set_table_product main section article .item[data-active="true"] .active {
+.set_table_position main section article .item[data-active="true"] .active {
   position: absolute;
   top: 0;
   left: 0;
@@ -698,7 +698,7 @@ section ul li .submit_btn {
   background: #1FAA9C33;
   display: block;
 }
-.set_table_product main section article .item[data-active="true"] .active i {
+.set_table_position main section article .item[data-active="true"] .active i {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -706,10 +706,10 @@ section ul li .submit_btn {
   font-size: 30px;
   color: #1FAA9C;
 }
-.set_table_product main section article .item .ph-trash{
+.set_table_position main section article .item .ph-trash{
   color: #F43E25;
 }
-.set_table_product main section article .item .ph-plus {
+.set_table_position main section article .item .ph-plus {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -719,3 +719,12 @@ section ul li .submit_btn {
 }
 /* 매장 테이블 관리 페이지 */
 /***************************/
+
+
+/*************************/
+/* 메뉴 위치 관리 페이지 */
+.set_menu_position {
+  
+}
+/* 메뉴 위치 관리 페이지 */
+/*************************/
