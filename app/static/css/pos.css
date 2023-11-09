@@ -693,6 +693,7 @@ main section > aside .custom_btns button{
 
 }
 .payment main section article .top .total_price .cur_price {
+  width: max-content;
   position: relative;
 }
 .payment main section article .top .total_price .cur_price > span{

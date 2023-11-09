@@ -679,6 +679,9 @@ section ul li .submit_btn {
   font-size: 16px;
   font-weight: 700;
 }
+.set_table_position main section article .item input {
+  display: none;
+}
 .set_table_position main section article .item[data-has="true"]{
   border: 1px solid #CCC;
   background: #FFF;
@@ -706,8 +709,16 @@ section ul li .submit_btn {
   font-size: 30px;
   color: #1FAA9C;
 }
+.set_table_position main section article .item .icons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 .set_table_position main section article .item .ph-trash{
   color: #F43E25;
+}
+.set_table_position main section article .item .ph-pencil{
+  color: #ccc;
 }
 .set_table_position main section article .item .ph-plus {
   position: absolute;

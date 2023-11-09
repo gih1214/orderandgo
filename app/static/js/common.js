@@ -346,10 +346,10 @@ const changeBasketHtml = (datas) => {
     const vat = Math.trunc(totalPrice * 10 / 110);
     const supplyPrice = Math.trunc(totalPrice - vat);
 
-    _supplyPrice.innerHTML = `${supplyPrice.toLocaleString()} 원`;
-    _vat.innerHTML = `${vat.toLocaleString()} 원`;
-    _totalPrice.innerHTML = `${totalPrice.toLocaleString()} 원`;
-    _sectionTotalPrice.innerHTML = `${totalPrice.toLocaleString()} 원`;
+    _supplyPrice.innerHTML = `${supplyPrice.toLocaleString()}원`;
+    _vat.innerHTML = `${vat.toLocaleString()}원`;
+    _totalPrice.innerHTML = `${totalPrice.toLocaleString()}원`;
+    _sectionTotalPrice.innerHTML = `${totalPrice.toLocaleString()}원`;
   }
   return totalPrice;
 }

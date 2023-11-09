@@ -87,7 +87,7 @@
 /* ######### 모달 ############### */
 .modal {
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   align-items: center;
   justify-content: center;
   display: none;

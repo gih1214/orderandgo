@@ -74,8 +74,8 @@ const paymentHtml = () => {
     const _received = _paid.querySelector('.received');
 
     receivedTotalPrice = payment_history.payment.reduce((accumulator, item) => accumulator + item.price, 0);
-    _remaining.innerHTML = `남은 금액 ${(totalPrice - receivedTotalPrice).toLocaleString()}`;
-    _received.innerHTML = `| 받은 금액 ${receivedTotalPrice.toLocaleString()}`;
+    _remaining.innerHTML = `남은 금액 ${(totalPrice - receivedTotalPrice).toLocaleString()}원`;
+    _received.innerHTML = `| 받은 금액 ${receivedTotalPrice.toLocaleString()}원`;
 
   }
   const _sectionTotalPrice = document.querySelector('main section .total_price .price');
@@ -172,22 +172,22 @@ const setPaymentData = (curPaymentPrice=false) => {
 
   // 남은 금액 최신화
   const _remaining = document.querySelector('.payment main section article .top .total_price .paid .remaining'); // 남은 금액
-  _remaining.innerHTML = `남은 금액 ${(totalPrice-receivedTotalPrice).toLocaleString()}`
+  _remaining.innerHTML = `남은 금액 ${(totalPrice-receivedTotalPrice).toLocaleString()}원`
 
   
   // 현재 받을 금액 최신화 
   const _currentPrice = document.querySelector('.payment main section article .top .total_price .cur_price > span'); // 현재 결제할 금액
   if(!curPaymentPrice){
     if(payment_history.payment_history.isDutch){
-      _currentPrice.innerHTML = `${(payment_history.payment_history.dutchPrice).toLocaleString()} 원`;
+      _currentPrice.innerHTML = `${(payment_history.payment_history.dutchPrice).toLocaleString()}원`;
       payment_history.curPaymentPrice = payment_history.payment_history.dutchPrice
     }else{
-      _currentPrice.innerHTML = `${(totalPrice-receivedTotalPrice).toLocaleString()} 원`;
+      _currentPrice.innerHTML = `${(totalPrice-receivedTotalPrice).toLocaleString()}원`;
       payment_history.curPaymentPrice = totalPrice-receivedTotalPrice
     }
   }else{
     
-    _currentPrice.innerHTML = `${curPaymentPrice.toLocaleString()} 원`;
+    _currentPrice.innerHTML = `${curPaymentPrice.toLocaleString()}원`;
     payment_history.curPaymentPrice = curPaymentPrice
   };  
 

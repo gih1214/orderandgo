@@ -7,7 +7,7 @@ from app.models import db, Store, TableCategory, Table
 from app.models.menu_category import create_main_category, create_sub_category
 from app.models.store import create_store, delete_store, update_store
 from app.models.menu import create_menu, create_menu_option, delete_menu, update_menu
-from app.models.table import update_table_name, update_table_position, create_table
+from app.models.table import update_table_name, update_table_position, create_table, delete_table
 
 @adm_bp.route('/')
 def index():
@@ -366,10 +366,10 @@ def update_table(table_id):
     return jsonify({'message': '테이블을 성공적으로 업데이트되었습니다.'}), 200
 
 @adm_bp.route('/table/<table_id>', methods=['DELETE'])
-def delete_table(table_id):
+def api_delete_table(table_id):
     # 테이블 삭제 로직 수행
-    # ...
-    return jsonify({'message': '테이블을 성공적으로 삭제되었습니다.'}), 204
+    if delete_table(table_id):
+        return jsonify({'message': '테이블을 성공적으로 삭제되었습니다.'}), 204
 
 
 
@@ -381,6 +381,7 @@ def api_create_table():
 @adm_bp.route('/update_table_name', methods=['PATCH'])
 def api_update_table_name():
     data = request.get_json()
+    print(data)
     table_id = data.table_id
     name = data.name
 
@@ -390,6 +391,7 @@ def api_update_table_name():
 @adm_bp.route('/update_table_position', methods=['PATCH'])
 def api_update_table_position():
     data = request.get_json()
+    print('data,',data)
     table_id_fir = data.table_id_fir
     table_id_sec = data.table_id_sec
 
