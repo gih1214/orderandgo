@@ -382,8 +382,8 @@ def api_create_table():
 def api_update_table_name():
     data = request.get_json()
     print(data)
-    table_id = data.table_id
-    name = data.name
+    table_id = data['table_id']
+    name = data['name']
 
     return update_table_name(table_id, name)
 
@@ -392,8 +392,8 @@ def api_update_table_name():
 def api_update_table_position():
     data = request.get_json()
     print('data,',data)
-    table_id_fir = data.table_id_fir
-    table_id_sec = data.table_id_sec
+    table_id_fir = data['table_id_fir']
+    table_id_sec = data['table_id_sec']
 
     return update_table_position(table_id_fir, table_id_sec)
 

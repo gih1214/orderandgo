@@ -147,4 +147,4 @@ def create_table(data):
     db.session.add(item)
     db.session.commit()
     db.session.refresh(item)
-    return jsonify({'message': 'Table position updated successfully'}), 200
+    return jsonify({'table_id': item.id, 'table_name': item.name}), 200
