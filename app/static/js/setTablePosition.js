@@ -11,7 +11,7 @@ const callTableList = () => {
   const onSuccess = (data) => {
     console.log(data);
     tableData=data;
-    createTableHtml(data, 0, 0);
+    createTableHtml(data, curCategoryIndex, curPage);
   }
   fetchData(`/store/get_table`, 'GET', {}, onSuccess);
 }

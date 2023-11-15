@@ -1031,3 +1031,57 @@ main section > aside .custom_btns button{
 
 /* ##### payment ##### */
 /* ################### */
+
+
+/*************************/
+/* 메뉴 위치 관리 페이지 */
+.set_menu_position {
+  
+}
+.set_menu_position .background_area{
+  background: rgba(0, 0, 0, .5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.set_menu_position main section nav{
+  position: relative;
+  z-index: 1;
+}
+.set_menu_position main section article .item.hidden{
+  visibility: inherit;
+  opacity: inherit;
+  background: none;
+  border-radius: 10px;
+  border: 1px dashed #CCC;
+}
+.set_menu_position main section article .item .active{
+  display: none;
+}
+.set_menu_position main section article .item[data-active="true"] .active{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #1FAA9C33;
+  display: block; 
+}
+.set_menu_position main section article .item[data-active="true"] .active i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
+  color: #1FAA9C;
+}
+.set_menu_position .basket_container > .count_btns button{
+  z-index: 0;
+}
+
+
+/* 메뉴 위치 관리 페이지 */
+/*************************/
