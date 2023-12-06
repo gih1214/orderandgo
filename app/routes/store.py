@@ -8,7 +8,7 @@ from app.routes import store_bp
 
 
 from app.models.store import create_store, update_store
-from app.models.menu import check_image_exsit, create_menu, create_menu_option, select_main_category, select_menu, select_menu_all, select_sub_category, select_menu_option_all, find_all_menu, update_menu, update_menu_option
+from app.models.menu import check_image_exsit, create_menu, create_menu_option, select_main_category, select_menu, select_menu_all, select_pre_menu_id, select_sub_category, select_menu_option_all, find_all_menu, update_menu, update_menu_option
 from app.login_manager import update_store_session
 
 # 매장 생성
@@ -283,7 +283,7 @@ def set_menu():
         store_id = current_user.id
         json_data = json.loads(request.form.get('json_data'))
         name = json_data['name']
-        price = json_data['price']
+        price = int(json_data['price'])
         image_list = json_data['image']
         main_description = json_data['main_description']
         #sub_description = json_data['sub_description']
@@ -292,13 +292,18 @@ def set_menu():
         menu_category_id = json_data['main_category']
         #page = menu_data['page']
         #position = menu_data['position']
+
         images = []
+        # 현재 menu 마지막 행의 id 가져오기
+        # 이미지 저장 경로에 필요
+        pre_menu_id = select_pre_menu_id(store_id)
+        current_menu_id = pre_menu_id + 1
 
         # 이미지 저장
         for index, menu_name in enumerate(json_data['image']):
             file = request.files.get(menu_name)
             UPLOAD_FOLDER = 'app/static/images/store_'
-            upload_path = f'{UPLOAD_FOLDER}{store_id}/' # app/static/images/store_16
+            upload_path = f'{UPLOAD_FOLDER}{store_id}/menu_{current_menu_id}' # app/static/images/store_16/menu_30
             
             # 서버에 스토어 아이디에 해당하는 폴더 유무 확인 후 생성
             if not os.path.exists(upload_path):
@@ -310,10 +315,15 @@ def set_menu():
 
             # 디비에 저장할 이미지 경로
             images.append(upload_path + file_name)
-        
-        # 메뉴 create
-        menu = create_menu(name, price, images, main_description, is_soldout, store_id, menu_category_id)
+        print('이미지 저장 완료')
 
+        # 'image' 키의 값을 리스트에서 문자열로 변환
+        images_as_string = ', '.join(images)
+
+        # 메뉴 create
+        menu = create_menu(name, price, images_as_string, main_description, is_soldout, store_id, menu_category_id)
+        print('메뉴 저장 성공 !!!!!!!!!!!!!!!!!!!!!')
+        
         # 메뉴 옵션 create
         create_menu_option(json_data['options'], menu.id)
 

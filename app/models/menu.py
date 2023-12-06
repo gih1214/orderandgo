@@ -1,5 +1,6 @@
 import json
 from flask import session
+from sqlalchemy import desc
 from app.models import MainCategory, SubCategory, db, Menu, MenuOption
 
 # 메뉴 id 생성
@@ -14,10 +15,12 @@ def create_menu(store_id, menu_category_id):
 '''
 
 # 메뉴 생성
-def create_menu(name, price, images, main_description, is_soldout, store_id, menu_category_id):
-    menu = Menu(name=name, price=price, image=images, main_description=main_description,
+def create_menu(name, price, image, main_description, is_soldout, store_id, menu_category_id):
+    menu = Menu(name=name, price=price, image=image, main_description=main_description,
                 is_soldout=is_soldout, store_id=store_id, menu_category_id=menu_category_id)
+    print('DB 넣기 전')
     db.session.add(menu)
+    print('추가 후 커밋 전')
     db.session.commit()
     return menu # 커밋된 메뉴 리턴
 
@@ -28,6 +31,13 @@ def create_menu_option(option_list, menu_id):
         db.session.add(menu_option)
     db.session.commit()
     return True
+
+# 메뉴 마지막 행의 id 값 조회 (스토어별)
+def select_pre_menu_id(store_id):
+    menu = Menu.query.filter(Menu.store_id == store_id).order_by(desc(Menu.id)).first()
+    if not menu:
+        return 0
+    return menu.id
 
 # 이미지 조회
 def check_image_exsit(menu_id):
