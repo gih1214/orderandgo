@@ -176,3 +176,14 @@ const clickChangeMenuPositionPage = (event, type) => {
   }
   createMenuHtml(menuData, curCategoryIndex, curPage);
 }
+
+// 카테고리 설정 클릭 시
+const clickSetCategory = (event) => {
+  openModalFun(event);
+  const _modal = document.querySelector('.modal');
+  const _modalTitle = document.querySelector('.modal-content h1');
+  const _modalBody = document.querySelector('.modal-content .modal-body');
+  _modalTitle.innerHTML = '카테고리 설정'
+  const html = ``
+
+}

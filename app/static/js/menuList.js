@@ -4,6 +4,8 @@ let basket = new Array;
 let currentMenu = null;
 let menuAllData = [];
 let order_history = [];
+let cancel_order_list = [];
+
 // 메뉴판 메뉴 리스트 가져오기
 fetch(`/pos/get_menu_list/${lastPath}`, {
   method: 'GET',
@@ -67,6 +69,28 @@ const clickBasketBtn = (event) => {
   const _countBtns = document.querySelectorAll('.count_btns button.minus, .count_btns button.plus, .count_btns button.delete');
   _countBtns.forEach(btn=>btn.dataset.active=false);
   closeOptionContainer();
+}
+
+// 주문내역 버튼 클릭 시
+const clickOrderList = (event) => {
+  const _countBtns = document.querySelector('.count_btns top');
+  _countBtns.innerHTML = `
+    <button onclick="minusBasketMenu(event)" data-active="false" class="minus">
+      <i class="ph ph-minus"></i>
+    </button>
+    <button onclick="plusBasketMenu(event)" data-active="false" class="plus">
+      <i class="ph ph-plus"></i>
+    </button>
+    <button onclick="deleteBasketMenu(event)" class="delete" data-active="false">
+      <i class="ph ph-trash"></i>
+    </button>
+    <button onclick="clickOrderHistoryBtn(event)" data-check="false" class="order_history" data-active="true">
+      주문내역
+    </button>
+    <button onclick="clickBasketBtn(event)" class="new_order" data-active="true">
+      장바구니
+    </button>
+  `
 }
 
 const createHtml = (menuPageData) => {
@@ -317,7 +341,6 @@ const minusBasketMenu = (event) => {
     menuIndex = Array
       .from(basketItems)
       .findIndex(el => el.querySelector('div').classList.contains('active'))
-    
     const target = document.querySelector('.basket li div.active');
     const isCancel = target.classList.contains('cancel');
     if(isCancel) return; // 선택한 메뉴가 취소 데이터 일 때
