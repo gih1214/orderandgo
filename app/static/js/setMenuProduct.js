@@ -213,6 +213,7 @@ const clickDeleteImg = (event) => {
 }
 
 const setMenuHtmlEmptyData = {
+  id: '',
   imgList : [],
   name: '',
   price: '',
@@ -224,7 +225,7 @@ const setMenuHtmlEmptyData = {
   options: []
 }
 // 메뉴데이터 수정 html 만들기
-const setMenuHtml = ({imgList,name,price,description,category,options, is_soldout}) => {
+const setMenuHtml = ({id, imgList,name,price,description,category,options, is_soldout}) => {
   const imgCountArray = new Array(4).fill(false);
   const checkedMainCategory = category.main.filter(({checked})=>checked);
   const checkedSubCategory = category.sub.filter(({checked})=>checked);
@@ -308,8 +309,10 @@ const setMenuHtml = ({imgList,name,price,description,category,options, is_soldou
       </div>
     </div>
     <div class="bottom">
-      <button class="delete">삭제</button>
-      <button class="save" onclick="clickSaveMenuData(event)">저장</button>
+      <button class="delete">${id == ''? '취소' : '삭제'}</button>
+      <button class="save" onclick="clickSaveMenuData(event, '${ id == '' ? 'POST' : 'PATCH' }', ${id})">
+        ${id == ''? '저장' : '수정'}
+      </button>
     </div>
   `
   return html
@@ -427,7 +430,7 @@ const clickDeleteOptionBtn = (event) => {
 }
 
 // 메뉴 데이터 저장 버튼 클릭 시
-const clickSaveMenuData = (event) => {
+const clickSaveMenuData = (event, type, id) => {
   const elements = document.querySelectorAll('*[data-type="form"]');
   const new_data = {};
   const form_data = [];
@@ -466,12 +469,14 @@ const clickSaveMenuData = (event) => {
       new_data[title] = value;
     }
   })
+  new_data['id'] = id
   const data = {
     json_data : new_data,
     form_data : form_data
   }
   console.log(data);
-  fetchData(`/store/set_menu`, 'POST', data, (data)=>{
+  const method = type == 'PATCH' ? 'PATCH' : 'POST';
+  fetchData(`/store/set_menu`, method, data, (data)=>{
     console.log(data)
     if(data.code == 200){
       

@@ -46,8 +46,10 @@ fetch(`/pos/get_table_order_list/${lastPath}`, {
   console.error('Error:', error);
 });
 
-// 이전 주문 버튼 클릭 시
+// 주문내역 버튼 클릭 시
 const clickOrderHistoryBtn = (event) => {
+  document.querySelector('.basket_container .count_btns').innerHTML = posMenuListOrderListTopBtnsHtml();
+
   const _orderHistoryBtn = event.currentTarget;
   _orderHistoryBtn.dataset.check = true;
   const _basketContainer = document.querySelector('.basket_container');
@@ -58,8 +60,11 @@ const clickOrderHistoryBtn = (event) => {
   _countBtns.forEach(btn=>btn.dataset.active=false);
   closeOptionContainer();
 }
+
 // 장바구니 버튼 클릭 시
 const clickBasketBtn = (event) => {
+  document.querySelector('.basket_container .count_btns').innerHTML = posMenuListBasketTopBtnsHtml();
+
   changeBasketHtml(setBasketData(menuAllData));
   const _basketContainer = document.querySelector('.basket_container');
   _basketContainer.dataset.type="basket";
@@ -71,28 +76,8 @@ const clickBasketBtn = (event) => {
   closeOptionContainer();
 }
 
-// 주문내역 버튼 클릭 시
-const clickOrderList = (event) => {
-  const _countBtns = document.querySelector('.count_btns top');
-  _countBtns.innerHTML = `
-    <button onclick="minusBasketMenu(event)" data-active="false" class="minus">
-      <i class="ph ph-minus"></i>
-    </button>
-    <button onclick="plusBasketMenu(event)" data-active="false" class="plus">
-      <i class="ph ph-plus"></i>
-    </button>
-    <button onclick="deleteBasketMenu(event)" class="delete" data-active="false">
-      <i class="ph ph-trash"></i>
-    </button>
-    <button onclick="clickOrderHistoryBtn(event)" data-check="false" class="order_history" data-active="true">
-      주문내역
-    </button>
-    <button onclick="clickBasketBtn(event)" class="new_order" data-active="true">
-      장바구니
-    </button>
-  `
-}
 
+// 메뉴판 HTML 만들기
 const createHtml = (menuPageData) => {
   const _menuCatgory = document.querySelector('main section nav ul');
   const _menu = document.querySelector('main section article .items');
@@ -333,89 +318,89 @@ const clickBasketMenu = (event) => {
 
 // 장바구니 - 클릭 시
 const minusBasketMenu = (event) => {
-  const type = findParentTarget(event.currentTarget, 'aside').dataset.type
-  if(type == 'order_list'){
-    console.log('주문내역에서 마이너스 클릭함')
-    const basketItems = document.querySelectorAll('.basket li');
-    let menuIndex;
+  if(menuAllData.length == 0) return;
+  const basketItems = document.querySelectorAll('.basket li');
+  let menuIndex;
+  menuIndex = Array
+    .from(basketItems)
+    .findIndex(el => el.querySelector('div').classList.contains('active'))
+  if(menuIndex == -1) {
     menuIndex = Array
       .from(basketItems)
-      .findIndex(el => el.querySelector('div').classList.contains('active'))
-    const target = document.querySelector('.basket li div.active');
-    const isCancel = target.classList.contains('cancel');
-    if(isCancel) return; // 선택한 메뉴가 취소 데이터 일 때
-    const targetType = target.dataset.type;
-    const _targetLi = target.closest('li');
-    const _nextLi = _targetLi.nextElementSibling;
-    const isHasCancel = _nextLi.querySelector('.menu').classList.contains('cancel');
-    if(isHasCancel)return; // 선택한 메뉴가 이미 취소 데이터를 가지고 있을 때
-    const pargetEl = target.closest('li').querySelector('[data-type="menu"]')
-    const masterName = targetType == "menu" ? target.dataset.master : pargetEl.dataset.master;
-    if(targetType == 'menu'){
-      const basketDatas = setBasketData(order_history);
-      const basket = basketDatas.find(data => data.masterName == masterName)
-      const liHtml = `
-        <li>
-          <div 
-            data-id="${basket.data.id}" 
-            data-type="menu" 
-            data-count="${basket.length}" 
-            data-master="${basket.masterName}" 
-            class="menu cancel" 
-            onclick="clickBasketMenu(event)"
-            >
-            <div class="count"><span>${basket.length}</span></div>
-            <h2>${basket.data.name}</h2>
-            <span class="price">-${basket.data.price.toLocaleString()}원</span>
-          </div>
-        </li>`
-      _targetLi.insertAdjacentHTML("afterend", liHtml);
-
-    }
-
+      .findIndex((el)=>el.querySelector('div.active[data-type="menu_option"]') != undefined)
   }
-  if(type == 'basket'){
-    if(menuAllData.length == 0) return;
-    const basketItems = document.querySelectorAll('.basket li');
-    let menuIndex;
-    menuIndex = Array
-      .from(basketItems)
-      .findIndex(el => el.querySelector('div').classList.contains('active'))
-    if(menuIndex == -1) {
-      menuIndex = Array
-        .from(basketItems)
-        .findIndex((el)=>el.querySelector('div.active[data-type="menu_option"]') != undefined)
-    }
-  
-    const target = document.querySelector('.basket li div.active');
-    const targetType = target.dataset.type;
-    const pargetEl = target.closest('li').querySelector('[data-type="menu"]')
-    const masterName = targetType == "menu" ? target.dataset.master : pargetEl.dataset.master;
-  
-    let optionIndex = undefined;
-  
-    if(targetType == 'menu'){
-      const dataIndex = menuAllData.findIndex(data=>data.masterName == masterName)
-      menuAllData.splice(dataIndex, 1);
-    }
-    if(targetType == 'menu_option'){
-      const filterData = menuAllData
-        .filter(data=>data.masterName == masterName);
-      optionIndex = filterData[0].options
-        .findIndex(option => Number(option.id) == Number(target.dataset.id));
-      if(filterData[0].options[optionIndex].count > 1) {
-        filterData.forEach(({options}) => options[optionIndex].count -= 1 );
-      }else{
-        filterData.forEach((data)=>data.options.splice(optionIndex, 1))
-      }
-    }
-    menuAllData.forEach(data =>data.masterName = setMasterName(data))
-    changeBasketHtml(setBasketData(menuAllData))
-    maintainActive(targetType, menuIndex, optionIndex);
-    closeOptionContainer();
+
+  const target = document.querySelector('.basket li div.active');
+  const targetType = target.dataset.type;
+  const pargetEl = target.closest('li').querySelector('[data-type="menu"]')
+  const masterName = targetType == "menu" ? target.dataset.master : pargetEl.dataset.master;
+
+  let optionIndex = undefined;
+
+  if(targetType == 'menu'){
+    const dataIndex = menuAllData.findIndex(data=>data.masterName == masterName)
+    menuAllData.splice(dataIndex, 1);
   }
+  if(targetType == 'menu_option'){
+    const filterData = menuAllData
+      .filter(data=>data.masterName == masterName);
+    optionIndex = filterData[0].options
+      .findIndex(option => Number(option.id) == Number(target.dataset.id));
+    if(filterData[0].options[optionIndex].count > 1) {
+      filterData.forEach(({options}) => options[optionIndex].count -= 1 );
+    }else{
+      filterData.forEach((data)=>data.options.splice(optionIndex, 1))
+    }
+  }
+  menuAllData.forEach(data =>data.masterName = setMasterName(data))
+  changeBasketHtml(setBasketData(menuAllData))
+  maintainActive(targetType, menuIndex, optionIndex);
+  closeOptionContainer();
 
 }
+
+// 장바구니에서 '-' 클릭 시
+const minusOrderListMenu = () => {
+  const basketItems = document.querySelectorAll('.basket li');
+  let menuIndex;
+  menuIndex = Array
+    .from(basketItems)
+    .findIndex(el => el.querySelector('div').classList.contains('active'))
+  const target = document.querySelector('.basket li div.active');
+  const isCancel = target.classList.contains('cancel');
+  if(isCancel) return; // 선택한 메뉴가 취소 데이터 일 때
+  const targetType = target.dataset.type;
+  const _targetLi = target.closest('li');
+  const _nextLi = _targetLi.nextElementSibling;
+  const isHasCancel = _nextLi.querySelector('.menu').classList.contains('cancel');
+  if(isHasCancel)return; // 선택한 메뉴가 이미 취소 데이터를 가지고 있을 때
+  const pargetEl = target.closest('li').querySelector('[data-type="menu"]')
+  const masterName = targetType == "menu" ? target.dataset.master : pargetEl.dataset.master;
+  if(targetType == 'menu'){
+    const basketDatas = setBasketData(order_history);
+    const basket = basketDatas.find(data => data.masterName == masterName)
+    const liHtml = `
+      <li>
+        <div 
+          data-id="${basket.data.id}" 
+          data-type="menu" 
+          data-count="${basket.length}" 
+          data-master="${basket.masterName}" 
+          class="menu cancel" 
+          onclick="clickBasketMenu(event)"
+          >
+          <div class="count"><span>${basket.length}</span></div>
+          <h2>${basket.data.name}</h2>
+          <span class="price">-${basket.data.price.toLocaleString()}원</span>
+        </div>
+      </li>`
+    _targetLi.insertAdjacentHTML("afterend", liHtml);
+  }
+}
+// 장바구니에서 '+' 클릭 시
+const plusOrderListMenu = () => {}
+// 장바구니에서 '삭제' 클릭 시
+const deleteOrderListMenu = () => {}
 
 // 장바구니 + 클릭 시
 const plusBasketMenu = (event) => {

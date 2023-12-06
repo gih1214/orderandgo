@@ -434,9 +434,6 @@ main section > aside .custom_btns button{
   color: #111;
   border-color: #111;
 }
-.basket_container > .count_btns button.new_order{
-  display: none;
-}
 .basket_container > .count_btns button.order_history[data-check="true"] {
   display: none;
 }
