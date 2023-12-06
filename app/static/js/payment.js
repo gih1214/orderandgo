@@ -638,7 +638,6 @@ const clickCashPaymentCompleted = (event) => {
 const clickCardPayment = (event) => { // 카드 결제 클릭 시
   const type = 2 // CARD
   const data = setPayment(type);
-  console.log('data,',data)
   const onSuccess = (data) => {
     console.log(data);
     if(data.is_finished){
@@ -688,7 +687,9 @@ const setOrderList = () => { // 결제 전 주문 내역 정리
 const setPayment = (method) => { // 결제 전 데이터 만들기
   const tableId = lastPath;
   const order_list = setOrderList();
-  const total_price = payment_history.orderTotalPrice;
+  // 이게 맞나?
+  // const total_price = payment_history.orderTotalPrice + payment_history.extra_charge;
+  const total_price = payment_history.orderTotalPrice + payment_history.extra_charge;
   const first_order_time = payment_history.first_order_time;
   
   const payment = {

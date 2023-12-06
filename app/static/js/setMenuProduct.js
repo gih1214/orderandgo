@@ -309,7 +309,7 @@ const setMenuHtml = ({id, imgList,name,price,description,category,options, is_so
       </div>
     </div>
     <div class="bottom">
-      <button class="delete">${id == ''? '취소' : '삭제'}</button>
+      <button class="delete">${id == '' ? '취소' : '삭제'}</button>
       <button class="save" onclick="clickSaveMenuData(event, '${ id == '' ? 'POST' : 'PATCH' }', ${id})">
         ${id == ''? '저장' : '수정'}
       </button>
