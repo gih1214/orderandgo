@@ -116,7 +116,7 @@ const changeTableHtml = (tables) => {
   let html = '';
   html = forArray.map((table, index)=>`
   ${table == false ? `<button></button>` : `
-    <button class="table item ${table.select ? 'select' : ''}" data-id="${table.tableId}" data-state="${table.statusId}" style="border:${table.groupId != 0 ? "1px solid " + table.groupColor : ""}"onclick="clickTable(${table.tableId})">
+    <button class="table item ${table.select ? 'select' : ''}" data-id="${table.tableId}" data-state="${table.statusId}" style="${table.groupId != 0 ? "border: 1px solid " + table.groupColor : ""}"onclick="clickTable(${table.tableId})">
       ${table.isGroup != 0 ? `
       <div class="item_grop_num" data-id="${table.groupId}" style="background : ${table.groupColor}">${table.groupId}</div>
       ` : ``}
@@ -147,88 +147,9 @@ const changeTableHtml = (tables) => {
       </div>
     </button>
   ` }`).join('');
-  // tables.forEach((table, index)=>{
-  //   html += `
-  //     <button 
-  //       class="table item ${table.select ? 'select' : ''}" 
-  //       data-id="${table.tableId}" 
-  //       data-state="${table.statusId}" 
-  //       style="border:${table.groupId != 0 ? "1px solid " + table.groupColor : ""}"
-  //       onclick="clickTable(${table.tableId})">
-  //       `
-  //     if(table.isGroup != 0) {
-  //       html += `
-  //         <div 
-  //           class="item_grop_num" 
-  //           data-id="${table.groupId}" 
-  //           style="background : ${table.groupColor}"
-  //         >
-  //         ${table.groupId}</div>
-  //       `
-
-  //     }
-  //     html +=` 
-  //       <div class="transparent_group_box" onclick="clickTransparentGroupTable(event)">
-  //         <i class="ph-fill ph-check-fat"></i>
-  //       </div>
-  //       <div class="transparent_move_box" onclick="clickTransparentMoveTable(event)">
-  //         <i class="ph-fill ph-check-fat"></i>
-  //       </div>
-  //       <div class="title">
-  //         <h2>${table.table} <i class="ph-fill ph-bell-ringing"></i></h2>
-  //         <div class="table_state">${
-  //           table.statusId == 0 ? '조리 중' : table.statusId == 1 ? '완료' : table.statusId == 2 ? '조리대기' : ''
-  //         }</div>
-  //       </div>
-  //       <div class="body">
-  //         <i class="ph-bold ph-plus"></i>
-  //         <ul>
-  //         `
-  //         if(table.orderList.length != 0){
-  //           const orderList = table.orderList;
-  //           orderList.forEach((order, orderIndex)=>{
-  //             if(orderIndex <= 2){
-  //               html +=`
-  //               <li data-id="${order.menuId}">
-  //                 <span>${order.menu}</span>
-  //                 <span>${order.count}</span>
-  //               </li>
-  //               `
-  //             } 
-  //             if(orderIndex == 2){
-  //               html += `
-  //                 <li class="order_more">
-  //                   ${orderList.length - 3 > 0 ? `<span>외 ${orderList.length - 3}</span>`  : ''}
-  //                 </li>
-  //               ` 
-  //             }
-  //           })
-  //         }
-
-  //       html +=`
-  //         </ul>
-  //       </div>
-  //     </button>`
-  // })
+  
   return html;
 }
-
-// // 페이지 변경 버튼 html 만들기 
-// const createPageNationBtnHtml = (event) => {
-//   console.log('화살표 만듬')
-//   const _article = document.querySelector('main section article');
-//   let html = `
-//   <button class="change_page_btn prev_page_btn" onclick="clickChagePageBtn(event, 'prev')">
-//     <i class="ph ph-caret-left"></i>
-//   </button>
-//   <button class="change_page_btn next_page_btn" onclick="clickChagePageBtn(event, 'next')">
-//     <i class="ph ph-caret-right"></i>
-//   </button>
-//   `
-//   _article.insertAdjacentHTML('beforeend',html)
-// }
-
-
 
 function clickTable(table_id){
   console.log('클릭함')
