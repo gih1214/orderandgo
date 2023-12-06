@@ -60,7 +60,7 @@ def update_menu(menu_id, name, price, images, main_description, is_soldout, stor
     db.session.commit()
     return item
 
-# 메뉴 옵션 삭제
+# 메뉴 옵션 삭제 (개별)
 def delete_menu_option(option_id):
     item = MenuOption.query.filter(MenuOption.id == option_id).all()
     if not item:
@@ -83,14 +83,45 @@ def select_menu_option_all(menu_id):
     #     return '메뉴 옵션이 없습니다.'
     return item
 
+# 메뉴 옵션 존재여부 조회
+def check_options_exist(menu_id):
+    check_option = MenuOption.query.filter(MenuOption.menu_id == menu_id).all()
+    if not check_option:
+        return '등록된 옵션이 없습니다.'
+    else:
+        delete_options = delete_all_menu_option(menu_id)
+        return delete_options
+
+# 메뉴 옵션 삭제 (한 개의 메뉴에 등록된 모든 옵션)
+def delete_all_menu_option(menu_id):
+    options = MenuOption.query.filter(MenuOption.menu_id == menu_id).all()
+    if not options:
+        return '메뉴 옵션이 없습니다.'
+    db.session.delete(options)
+    db.session.commit()
+    return True
+
+'''
 # 메뉴 옵션 수정
-def update_menu_option(id, name, price, description, menu_id):
+def update_menu_option(option_list, menu_id):
+    for o in option_list:
+        menu_option = MenuOption(name=o['name'], price=o['price'], menu_id=menu_id)
+
     item = MenuOption.query.filter(MenuOption.id == id).first()
     if not item:
         return '없는 메뉴입니다.'
     item.name = name
     item.price = price
     item.main_description = description
+    db.session.commit()
+    return True
+'''
+
+# 메뉴 옵션 생성
+def create_menu_option(option_list, menu_id):
+    for o in option_list:
+        menu_option = MenuOption(name=o['name'], price=o['price'], menu_id=menu_id)
+        db.session.add(menu_option)
     db.session.commit()
     return True
 

@@ -8,7 +8,7 @@ from app.routes import store_bp
 
 
 from app.models.store import create_store, update_store
-from app.models.menu import check_image_exsit, create_menu, create_menu_option, select_main_category, select_menu, select_menu_all, select_pre_menu_id, select_sub_category, select_menu_option_all, find_all_menu, update_menu, update_menu_option
+from app.models.menu import check_image_exsit, check_options_exist, create_menu, create_menu_option, select_main_category, select_menu, select_menu_all, select_pre_menu_id, select_sub_category, select_menu_option_all, find_all_menu, update_menu
 from app.login_manager import update_store_session
 
 # 매장 생성
@@ -284,7 +284,6 @@ def set_menu():
         json_data = json.loads(request.form.get('json_data'))
         name = json_data['name']
         price = int(json_data['price'])
-        image_list = json_data['image']
         main_description = json_data['main_description']
         #sub_description = json_data['sub_description']
         is_soldout = False # null 허용X -> false 기본값으로 넣고 있음
@@ -292,6 +291,7 @@ def set_menu():
         menu_category_id = json_data['main_category']
         #page = menu_data['page']
         #position = menu_data['position']
+        options = json_data['options']
 
         images = []
         # 현재 menu 마지막 행의 id 가져오기
@@ -322,10 +322,10 @@ def set_menu():
 
         # 메뉴 create
         menu = create_menu(name, price, images_as_string, main_description, is_soldout, store_id, menu_category_id)
-        print('메뉴 저장 성공 !!!!!!!!!!!!!!!!!!!!!')
-        
+
         # 메뉴 옵션 create
-        create_menu_option(json_data['options'], menu.id)
+        if options:
+            create_menu_option(options, menu.id)
 
         return jsonify({'message': '메뉴가 성공적으로 생성되었습니다.'}), 201
     
@@ -337,7 +337,6 @@ def set_menu():
         menu_id = json_data['id']
         name = json_data['name']
         price = json_data['price']
-        image_list = json_data['image']
         main_description = json_data['main_description']
         #sub_description = json_data['sub_description']
         is_soldout = False # null 허용X -> false 기본값으로 넣고 있음
@@ -345,40 +344,43 @@ def set_menu():
         menu_category_id = json_data['main_category']
         #page = menu_data['page']
         #position = menu_data['position']
+        options = json_data['options']
+        
         images = []
 
-        # 기존 이미지 있으면 삭제
-        ck_image_name = check_image_exsit(menu_id)
-        if ck_image_name:
-            UPLOAD_FOLDER = 'app/static/images/store_'
-            upload_path = f'{UPLOAD_FOLDER}{store_id}/'
-            for index, menu_name in enumerate(ck_image_name):
-                os.remove(upload_path + menu_name)
-                print('이미지 삭제 완료')
-                
+        UPLOAD_FOLDER = 'app/static/images/store_'
+        upload_path = f'{UPLOAD_FOLDER}{store_id}/menu_{menu_id}'
+        
         # 이미지 저장
-        for index, menu_name in enumerate(json_data['image']):
-            file = request.files.get(menu_name)
-            UPLOAD_FOLDER = 'app/static/images/store_'
-            upload_path = f'{UPLOAD_FOLDER}{store_id}/' # app/static/images/store_16
-            
-            # 서버에 스토어 아이디에 해당하는 폴더 유무 확인 후 생성
-            if not os.path.exists(upload_path):
-                os.makedirs(upload_path)
-            file_name = f'{name}_{index}.png'
+        if json_data['image']:
+            for index, menu_name in enumerate(json_data['image']):
+                file = request.files.get(menu_name)
+                
+                # 서버에 스토어 아이디에 해당하는 폴더 유무 확인 후 생성
+                if not os.path.exists(upload_path): # 해당 메뉴에 저장된 이미지가 없으면 바로 저장
+                    os.makedirs(upload_path)
+                    print('이미지 생성 완료')
+                else: # 저장된 이미지 있으면 삭제 후 현재 이미지로 저장
+                    os.remove(upload_path)
+                    print('이미지 삭제 완료')
+                    os.makedirs(upload_path)
+                    print('이미지 생성 완료')
 
-            # 저장
-            file.save(os.path.join(upload_path, file_name))
+                file_name = f'{name}_{index}.png'
 
-            # 디비에 저장할 이미지 경로
-            images.append(upload_path + file_name)
+                # 저장
+                file.save(os.path.join(upload_path, file_name))
+
+                # 디비에 저장할 이미지 경로
+                images.append(upload_path + file_name)
 
         # 메뉴 update
         menu = update_menu(menu_id, name, price, images, main_description, is_soldout, store_id, menu_category_id)
         
         # 메뉴 옵션 update
-        check_menu_option(menu.id)
-        create_menu_option(json_data['options'], menu.id)
+        if options:
+            check_options_exist(options, menu.id) # DB에 등록된 옵션이 있는지 확인 후 있으면 삭제하고
+            create_menu_option(options, menu.id) # 메뉴 옵션 재등록함
 
         return jsonify({'message': '메뉴가 성공적으로 수정되었습니다.'}), 200
 
