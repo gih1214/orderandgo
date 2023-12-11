@@ -340,7 +340,7 @@ def set_menu():
         main_description = json_data['main_description']
         #sub_description = json_data['sub_description']
         is_soldout = False # null 허용X -> false 기본값으로 넣고 있음
-        print(type(json_data['main_category']))
+        #print(type(json_data['main_category']))
         menu_category_id = json_data['main_category']
         #page = menu_data['page']
         #position = menu_data['position']
@@ -355,14 +355,18 @@ def set_menu():
         if json_data['image']:
             for index, menu_name in enumerate(json_data['image']):
                 file = request.files.get(menu_name)
+                print('여기까진 괜찮겠지...?')
                 
                 # 서버에 스토어 아이디에 해당하는 폴더 유무 확인 후 생성
                 if not os.path.exists(upload_path): # 해당 메뉴에 저장된 이미지가 없으면 바로 저장
                     os.makedirs(upload_path)
                     print('이미지 생성 완료')
                 else: # 저장된 이미지 있으면 삭제 후 현재 이미지로 저장
-                    os.remove(upload_path)
-                    print('이미지 삭제 완료')
+                    try:
+                        os.remove(upload_path)
+                        print('이미지 삭제 완료')
+                    except Exception as e:
+                        print(f'이미지 삭제 오류: {str(e)}')
                     os.makedirs(upload_path)
                     print('이미지 생성 완료')
 

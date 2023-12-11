@@ -97,7 +97,7 @@ def delete_all_menu_option(menu_id):
     options = MenuOption.query.filter(MenuOption.menu_id == menu_id).all()
     if not options:
         return '메뉴 옵션이 없습니다.'
-    db.session.delete(options)
+    db.session.delete(options) # 오류나서 고쳐야 함...
     db.session.commit()
     return True
 
