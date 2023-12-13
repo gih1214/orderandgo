@@ -350,26 +350,27 @@ def set_menu():
 
         UPLOAD_FOLDER = 'app/static/images/store_'
         upload_path = f'{UPLOAD_FOLDER}{store_id}/menu_{menu_id}'
-        
+        print(upload_path)
+        print(os.path.isfile(upload_path))
+
+        import shutil
         # 이미지 저장
         if json_data['image']:
+            # 서버에 스토어 아이디에 해당하는 폴더 유무 확인 후 있으면 폴더 삭제
+            if os.path.exists(upload_path):
+                try:
+                    shutil.rmtree(upload_path)
+                    print('폴더 삭제 완료')
+                except Exception as e:
+                    print(f'폴더 삭제 오류: {str(e)}')
+            
+            # 이미지 저장하기
             for index, menu_name in enumerate(json_data['image']):
                 file = request.files.get(menu_name)
-                print('여기까진 괜찮겠지...?')
-                
-                # 서버에 스토어 아이디에 해당하는 폴더 유무 확인 후 생성
-                if not os.path.exists(upload_path): # 해당 메뉴에 저장된 이미지가 없으면 바로 저장
-                    os.makedirs(upload_path)
-                    print('이미지 생성 완료')
-                else: # 저장된 이미지 있으면 삭제 후 현재 이미지로 저장
-                    try:
-                        os.remove(upload_path)
-                        print('이미지 삭제 완료')
-                    except Exception as e:
-                        print(f'이미지 삭제 오류: {str(e)}')
-                    os.makedirs(upload_path)
-                    print('이미지 생성 완료')
 
+                # 서버에 스토어 아이디에 해당하는 폴더 유무 확인 후 생성
+                if not os.path.exists(upload_path):
+                    os.makedirs(upload_path)
                 file_name = f'{name}_{index}.png'
 
                 # 저장
@@ -378,8 +379,11 @@ def set_menu():
                 # 디비에 저장할 이미지 경로
                 images.append(upload_path + file_name)
 
+        # 'image' 키의 값을 리스트에서 문자열로 변환
+        images_as_string = ', '.join(images)
+
         # 메뉴 update
-        menu = update_menu(menu_id, name, price, images, main_description, is_soldout, store_id, menu_category_id)
+        menu = update_menu(menu_id, name, price, images_as_string, main_description, is_soldout, store_id, menu_category_id)
         
         # 메뉴 옵션 update
         if options:
