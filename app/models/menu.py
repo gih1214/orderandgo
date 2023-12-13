@@ -98,25 +98,9 @@ def delete_all_menu_option(menu_id):
     if not options:
         return '메뉴 옵션이 없습니다.'
     for o in options:
-        db.session.delete(o) # 오류나서 고쳐야 함...
+        db.session.delete(o)
     db.session.commit()
     return True
-
-'''
-# 메뉴 옵션 수정
-def update_menu_option(option_list, menu_id):
-    for o in option_list:
-        menu_option = MenuOption(name=o['name'], price=o['price'], menu_id=menu_id)
-
-    item = MenuOption.query.filter(MenuOption.id == id).first()
-    if not item:
-        return '없는 메뉴입니다.'
-    item.name = name
-    item.price = price
-    item.main_description = description
-    db.session.commit()
-    return True
-'''
 
 # 메뉴 옵션 생성
 def create_menu_option(option_list, menu_id):
@@ -166,10 +150,14 @@ def delete_menu(menu_id):
     if not item:
         return '없는 메뉴입니다.'
     
+    # 메뉴 옵션 삭제
+    delete_options = delete_all_menu_option(menu_id)
+    print(delete_options)
+
+    # 메뉴 삭제
     db.session.delete(item)
     db.session.commit()
     return True
-
 
 # 서브 카테고리 조회 (SELECT ALL)
 def select_sub_category(main_category_id):

@@ -8,7 +8,7 @@ from app.routes import store_bp
 
 
 from app.models.store import create_store, update_store
-from app.models.menu import check_image_exsit, check_options_exist, create_menu, create_menu_option, select_main_category, select_menu, select_menu_all, select_pre_menu_id, select_sub_category, select_menu_option_all, find_all_menu, update_menu
+from app.models.menu import check_image_exsit, check_options_exist, create_menu, create_menu_option, delete_menu, select_main_category, select_menu, select_menu_all, select_pre_menu_id, select_sub_category, select_menu_option_all, find_all_menu, update_menu
 from app.login_manager import update_store_session
 
 # 매장 생성
@@ -272,7 +272,7 @@ def get_menu():
 
 
 # POS -> 매장관리 -> 상품 정보 수정 -> 생성, 수정
-@store_bp.route('/set_menu', methods=['GET', 'POST', 'PATCH'])
+@store_bp.route('/set_menu', methods=['GET', 'POST', 'PATCH', 'DELETE'])
 def set_menu():
     if request.method == 'GET':
         return render_template('set_menu_product.html')
@@ -391,6 +391,13 @@ def set_menu():
             create_menu_option(options, menu.id) # 메뉴 옵션 재등록함
 
         return jsonify({'message': '메뉴가 성공적으로 수정되었습니다.'}), 200
+    
+    # 메뉴 삭제
+    if request.method == 'DELETE':
+        json_data = json.loads(request.form.get('json_data'))
+        menu_id = json_data['id']
+        delete_menu(menu_id)
+        return jsonify({'message': '메뉴가 성공적으로 삭제되었습니다.'}), 200
 
 
 # POS -> 매장관리 -> 상품 정보 수정 -> 생성(완료), 수정(진행중)
