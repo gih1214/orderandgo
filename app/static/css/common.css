@@ -255,14 +255,14 @@ main section {
   position: relative;
   overflow: hidden;
 }
-main section nav {
+/* main section nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 8px 20px;
   background: #fff;
   border-bottom: 1px solid #CCCCCC;
-}
+} */
 main section article {
   position: relative;
   height: calc(100vh - (40px + 50px));
@@ -272,18 +272,19 @@ main section article {
   transition: .25s;
 }
 
-main section nav ul li[data-state="active"] button {
+/* main section nav ul li[data-state="active"] button {
   background: #1FAA9C;
   color: #fff;
-}
-main section nav ul li button {
+} */
+/* main section nav ul li button {
   padding: 8px 20px;
   border: 1px solid #1FAA9C;
   border-radius: 5px;
   font-size: 15px;
   font-weight: 700;
   color: #1FAA9C;
-}
+} */
+
 main section article .items{
   display: grid;
   grid-template-columns: repeat(5, 1fr);

@@ -646,7 +646,8 @@ const clickCardPayment = (event) => { // 카드 결제 클릭 시
       // location.reload();
     }
   }
-  fetchData(`/pos/payment_history/${lastPath}`, 'POST', data, onSuccess)
+  console.log(data)
+  // fetchData(`/pos/payment_history/${lastPath}`, 'POST', data, onSuccess)
   
 }
 

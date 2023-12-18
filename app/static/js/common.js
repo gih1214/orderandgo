@@ -323,7 +323,64 @@ const changeBasketHtml = (datas) => {
             <span class="price">${(option.price * option.count * length).toLocaleString()}원</span>
           </div>
           `
+        })
+      html +=
+        `
+      </li>
+    `
+  })
+  _basket.innerHTML = html
 
+  const currentPage = window.location.pathname.split("/")[2];
+  if(currentPage == 'menuList'){
+    const _totalPrice = document.querySelector('main aside .total_price .price');
+    _totalPrice.innerHTML = `${totalPrice.toLocaleString()} 원`;
+  }
+  if(currentPage == 'payment'){
+    const _supplyPrice = document.querySelector('main aside .order_btns .supply_price');
+    const _vat = document.querySelector('main aside .order_btns .vat');
+    const _totalPrice = document.querySelector('main aside .order_btns .price');
+    const _sectionTotalPrice = document.querySelector('main section .total_price .price');
+
+    const vat = Math.trunc(totalPrice * 10 / 110);
+    const supplyPrice = Math.trunc(totalPrice - vat);
+
+    _supplyPrice.innerHTML = `${supplyPrice.toLocaleString()}원`;
+    _vat.innerHTML = `${vat.toLocaleString()}원`;
+    _totalPrice.innerHTML = `${totalPrice.toLocaleString()}원`;
+    _sectionTotalPrice.innerHTML = `${totalPrice.toLocaleString()}원`;
+  }
+  return totalPrice;
+}
+
+
+// 주문내역 html 변경
+const changeOrderHtml = (datas) => {
+  const _basket = document.querySelector('main aside .basket');
+  html = ``;
+  let totalPrice = 0;
+  datas.forEach(({data, length, masterName})=>{
+    totalPrice += data.price * length
+    html += `
+      <li data-id="${data.id}" data-type="menu" data-count="${length}" data-master="${masterName}" class="menu" onclick="clickOrderMenu(event)">
+        <div data-id="${data.id}" data-type="menu" data-count="${length}" data-master="${masterName}" class="menu">
+          <div class="count"><span>${length}</span></div>
+          <h2>${data.name}</h2>
+          <span class="price">${(data.price * length).toLocaleString()}원</span>
+        </div>
+        `
+        data?.options?.forEach((option)=>{
+          totalPrice += option.price * option.count * length
+          html +=`
+          <div data-id="${option.id}" data-type="menu_option" class="menu_option">
+            <div class="option_name_count">
+              <h2>${option.name}</h2>
+              <span>x</span>
+              <span>${option.count}</span>
+            </div>
+            <span class="price">${(option.price * option.count * length).toLocaleString()}원</span>
+          </div>
+          `
         })
       html +=
         `

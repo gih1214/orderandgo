@@ -41,6 +41,7 @@ fetch(`/pos/get_table_order_list/${lastPath}`, {
     count: 1,
     options: order.options,
   }))
+
 })
 .catch(error => {
   console.error('Error:', error);
@@ -53,12 +54,12 @@ const clickOrderHistoryBtn = (event) => {
   const _orderHistoryBtn = event.currentTarget;
   _orderHistoryBtn.dataset.check = true;
   const _basketContainer = document.querySelector('.basket_container');
-
   _basketContainer.dataset.type="order_list";
-  changeBasketHtml(setBasketData(order_history))
+  changeOrderHtml(setBasketData(order_history))
   const _countBtns = document.querySelectorAll('.count_btns button.minus, .count_btns button.plus, .count_btns button.delete');
   _countBtns.forEach(btn=>btn.dataset.active=false);
   closeOptionContainer();
+
 }
 
 // 장바구니 버튼 클릭 시
@@ -316,6 +317,19 @@ const clickBasketMenu = (event) => {
   closeOptionContainer();
 }
 
+// 주문내역 아이템 클릭 시
+const clickOrderMenu = (event) => {
+  const __basketMenu = document.querySelectorAll('.basket_container .basket li');
+  const target = event.currentTarget;
+  __basketMenu.forEach((_basketMenu)=>{
+    _basketMenu.classList.remove('active');
+  })
+  target.classList.add('active');
+  const _countBtns = document.querySelectorAll('.count_btns button.minus, .count_btns button.plus, .count_btns button.delete');
+  _countBtns.forEach(btn=>btn.dataset.active=true);
+  closeOptionContainer();
+}
+
 // 장바구니 - 클릭 시
 const minusBasketMenu = (event) => {
   if(menuAllData.length == 0) return;
@@ -359,47 +373,81 @@ const minusBasketMenu = (event) => {
 
 }
 
-// 장바구니에서 '-' 클릭 시
+// 주문내역에서 '-' 클릭 시
 const minusOrderListMenu = () => {
+  console.log('order_history,',order_history)
   const basketItems = document.querySelectorAll('.basket li');
   let menuIndex;
   menuIndex = Array
     .from(basketItems)
-    .findIndex(el => el.querySelector('div').classList.contains('active'))
-  const target = document.querySelector('.basket li div.active');
-  const isCancel = target.classList.contains('cancel');
-  if(isCancel) return; // 선택한 메뉴가 취소 데이터 일 때
-  const targetType = target.dataset.type;
-  const _targetLi = target.closest('li');
-  const _nextLi = _targetLi.nextElementSibling;
-  const isHasCancel = _nextLi.querySelector('.menu').classList.contains('cancel');
-  if(isHasCancel)return; // 선택한 메뉴가 이미 취소 데이터를 가지고 있을 때
-  const pargetEl = target.closest('li').querySelector('[data-type="menu"]')
-  const masterName = targetType == "menu" ? target.dataset.master : pargetEl.dataset.master;
-  if(targetType == 'menu'){
-    const basketDatas = setBasketData(order_history);
-    const basket = basketDatas.find(data => data.masterName == masterName)
-    const liHtml = `
-      <li>
-        <div 
-          data-id="${basket.data.id}" 
-          data-type="menu" 
-          data-count="${basket.length}" 
-          data-master="${basket.masterName}" 
-          class="menu cancel" 
-          onclick="clickBasketMenu(event)"
-          >
-          <div class="count"><span>${basket.length}</span></div>
-          <h2>${basket.data.name}</h2>
-          <span class="price">-${basket.data.price.toLocaleString()}원</span>
+    .findIndex(el => el.classList.contains('active'))
+  const target = document.querySelector('.basket li.active');
+  console.log('target.dataset.master',target.dataset.master)
+  const dataList = order_history.filter((order)=>order.masterName == target.dataset.master);
+  const maxCount = dataList.length;
+  const data = dataList[0];
+  const _nextLi = target.nextElementSibling;
+  const isHasCancel = _nextLi?.querySelector('.menu').classList.contains('cancel');
+  if(isHasCancel){ // 선택한 메뉴가 이미 취소 데이터를 가지고 있을 때
+    const count = Number(_nextLi.dataset.count) + 1;
+    if(count > maxCount){ return };
+    _nextLi.dataset.count = count;
+    _nextLi.innerHTML = `
+      <div 
+        data-id="${data.id}" 
+        data-type="menu" 
+        data-count="${count}" 
+        data-master="${data.masterName}" 
+        class="menu cancel" 
+        >
+        <div class="count"><span>${count}</span></div>
+        <h2>${data.name}</h2>
+        <span class="price">-${(data.price * count).toLocaleString()}원</span>
+      </div>
+      ${data.options.map((option)=>`
+      <div data-id="${option.id}" data-type="menu_option" class="menu_option">
+        <div class="option_name_count">
+          <h2>${option.name}</h2>
+          <span>x</span>
+          <span>${option.count}</span>
         </div>
+        <span class="price">-${(option.price * count).toLocaleString()}원</span>
+      </div>
+      `).join('')}
+    `
+  }else{
+    const liHtml = `
+      <li class="cancel" data-count="1">
+        <div 
+          data-id="${data.id}" 
+          data-type="menu" 
+          data-count="1" 
+          data-master="${data.masterName}" 
+          class="menu cancel" 
+          >
+          <div class="count"><span>1</span></div>
+          <h2>${data.name}</h2>
+          <span class="price">-${data.price.toLocaleString()}원</span>
+        </div>
+        ${data.options.map((option)=>`
+        <div data-id="${option.id}" data-type="menu_option" class="menu_option">
+          <div class="option_name_count">
+            <h2>${option.name}</h2>
+            <span>x</span>
+            <span>${option.count}</span>
+          </div>
+          <span class="price">${option.price.toLocaleString()}원</span>
+        </div>
+        `).join('')}
       </li>`
-    _targetLi.insertAdjacentHTML("afterend", liHtml);
-  }
+    target.insertAdjacentHTML("afterend", liHtml);
+  }; 
+  
+  
 }
-// 장바구니에서 '+' 클릭 시
+// 주문내역에서 '+' 클릭 시
 const plusOrderListMenu = () => {}
-// 장바구니에서 '삭제' 클릭 시
+// 주문내역에서 '삭제' 클릭 시
 const deleteOrderListMenu = () => {}
 
 // 장바구니 + 클릭 시

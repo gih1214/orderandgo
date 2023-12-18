@@ -8,25 +8,57 @@ main section {
 }
 main section nav{
   display: flex;
+  padding: 0px 20px;
+  align-items: flex-start;
+  gap: 15px;
+  align-self: stretch;
+}
+main section nav.main{}
+main section nav.sub{
+  background: #F3FAFA;
+  border-bottom: 1px solid #CCC;
+}
+/* main section nav{
+  display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 8px 20px;
   background: #fff;
   border-bottom: 1px solid #CCCCCC;
-}
-
+} */
 main section nav ul{
   display: flex;
-  align-items: center;
+  gap: 15px;
 }
 main section nav ul li {
-  margin-right: 10px;
+  color: #CCC;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+main section nav ul li button {
+  padding: 16px 2px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
 }
 main section nav ul li[data-state="active"] button{
+  color: var(--main, #1FAA9C);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+main section nav.main ul li[data-state="active"] button {
+  border-bottom: 2px solid var(--main, #1FAA9C);
+}
+main section nav.sub li button {
+  padding: 13px 2px;
+}
+/* main section nav ul li[data-state="active"] button{
   background: #1FAA9C;
   color: #fff;
-}
-main section nav ul li button{
+} */
+/* main section nav ul li button{
   padding: 8px 20px;
   border: 1px solid #1FAA9C;
   border-radius: 5px;
@@ -34,14 +66,14 @@ main section nav ul li button{
   font-weight: 700;
   color: #1FAA9C;
   z-index: 1;
-}
+} */
 main section nav .btn_set {
   color: #ccc;
   font-size: 20px;
 }
 main section article {
   position: relative;
-  height: calc(100vh - (40px + 50px));
+  height: calc(100vh - (40px + 49px + 42px));
   padding: 20px;
   background: #ddd;
   overflow: hidden;
@@ -127,6 +159,7 @@ main section article .item{
   display: flex;
   flex-flow: column;
   gap: 15px;
+  justify-content: space-between;
   width: 100%;
   padding: 20px;
   background: #FFFFFF;
@@ -157,10 +190,14 @@ main section article .table .title {
   width: 100%;
 }
 main section article .item .title h2{
-  width: 100%;
-  font-weight: 700;
+  color: #000;
   font-size: 16px;
-  line-height: 19px;
+  font-weight: 700;
+}
+main section article .item .price {
+  color: #000;
+  font-size: 14px;
+  font-weight: 500;
 }
 main section article .table .title h2 i{
   display: none;
@@ -447,8 +484,6 @@ main section > aside .custom_btns button{
   flex: 1;
   max-height: calc(100vh - 90px - 184px - 16px);
   height: 100%;
-  /* margin-top: -10px; */
-  /* margin-bottom: 10px; */
   overflow: auto;
 }
 .basket_container .basket li {
@@ -457,8 +492,9 @@ main section > aside .custom_btns button{
   gap: 10px;
   padding: 12px 20px;
   z-index: 1;
-  /* background: #F3FAFA; */
-  /* border-bottom: 1px solid #fff; */
+}
+.basket_container .basket li.active{
+  background: #F3FAFA;
 }
 .basket_container .basket li .menu {
   position: relative;
@@ -474,6 +510,9 @@ main section > aside .custom_btns button{
   left: -20px;
   right: -20px;
   background: #F3FAFA;
+}
+.basket_container .basket li.cancel {
+  background: #FEECEA;
 }
 .basket_container .basket li .menu.cancel::after {
   content: '';
