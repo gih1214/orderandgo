@@ -63,6 +63,13 @@ const findParentTarget = (targetEl, parent) => {
   return targetEl.closest(parent);
 }
 
+// 문자열 불리언 
+const stringToBooleanMap = {
+  "true": true,
+  "false": false
+};
+
+
 // form tag 내부 데이터 Object 만들기
 const getData = (elements) =>{
   const data = {};

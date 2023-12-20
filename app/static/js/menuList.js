@@ -375,27 +375,31 @@ const minusBasketMenu = (event) => {
 
 // 주문내역에서 '-' 클릭 시
 const minusOrderListMenu = () => {
-  console.log('order_history,',order_history)
   const basketItems = document.querySelectorAll('.basket li');
   let menuIndex;
   menuIndex = Array
     .from(basketItems)
     .findIndex(el => el.classList.contains('active'))
   const target = document.querySelector('.basket li.active');
-  console.log('target.dataset.master',target.dataset.master)
   const dataList = order_history.filter((order)=>order.masterName == target.dataset.master);
   const maxCount = dataList.length;
   const data = dataList[0];
+  if(!stringToBooleanMap[target.dataset.iscancel]){
+    target.dataset.iscancel = true;
+    const html = `<li class="cancel" data-count="0"></li>`
+    target.insertAdjacentHTML("afterend", html);
+  }
   const _nextLi = target.nextElementSibling;
-  const isHasCancel = _nextLi?.querySelector('.menu').classList.contains('cancel');
-  if(isHasCancel){ // 선택한 메뉴가 이미 취소 데이터를 가지고 있을 때
-    const count = Number(_nextLi.dataset.count) + 1;
-    if(count > maxCount){ return };
+  const count = Number(_nextLi.dataset.count) + 1;
+  if(count > maxCount){ 
+    return 
+  }else{
+    cancel_order_list.push(data);
     _nextLi.dataset.count = count;
-    _nextLi.innerHTML = `
+    const html = `
       <div 
         data-id="${data.id}" 
-        data-type="menu" 
+        data-type="menu"
         data-count="${count}" 
         data-master="${data.masterName}" 
         class="menu cancel" 
@@ -415,38 +419,58 @@ const minusOrderListMenu = () => {
       </div>
       `).join('')}
     `
-  }else{
-    const liHtml = `
-      <li class="cancel" data-count="1">
-        <div 
-          data-id="${data.id}" 
-          data-type="menu" 
-          data-count="1" 
-          data-master="${data.masterName}" 
-          class="menu cancel" 
-          >
-          <div class="count"><span>1</span></div>
-          <h2>${data.name}</h2>
-          <span class="price">-${data.price.toLocaleString()}원</span>
-        </div>
-        ${data.options.map((option)=>`
-        <div data-id="${option.id}" data-type="menu_option" class="menu_option">
-          <div class="option_name_count">
-            <h2>${option.name}</h2>
-            <span>x</span>
-            <span>${option.count}</span>
-          </div>
-          <span class="price">${option.price.toLocaleString()}원</span>
-        </div>
-        `).join('')}
-      </li>`
-    target.insertAdjacentHTML("afterend", liHtml);
-  }; 
-  
-  
+    _nextLi.innerHTML = html;
+  }
 }
 // 주문내역에서 '+' 클릭 시
-const plusOrderListMenu = () => {}
+const plusOrderListMenu = () => {
+  const basketItems = document.querySelectorAll('.basket li');
+  let menuIndex;
+  menuIndex = Array
+    .from(basketItems)
+    .findIndex(el => el.classList.contains('active'))
+  const target = document.querySelector('.basket li.active');
+  const dataList = order_history.filter((order)=>order.masterName == target.dataset.master);
+  const data = dataList[0];
+  if(!stringToBooleanMap[target.dataset.iscancel])return;
+  const _nextLi = target.nextElementSibling;
+  if(!_nextLi.classList.contains('cancel'))return;
+  const count = Number(_nextLi.dataset.count) - 1;
+  const index = cancel_order_list.findIndex(order=>order.masterName == target.dataset.master);
+  if (index !== -1) {
+    cancel_order_list.splice(index, 1);
+  }
+  if(count == 0){ // cancel 제거
+    target.dataset.iscancel = false;
+    _nextLi.remove();
+  }else{ // count -1; 
+    _nextLi.dataset.count = count;
+    const html = `
+      <div 
+        data-id="${data.id}" 
+        data-type="menu"
+        data-count="${count}" 
+        data-master="${data.masterName}" 
+        class="menu cancel" 
+        >
+        <div class="count"><span>${count}</span></div>
+        <h2>${data.name}</h2>
+        <span class="price">-${(data.price * count).toLocaleString()}원</span>
+      </div>
+      ${data.options.map((option)=>`
+      <div data-id="${option.id}" data-type="menu_option" class="menu_option">
+        <div class="option_name_count">
+          <h2>${option.name}</h2>
+          <span>x</span>
+          <span>${option.count}</span>
+        </div>
+        <span class="price">-${(option.price * count).toLocaleString()}원</span>
+      </div>
+      `).join('')}
+    `
+    _nextLi.innerHTML = html;
+  }
+}
 // 주문내역에서 '삭제' 클릭 시
 const deleteOrderListMenu = () => {}
 
