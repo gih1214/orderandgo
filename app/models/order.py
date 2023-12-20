@@ -86,3 +86,12 @@ def find_order_list(table_id):
 #     if items is None:
 #         return "잘못됨"
 #     return items
+
+
+# 주문 취소 클릭시
+def delete_order(order_id):
+    order_item = db.session.query(Order).filter(Order.id == order_id).first()
+    if order_item is None:
+        return False
+    db.session.delete(order_item)
+    return True

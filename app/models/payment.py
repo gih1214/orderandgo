@@ -103,7 +103,7 @@ def make_payment_history(store_id, table_id, paid, is_finished):
 
 # 결제정보 저장
 def create_payment_database(store_id, data):    
-    print("@#$@#$#@$", store_id)
+    print("@#$@#$#@$data", data)
 
     '''
     1. 일반결제
@@ -116,11 +116,12 @@ def create_payment_database(store_id, data):
         table_id = data['table_id']
         payment_time = datetime.now()
         p = data['payment']
-        
+        o = data['order_list']
         
         first_ordered_time = db.session.query(func.min(Order.ordered_at))\
                                     .filter(Order.table_id == table_id)\
                                     .scalar()
+        
         if data['total_price'] == p['price']+p['extra_charge']-p['discount']:     # 1. 일반결제
             print("@@@@111")
             # TablePaymentList, Payment 생성하기
@@ -160,7 +161,8 @@ def create_payment_database(store_id, data):
                                     .filter(Payment.table_payment_list_id == check_table_payment_list.id)\
                                     .filter(Payment.payment_status == 1)\
                                     .scalar()
-                if sum_payment+p['price']+p['extra_charge']-p['discount'] != data['total_price']:  # 2-2. 분할결제중
+                
+                if sum_payment+p['price'] != data['total_price']:  # 2-2. 분할결제중
                     print("@@@@222-2")
                     create_payment(check_table_payment_list.id, p['method'], 1, p['price'], payment_time)
 
