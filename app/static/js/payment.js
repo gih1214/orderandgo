@@ -647,7 +647,7 @@ const clickCardPayment = (event) => { // 카드 결제 클릭 시
     }
   }
   console.log(data)
-  // fetchData(`/pos/payment_history/${lastPath}`, 'POST', data, onSuccess)
+  fetchData(`/pos/payment_history/${lastPath}`, 'POST', data, onSuccess)
   
 }
 
@@ -690,7 +690,7 @@ const setPayment = (method) => { // 결제 전 데이터 만들기
   const order_list = setOrderList();
   // 이게 맞나?
   // const total_price = payment_history.orderTotalPrice + payment_history.extra_charge;
-  const total_price = payment_history.orderTotalPrice + payment_history.extra_charge;
+  const total_price = payment_history.orderTotalPrice + payment_history.extra_charge - payment_history.discount;
   const first_order_time = payment_history.first_order_time;
   
   const payment = {
