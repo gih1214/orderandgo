@@ -8,10 +8,12 @@ main section {
 }
 main section nav{
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 0px 20px;
-  align-items: flex-start;
+  
   gap: 15px;
-  align-self: stretch;
+  
 }
 main section nav.main{}
 main section nav.sub{
@@ -44,6 +46,7 @@ main section nav ul li button {
 }
 main section nav ul li[data-state="active"] button{
   color: var(--main, #1FAA9C);
+  border-bottom: 2px solid var(--main, #1FAA9C);
   font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.3px;
@@ -73,11 +76,15 @@ main section nav .btn_set {
 }
 main section article {
   position: relative;
-  height: calc(100vh - (40px + 49px + 42px));
+  
+  height: calc(100vh - (40px + 47px));
   padding: 20px;
   background: #ddd;
   overflow: hidden;
   transition: .25s;
+}
+#container.order main section article{
+  height: calc(100vh - (40px + 49px + 42px));
 }
 
 main section article.disabled {
