@@ -15,9 +15,9 @@ def create_menu(store_id, menu_category_id):
 '''
 
 # 메뉴 생성
-def create_menu(name, price, image, main_description, is_soldout, store_id, menu_category_id):
+def create_menu(name, price, image, main_description, is_soldout, store_id, menu_category_id, page, position):
     menu = Menu(name=name, price=price, image=image, main_description=main_description,
-                is_soldout=is_soldout, store_id=store_id, menu_category_id=menu_category_id)
+                is_soldout=is_soldout, store_id=store_id, menu_category_id=menu_category_id, page=page, position=position)
     print('DB 넣기 전')
     db.session.add(menu)
     print('추가 후 커밋 전')
@@ -72,8 +72,6 @@ def delete_menu_option(option_id):
 # 메뉴 옵션 조회 (SELECT ID)
 def select_menu_option(option_id):
     item = MenuOption.query.filter(MenuOption.id == option_id).all()
-    if not item:
-        return '메뉴 옵션이 없습니다.'
     return item
 
 # 메뉴 옵션 조회
@@ -178,3 +176,10 @@ def find_all_menu(store_id):
                     .filter(MainCategory.store_id == store_id)\
                     .all()
     return items
+
+# 메뉴 페이지, 포지션 마지막 값 가져오기
+def find_last_menu_page(store_id):
+    menu = Menu.query.filter(Menu.store_id == store_id).order_by(desc(Menu.page), desc(Menu.position)).first()
+    if not menu:
+        return 0
+    return menu

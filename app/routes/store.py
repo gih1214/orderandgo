@@ -8,7 +8,7 @@ from app.routes import store_bp
 
 
 from app.models.store import create_store, update_store
-from app.models.menu import check_image_exsit, check_options_exist, create_menu, create_menu_option, delete_menu, select_main_category, select_menu, select_menu_all, select_pre_menu_id, select_sub_category, select_menu_option_all, find_all_menu, update_menu
+from app.models.menu import check_image_exsit, check_options_exist, create_menu, create_menu_option, delete_menu, find_last_menu_page, select_main_category, select_menu, select_menu_all, select_pre_menu_id, select_sub_category, select_menu_option_all, find_all_menu, update_menu
 from app.login_manager import update_store_session
 
 # 매장 생성
@@ -289,9 +289,23 @@ def set_menu():
         is_soldout = False # null 허용X -> false 기본값으로 넣고 있음
         print(type(json_data['main_category']))
         menu_category_id = json_data['main_category']
-        #page = menu_data['page']
-        #position = menu_data['position']
         options = json_data['options']
+        
+        '''
+        1. 페이지 마지막 값 가져오기
+        2. 페이지 마지막 값에서 포지션 제일 마지막꺼 가져오기
+        3. 거기서 +1 한 값 사용 (메뉴 한 페이지당 24개)
+        '''
+        page_position_num = find_last_menu_page(store_id)
+        page = page_position_num.page
+        position = page_position_num.position
+        if position == 24: # 24이므로 page 넘김
+            page = page + 1
+            position = 1
+        elif position < 24: # 24를 넘기지 않으므로 position 더하기
+            position = position + 1
+        else:
+            print('ERROR : 24를 초과하면 안 되지')
 
         images = []
         # 현재 menu 마지막 행의 id 가져오기
@@ -321,7 +335,7 @@ def set_menu():
         images_as_string = ', '.join(images)
 
         # 메뉴 create
-        menu = create_menu(name, price, images_as_string, main_description, is_soldout, store_id, menu_category_id)
+        menu = create_menu(name, price, images_as_string, main_description, is_soldout, store_id, menu_category_id, page, position)
 
         # 메뉴 옵션 create
         if options:
