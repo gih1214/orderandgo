@@ -18,17 +18,22 @@ def create_menu(store_id, menu_category_id):
 def create_menu(name, price, image, main_description, is_soldout, store_id, menu_category_id, page, position):
     menu = Menu(name=name, price=price, image=image, main_description=main_description,
                 is_soldout=is_soldout, store_id=store_id, menu_category_id=menu_category_id, page=page, position=position)
-    print('DB 넣기 전')
     db.session.add(menu)
-    print('추가 후 커밋 전')
     db.session.commit()
     return menu # 커밋된 메뉴 리턴
 
 # 메뉴 옵션 생성
 def create_menu_option(option_list, menu_id):
+    page = 1
+    position = 1
     for o in option_list:
-        menu_option = MenuOption(name=o['name'], price=o['price'], menu_id=menu_id)
+        menu_option = MenuOption(name=o['name'], price=o['price'], page=page, position=position, menu_id=menu_id)
         db.session.add(menu_option)
+        if position == 8:
+            page += 1
+            position = 1
+        else:
+            position += 1
     db.session.commit()
     return True
 
@@ -97,14 +102,6 @@ def delete_all_menu_option(menu_id):
         return '메뉴 옵션이 없습니다.'
     for o in options:
         db.session.delete(o)
-    db.session.commit()
-    return True
-
-# 메뉴 옵션 생성
-def create_menu_option(option_list, menu_id):
-    for o in option_list:
-        menu_option = MenuOption(name=o['name'], price=o['price'], menu_id=menu_id)
-        db.session.add(menu_option)
     db.session.commit()
     return True
 
@@ -183,3 +180,12 @@ def find_last_menu_page(store_id):
     if not menu:
         return 0
     return menu
+
+'''
+# 옵션 페이지, 포지션 마지막 값 가져오기
+def find_last_menu_opt_page(menu_id):
+    menu_option = MenuOption.query.filter(MenuOption.menu_id == menu_id).order_by(desc(MenuOption.page), desc(MenuOption.position)).first()
+    if not menu_option:
+        return 0
+    return menu_option
+'''

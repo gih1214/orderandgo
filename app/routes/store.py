@@ -299,13 +299,18 @@ def set_menu():
         page_position_num = find_last_menu_page(store_id)
         page = page_position_num.page
         position = page_position_num.position
+
+        # page와 position이 null이면 1로 초기화
+        page = page if page is not None else 1
+        position = position if position is not None else 1
+
         if position == 24: # 24이므로 page 넘김
-            page = page + 1
+            page += 1
             position = 1
         elif position < 24: # 24를 넘기지 않으므로 position 더하기
-            position = position + 1
-        else:
-            print('ERROR : 24를 초과하면 안 되지')
+            position += 1
+        elif position > 24:
+            print('ERROR : position 24를 초과할 수 없습니다.')
 
         images = []
         # 현재 menu 마지막 행의 id 가져오기
