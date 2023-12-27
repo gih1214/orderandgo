@@ -73,17 +73,18 @@ def get_table_page():
                 orderList = []
                 for order in orders:
                     
-                    optionList = [];
+                    optionList = []
                     options = json.loads(order.menu_options) if order.menu_options else []
                     for option_data in options:
-                                        
-                        option = select_menu_option(option_data['id'])[0]
-                        optionList.append({
-                            "optionId" : option.id,
-                            "option" : option.name,
-                            "price" : option.price,
-                            "count" : option_data['count']
-                        })
+                        option = select_menu_option(option_data['id'])
+                        if option :
+                            option = option[0]
+                            optionList.append({
+                                "optionId" : option.id,
+                                "option" : option.name,
+                                "price" : option.price,
+                                "count" : option_data['count']
+                            })
                     menu = select_menu(order.menu_id)[0]
                     orderList.append({
                         "menuId" : order.menu_id,
@@ -165,13 +166,15 @@ def get_table_order_list(table_id):
         menu = select_menu(order.menu_id)[0]
         options = []
         for menu_option in json.loads(order.menu_options):
-            option = select_menu_option(menu_option['id'])[0]
-            options.append({
-                "id" : option.id,
-                "name" : option.name,
-                "price" : option.price,
-                "count" : menu_option['count']
-            })
+            option = select_menu_option(menu_option['id'])
+            if option :
+                option = option[0]
+                options.append({
+                    "id" : option.id,
+                    "name" : option.name,
+                    "price" : option.price,
+                    "count" : menu_option['count']
+                })
         order_list.append({
             "id" : menu.id,
             "name" : menu.name,
@@ -199,7 +202,7 @@ def get_menu_list(table_id):
         sorted_menus = sorted(menus, key=lambda menu: (menu.page, menu.position))
         
         def sort_menu(menu):
-            option_list = [];
+            option_list = []
             menu_options = select_menu_option_all(menu.id)
             if isinstance(menu_options, list):
                 for option in menu_options:

@@ -41,7 +41,24 @@
     <main>
       <section>
         <!-- <h1>POS - section</h1> -->
-        <nav>
+        <nav class="main">
+          <!-- <h1>POS - Nav</h1> -->
+          <ul>
+            <li data-state="active">
+              <button>카테고리 1</button>
+            </li>
+            <li>
+              <button>카테고리 2</button>
+            </li>
+            <li>
+              <button>카테고리 3</button>
+            </li>
+          </ul>
+          <button class="set_category_btn" onclick="clickSetCategory(event)">
+            <i class="ph ph-gear-six"></i>
+          </button>
+        </nav>
+        <nav class="sub">
           <!-- <h1>POS - Nav</h1> -->
           <ul>
             <li data-state="active">

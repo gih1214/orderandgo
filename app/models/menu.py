@@ -78,14 +78,14 @@ def delete_menu_option(option_id):
 def select_menu_option(option_id):
     item = MenuOption.query.filter(MenuOption.id == option_id).all()
     if not item:
-        return []
+        return False
     return item
 
 # 메뉴 옵션 조회
 def select_menu_option_all(menu_id):
     item = MenuOption.query.filter(MenuOption.menu_id == menu_id).all()
     if not item:
-        return []
+        return False
     return item
 
 # 메뉴 옵션 존재여부 조회

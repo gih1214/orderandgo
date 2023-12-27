@@ -1098,6 +1098,7 @@ main section > aside .custom_btns button{
 .set_menu_position main section nav{
   position: relative;
   z-index: 1;
+  background: #fff;
 }
 .set_menu_position main section .set_category_btn {
   font-size: 20px;
