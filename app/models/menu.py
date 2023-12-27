@@ -77,13 +77,15 @@ def delete_menu_option(option_id):
 # 메뉴 옵션 조회 (SELECT ID)
 def select_menu_option(option_id):
     item = MenuOption.query.filter(MenuOption.id == option_id).all()
+    if not item:
+        return []
     return item
 
 # 메뉴 옵션 조회
 def select_menu_option_all(menu_id):
     item = MenuOption.query.filter(MenuOption.menu_id == menu_id).all()
-    # if not item:
-    #     return '메뉴 옵션이 없습니다.'
+    if not item:
+        return []
     return item
 
 # 메뉴 옵션 존재여부 조회
@@ -180,12 +182,3 @@ def find_last_menu_page(store_id):
     if not menu:
         return 0
     return menu
-
-'''
-# 옵션 페이지, 포지션 마지막 값 가져오기
-def find_last_menu_opt_page(menu_id):
-    menu_option = MenuOption.query.filter(MenuOption.menu_id == menu_id).order_by(desc(MenuOption.page), desc(MenuOption.position)).first()
-    if not menu_option:
-        return 0
-    return menu_option
-'''
