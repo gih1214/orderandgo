@@ -11,9 +11,7 @@ main section nav{
   align-items: center;
   justify-content: space-between;
   padding: 0px 20px;
-  
   gap: 15px;
-  
 }
 main section nav.main{}
 main section nav.sub{

@@ -225,8 +225,8 @@ const modalBottomHtml = (btns=null) => {
 window.onclick = function (event) {
   if (event.target.id == 'modal' || event.target.closest('.close') != undefined) {
     const _modal = document.querySelector(".modal");
-    _modal.classList.remove("show");
-    _modal.remove();
+    _modal?.classList.remove("show");
+    _modal?.remove();
   }
 }
 

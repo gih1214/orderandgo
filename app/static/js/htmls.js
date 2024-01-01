@@ -60,3 +60,28 @@ const posMenuListOrderListTopBtnsHtml = () => {
     </button>
   `
 }
+
+// 메뉴 메인 카테고리 설정 모달 HTML
+const modalSetMenuMainCategoryHtml = (categorys) => {
+  return `
+    <div>
+      <h3>카테고리명</h3>
+      <ul>
+        ${categorys.map((category)=>`
+        <li>
+          <button class="move"><i class="ph-fill ph-caret-up-down"></i></button>
+          <div class="input_box">
+            <input type="text"/>
+            <i class="ph ph-pencil"></i>
+          </div>
+          <button class="delete"><i class="ph ph-trash"></i></button>
+        </li>
+        `).join('')}
+      </ul>
+    </div>
+    <button>
+      <i class="ph ph-plus"></i>
+      <span>카테고리 추가</span>
+    </button>
+  `;
+}

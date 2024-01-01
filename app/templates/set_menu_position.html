@@ -10,6 +10,9 @@
   <link rel="stylesheet" href="/static/css/reset.css">
   <link rel="stylesheet" href="/static/css/common.css">
   <link rel="stylesheet" href="/static/css/animation.css">
+
+  <script src="/static/js/htmls.js"></script>
+
   <!-- 아이콘 -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
@@ -54,7 +57,7 @@
               <button>카테고리 3</button>
             </li>
           </ul>
-          <button class="set_category_btn" onclick="clickSetCategory(event)">
+          <button class="set_category_btn" onclick="clickSetCategory(event, 'MAIN')">
             <i class="ph ph-gear-six"></i>
           </button>
         </nav>
@@ -71,7 +74,7 @@
               <button>카테고리 3</button>
             </li>
           </ul>
-          <button class="set_category_btn" onclick="clickSetCategory(event)">
+          <button class="set_category_btn" onclick="clickSetCategory(event, 'SUB')">
             <i class="ph ph-gear-six"></i>
           </button>
         </nav>
