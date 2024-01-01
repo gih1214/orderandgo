@@ -179,11 +179,20 @@ const clickChangeMenuPositionPage = (event, type) => {
 
 // 카테고리 설정 클릭 시
 const clickSetCategory = (event) => {
-  openModalFun(event);
-  const _modal = document.querySelector('.modal');
-  const _modalTitle = document.querySelector('.modal-content h1');
-  const _modalBody = document.querySelector('.modal-content .modal-body');
-  _modalTitle.innerHTML = '카테고리 설정'
-  const html = ``
+  // openModalFun(event);
+  // const _modal = document.querySelector('.modal');
+  // const _modalTitle = document.querySelector('.modal-content h1');
+  // const _modalBody = document.querySelector('.modal-content .modal-body');
+  // _modalTitle.innerHTML = '카테고리 설정'
+  // const html = ``
+
+  const modal = openDefaultModal();
+  modal.top.innerHTML = modalTopHtml('카테고리 설정');
+  modal.middle.innerHTML = ``;
+  const btns = [
+    {class: 'close',text: '취소', fun: ''},
+    {class: 'close',text: '저장', fun: ''}
+  ]
+  modal.bottom.innerHTML = modalBottomHtml(btns);
 
 }

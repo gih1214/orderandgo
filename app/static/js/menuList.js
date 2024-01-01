@@ -231,20 +231,73 @@ const getMenuOptionData = (data, categoryId, page, menuId, optionId) => {
 
 
 
-const showMenuOptionHtml = (optionDatas,) => {
+const showMenuOptionHtml = (optionDatas) => {
   const _optionHtml = document.querySelector('main section aside .items');
+  let curPage = 0;
+  const optionPageData = optionDatas.reduce((result, item, index) => {
+    const groupIndex = Math.floor(index / 8);
+    if (!result[groupIndex]) result[groupIndex] = []; 
+    result[groupIndex].push(item);
+    return result;
+  }, []);
+  _optionHtml.innerHTML = createMenuOptionsHtml(optionPageData[curPage]);
+  const _optionContainer = document.querySelector('.option_container')
+  _optionContainer.classList.remove('hasNextPage')
+  _optionContainer.classList.remove('hasPrevPage')
+  const optionPageLen = optionPageData.length;
+  if(optionPageLen>1){
+    
+    _optionContainer.classList.add('hasNextPage')
+    const _nextBtn = document.querySelector('.option_container .next_page_btn');
+    const _prevBtn = document.querySelector('.option_container .prev_page_btn');
+    _nextBtn.addEventListener('click',(event)=>{
+      curPage += 1;
+      if(!optionPageData[curPage]) {
+        curPage -= 1; 
+        return
+      };
+      if(curPage > 0) { // prev 버튼 보이게 하기
+        _optionContainer.classList.add('hasPrevPage')
+      }
+      if(curPage == optionPageLen-1 ) { // next 버튼 안보이게 하기
+        _optionContainer.classList.remove('hasNextPage')
+      }
+      _optionHtml.innerHTML = createMenuOptionsHtml(optionPageData[curPage]);
+    })
+    _prevBtn.addEventListener('click',(event)=>{
+      curPage -= 1;
+      if(!optionPageData[curPage]) {
+        curPage += 1; 
+        return
+      };
+      if(curPage == 0){ // prev 버튼 안보이게 하기
+        _optionContainer.classList.remove('hasPrevPage')
+      }
+      if(curPage != optionPageLen -1){
+        _optionContainer.classList.add('hasNextPage')
+      }
+      _optionHtml.innerHTML = createMenuOptionsHtml(optionPageData[curPage]);
+    })
+  }
+}
+
+// 옵션 리스트 HTML 만들기
+const createMenuOptionsHtml = (optionPageData) => {
   let html = ``;
-  optionDatas.forEach((optionData)=>{
+  for(let i=0; i<8; i++){
     html += `
-    <button data-id="${optionData.optionId}" class="menu item" onclick="clickMenuOption(event)" >
+    ${optionPageData[i] ? `
+    <button data-id="${optionPageData[i].optionId}" class="menu item" onclick="clickMenuOption(event)" >
       <div class="title">
-        <h2>${optionData.option}</h2>
+        <h2>${optionPageData[i].option}</h2>
       </div>
-      <span class="price">${optionData.price.toLocaleString()}원</span>
+      <span class="price">${optionPageData[i].price.toLocaleString()}원</span>
     </button>
+    ` : `<button class="menu item hidden"></button>`}
+    
     `
-  })
-  _optionHtml.innerHTML = html;
+  }
+  return html
 }
 
 // 메뉴 백그라운드 활성화

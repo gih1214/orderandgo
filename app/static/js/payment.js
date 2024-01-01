@@ -630,9 +630,24 @@ const clickCashPayment = (event) => {
 // 현금 결제 완료 클릭 시
 const clickCashPaymentCompleted = (event) => {
   // 결제 데이터 db 에 통신
+  const price = Number(document.querySelector('.modal input.cash_input').value.replace(/,/g, ''));
+  const type = 1 // CASH
+
+  const data = setPayment(type);
+  data.payment.price = data.payment.price < price ? data.payment.price : price
+  const onSuccess = (data) => {
+    console.log(data);
+    if(data.is_finished){
+      document.querySelector('.modal').remove()
+      createCompletedPaymentModal(event, 'CASH');
+    }else{
+      location.reload();
+    }
+  }
+  fetchData(`/pos/payment_history/${lastPath}`, 'POST', data, onSuccess)
 
   // 성공 모달 알림
-  createCompletedPaymentModal(event, 'CASH');
+  // createCompletedPaymentModal(event, 'CASH');
 }
 
 const clickCardPayment = (event) => { // 카드 결제 클릭 시
@@ -641,9 +656,10 @@ const clickCardPayment = (event) => { // 카드 결제 클릭 시
   const onSuccess = (data) => {
     console.log(data);
     if(data.is_finished){
+      document.querySelector('.modal').remove()
       createCompletedPaymentModal(event, 'CARD');
     }else{
-      // location.reload();
+      location.reload();
     }
   }
   console.log(data)

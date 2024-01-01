@@ -133,6 +133,94 @@ function historyBack(event){
 }
 
 
+// 모달 기본 엘리먼트 추가
+const openDefaultModal = (isBackClose=true) => {
+  removeModal();
+  document.querySelector('body').insertAdjacentHTML('beforeend', defaultModalHtml());
+  const _modal = document.querySelector('.modal');
+  const _modal_content = document.querySelector('.modal_content');
+  const _modal_top = document.querySelector('.modal_top');
+  const _modal_middle = document.querySelector('.modal_middle');
+  const _modal_bottom = document.querySelector('.modal_bottom');  
+  if(isBackClose)_modal.addEventListener('click', clickHandler);
+
+  return { 
+    container : _modal, 
+    content: _modal_content, 
+    top : _modal_top, 
+    middle : _modal_middle, 
+    bottom : _modal_bottom 
+  }
+}
+
+const getDefaultModal = () => {
+  const _modal = document.querySelector('.modal');
+  const _modal_content = document.querySelector('.modal_content');
+  const _modal_top = document.querySelector('.modal_top');
+  const _modal_middle = document.querySelector('.modal_middle');
+  const _modal_bottom = document.querySelector('.modal_bottom');  
+  return { 
+    container : _modal, 
+    content: _modal_content, 
+    top : _modal_top, 
+    middle : _modal_middle, 
+    bottom : _modal_bottom 
+  }
+}
+
+// 모달 삭제
+const removeModal = () => {
+  const _modal = document.querySelector('.modal');
+  if(_modal){
+    _modal.removeEventListener('click', clickHandler);
+    document.querySelector('.modal').remove();
+  }
+}
+
+// 모달 배경 클릭 시 닫기(이벤트 제거)
+const clickHandler = (event) => {
+  const target = event.target; 
+  const isClose = findParentTarget(target, '.close');
+  const isBackground = target.classList.contains('modal');
+  if (isBackground || isClose) removeModal(clickHandler);
+};
+
+// 모달 기본 틀
+const defaultModalHtml = () => `
+  <div class="modal show">
+    <div class="modal_content">
+      <div class="modal_top"></div>
+      <div class="modal_middle"></div>
+      <div class="modal_bottom"></div>
+    </div>
+  </div>
+`
+
+// 모달 TOP
+const modalTopHtml = (title, hasX=false) => {
+  return `
+    <h1>${title}</h1>
+    <i class="ph ph-x close"></i>
+  `
+}
+// 모달 BOTTOM AND
+const modalBottomHtml = (btns=null) => {
+  // const btns = [
+  //   {class: '',text: '', fun: ''},
+  //   {class: '',text: '', fun: ''}
+  // ]
+  return `
+    ${btns != null ?`
+    <div class="buttons">
+      ${btns.map((btn)=>`
+      <button class="${btn.class}" ${btn.fun}>${btn.text}</button>
+      `).join('')}
+    </div>
+    `:``}
+  `
+}
+
+
 // 모달 배경 및 닫기 클릭 시 모달 닫기
 window.onclick = function (event) {
   if (event.target.id == 'modal' || event.target.closest('.close') != undefined) {

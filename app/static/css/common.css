@@ -84,8 +84,73 @@
 /* ######### 버튼 ############### */
 /* ############################## */
 
+/* ############################## */
 /* ######### 모달 ############### */
 .modal {
+  position: fixed;
+  z-index: 2;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal .modal_content{
+  max-width: 420px;
+  max-height: 555px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 20px;
+  background: #FFF;
+  color: #000;
+}
+.modal .modal_content .modal_top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  font-family: Inter;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: normal;
+}
+.modal .modal_content .modal_top i{
+  font-size: 25px;
+}
+.modal .modal_content .modal_middle {
+  margin-bottom: 30px;
+  text-align: start;
+  font-size: 14px;
+  font-weight: 400;
+}
+.modal .modal_content .modal_bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal .modal_content .modal_bottom .buttons{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.modal .modal_content .modal_bottom .buttons button{
+  flex: 1;
+  padding: 10px;
+  border-radius: 20px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+/* .modal {
   position: fixed;
   z-index: 2;
   align-items: center;
@@ -97,8 +162,7 @@
   height: 100%;
   padding: 0 20px;
   background-color: rgba(0, 0, 0, 0.4);
-  
-}
+} */
 .modal.show {
   display: flex;
 }
