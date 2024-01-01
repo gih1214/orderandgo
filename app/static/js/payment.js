@@ -535,9 +535,15 @@ const updatePaymentAmount = (event) => {
 const changePaymentAmount = (type, input) => {
   if(type=="direct"){}
   if(type=="dutch"){}
-  if(type=="won"){}
+  if(type=="won"){
+    
+  }
   if(type=="percent"){}
-  if(type=="cash"){}
+  if(type=="cash"){
+    const value = Number(input.value.replace(/,/g, ''));
+    document.querySelector('.cash_amount span').innerHTML = `${value.toLocaleString()}원`
+    document.querySelector('.change_amount span').innerHTML = `${(value - payment_history.curPaymentPrice).toLocaleString()}원`
+  }
   // 단위 위치 변경
   const _span = input.nextElementSibling;
   _span.style.left = `${15 + calculateTextWidth(input.value)}px`
@@ -575,13 +581,20 @@ const clickCashPayment = (event) => {
   const _modal = document.querySelector('.modal');
   const _modalTitle = document.querySelector('.modal-content h1');
   const _modalBody = document.querySelector('.modal-content .modal-body');
+  console.log('payment_history,',)
+  const totalPrice = payment_history.orderTotalPrice + payment_history.extra_charge;
+  const receivedTotalPrice = payment_history.payment.reduce((accumulator, item) => accumulator + item.price, 0);
+  
+  const dicountPercent = (payment_history.discount/totalPrice) * 100
+  console.log(totalPrice, payment_history.discount, dicountPercent)
+
   _modalTitle.innerHTML = '현금 결제'
   let html = `
     <div class="top ">
       <div class="content cash" data-total="94000" data-type="cash">
         <div class="receive_amount">
           <h3>받을 금액</h3>
-          <span>94,000원</span>
+          <span>${payment_history.curPaymentPrice.toLocaleString()}원</span>
         </div>
         <div class="direct_content">
           <div class="payment_amount">
@@ -592,17 +605,17 @@ const clickCashPayment = (event) => {
             <span class="percent_input">%</span>
             <input class="won_input" type="text" oninput="updatePaymentAmount(event)" />
             <span class="won_input">원</span>
-            <input class="cash_input" type="text" oninput="updatePaymentAmount(event)" />
+            <input class="cash_input" type="text" value="" oninput="updatePaymentAmount(event)" />
             <span class="cash_input">원</span>
           </div>
         </div>
         <div class="cash_amount ">
           <h3>현금 결제 금액</h3>
-          <span>94,000원</span>
+          <span>0원</span>
         </div>
         <div class="change_amount ">
           <h3>거스름 돈</h3>
-          <span>94,000원</span>
+          <span>0원</span>
         </div>
       </div>
       <div class="number_pad" onclick="clickNumberPad(event)">
@@ -656,7 +669,7 @@ const clickCardPayment = (event) => { // 카드 결제 클릭 시
   const onSuccess = (data) => {
     console.log(data);
     if(data.is_finished){
-      document.querySelector('.modal').remove()
+      document.querySelector('.modal').remove();
       createCompletedPaymentModal(event, 'CARD');
     }else{
       location.reload();
