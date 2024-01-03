@@ -1,5 +1,43 @@
 const lastPath = window.location.href.split('/').pop();
 
+// 비동기 fetch api
+async function fetchDataAsync(url, method, data, form=false){
+  let newUrl = url;
+  let fetchOptions = { method};
+  if(method !== 'GET' && form) {
+    const formData = new FormData();
+    formData.append('json_data', JSON.stringify(data.json_data)) 
+    data.form_data.forEach(({key, value})=>{
+      formData.append(key, value);
+    })
+    fetchOptions.body = formData
+  }
+  if(method !== 'GET' && !form){
+    fetchOptions.body = JSON.stringify(data);
+  }
+  if(method == 'GET' || method == 'DELETE'){
+    newUrl += `?`
+    for (const key in data) {
+      const value = data[key];
+      newUrl += `${key}=${value}&`;
+    }
+    console.log(newUrl);
+  }
+  try {
+    const response = await fetch(newUrl, fetchOptions);
+    if (response.ok) {
+      const result = await response.json();
+      return result;
+    } else {
+      throw new Error('문제가 발생했습니다.');
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+
 // fetch api
 function fetchData(url, method, data, onSuccess, form=false) {
   let newUrl = url;
