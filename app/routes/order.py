@@ -24,6 +24,7 @@ def menu_order():
 @order_bp.route('/delete_order', methods=['POST'])
 def api_delete_order():
     print("comming?????????")
+    order_id_list = request.get_json(force=True)
     order_id_list = request.get_json()['order_id_list']
     print("order###", order_id_list)
     res = delete_order(order_id_list)
