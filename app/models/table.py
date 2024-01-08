@@ -148,3 +148,10 @@ def create_table(data):
     db.session.commit()
     db.session.refresh(item)
     return jsonify({'table_id': item.id, 'table_name': item.name}), 200
+
+# 테이블 조회 - 테이블에 해당 테이블 카테고리가 있는지 조회
+def select_table_id(id):
+    item = Table.query.filter(Table.table_category_id == id).first()
+    if not item:
+        return False
+    return True

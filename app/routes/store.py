@@ -3,7 +3,7 @@ import os
 from flask import render_template, request, jsonify
 from flask_login import login_required, current_user
 from app.models.menu_category import get_main_and_sub_category_by_menu_id, select_main_and_sub_category_by_store_id
-from app.models.table import select_table, select_table_category
+from app.models.table import select_table, select_table_category, select_table_id
 from app.routes import store_bp
 
 
@@ -466,3 +466,21 @@ def get_table():
 def set_menu_position():
     if request.method == 'GET':
         return render_template('set_menu_position.html')
+    
+# 테이블 카테고리
+@store_bp.route('/set_table_category', methods=['POST'])
+def set_table_category():
+    if request.method == 'POST':
+        
+        return jsonify({'message': '테이블 카테고리가 성공적으로 저장되었습니다.'}), 200
+
+# 테이블 카테고리 삭제 시 테이블 이용 중 유무 확인 API
+# 테이블 카테고리 삭제 버튼 클릭 시 해당 카테고리에 테이블 있는지 조회하는 기능
+# True, False 리턴
+@store_bp.route('/get_table_id_yn', methods=['GET'])
+def get_table_id_yn():
+    if request.method == 'GET':
+        json_data = json.loads(request.form.get('json_data'))
+        table_category_id = json_data['id']
+        table_id_yn = select_table_id(table_category_id)
+        return jsonify({'success': table_id_yn})
