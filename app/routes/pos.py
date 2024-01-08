@@ -185,6 +185,62 @@ def get_table_order_list(table_id):
     
     return jsonify(order_list)
 
+'''
+# pos->테이블 클릭시
+@pos_bp.route('/get_menu_list', methods=['GET'])
+def get_menu_list():
+    store_id = current_user.id
+
+    all_menu_list = []
+    menu_categories = select_main_category(store_id) # 메인 카테고리 조회
+    for t in menu_categories:
+        category_name = t.name
+        category_id = t.id
+
+
+    dummy = [
+        {
+            'categoryId': 1,
+            'category': '식사류',
+            'subCategoryList': [
+                {
+                    'subCategoryId': 1,
+                    'subCategory': '식사류',
+                    'pageList' : [
+                        {
+                            'page': 1,
+                            'menuList': [
+                                {
+                                    'menuId': 1,
+                                    'menu': '짜장면',
+                                    'price': 6000,
+                                    'page': 1,
+                                    'position': 1,
+                                    'optionList': [
+                                        {
+                                            'optionId':42,
+                                            'option':'소시지',
+                                            'price':1000
+                                        },
+                                        {
+                                            'optionId':42,
+                                            'option':'소시지',
+                                            'price':1000
+                                        },
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+            ]
+        },
+    ]
+
+
+
+    return all_menu_list
+'''
     
 
 # 테이블 -> 메뉴리스트에 필요한 메뉴 데이터 (json)
@@ -245,6 +301,7 @@ def get_menu_list(table_id):
             "pageList" : page_list
         })
 
+    print("allll_menu_list", all_menu_list)
     return jsonify(all_menu_list)
 
     # # JSON 파일 경로 설정

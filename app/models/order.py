@@ -89,9 +89,10 @@ def find_order_list(table_id):
 
 
 # 주문 취소 클릭시
-def delete_order(order_id):
-    order_item = db.session.query(Order).filter(Order.id == order_id).first()
-    if order_item is None:
-        return False
-    db.session.delete(order_item)
+def delete_order(order_id_list):
+    for order_id in order_id_list:
+        order_item = db.session.query(Order).filter(Order.id == order_id).first()
+        # if order_item is None:
+            # return False
+        db.session.delete(order_item)
     return True

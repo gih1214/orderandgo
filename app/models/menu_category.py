@@ -49,3 +49,18 @@ def get_main_and_sub_category_by_menu_id(menu):
         return None, None  # 오류 발생 시 None을 반환합니다.
 
 
+# pos->테이블 클릭시 메인->서브 카테고리로 띄우기
+def get_all_category_menu(store_id, main_categoty_id, sub_category_id):
+    query = session.query(Menu)\
+                    .join(SubCategory, SubCategory.id == Menu.menu_category_id)\
+                    .join(MainCategory, MainCategory.id == SubCategory.main_category_id)\
+                    .filter(MainCategory.store_id == store_id)\
+                            
+    if main_categoty_id is not None:
+        query = query.filter(MainCategory.id == main_categoty_id)
+    if sub_category_id is not None:
+        query = query.filter(SubCategory.id == sub_category_id)
+
+    all_menu_items = query.all()
+
+    return all_menu_items
