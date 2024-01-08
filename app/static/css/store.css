@@ -655,8 +655,36 @@ section ul li .submit_btn {
 
 }
 .set_table_position main section nav {
-  height: 50px;
+  display: flex;
+  padding: 0px 20px;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #CCC;
+  background: #FFF;
 }
+.set_table_position main section nav ul{
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+.set_table_position main section nav ul li button{
+  padding: 16px 2px;
+  height: 50px;
+  color: #CCC;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.set_table_position main section nav ul li[data-state="active"] button{
+  color: var(--main, #1FAA9C);
+  border-bottom: 2px solid var(--main, #1FAA9C);
+  margin-bottom: -1px;
+}
+.set_table_position main section nav .btn_set {
+  color: #CCC;
+  font-size: 20px;
+}
+
 .set_table_position main section article{
   background: rgba(0, 0, 0, 0.50);
 }

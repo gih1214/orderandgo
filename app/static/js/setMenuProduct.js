@@ -309,7 +309,7 @@ const setMenuHtml = ({id, imgList,name,price,description,category,options, is_so
       </div>
     </div>
     <div class="bottom">
-      <button class="delete">${id == '' ? '취소' : '삭제'}</button>
+      <button class="delete" onclick="clickDeleteMenuData(event, ${id})">${id == '' ? '취소' : '삭제'}</button>
       <button class="save" onclick="clickSaveMenuData(event, '${ id == '' ? 'POST' : 'PATCH' }', ${id})">
         ${id == ''? '저장' : '수정'}
       </button>
@@ -515,7 +515,16 @@ const clickDeleteMenu = (e) => {
 
 
 }
-
+// 메뉴 상세 보기에서 삭제 클릭 시
+const clickDeleteMenuData = async (e, id) => {
+  const url = `/store/set_menu`;
+  const method = `DELETE`;
+  const fetchData = {id:id};
+  const result = await fetchDataAsync(url, method, fetchData);
+  if(result.code == 200){
+    window.location.reload()
+  }
+}
 const toggleSoldOut = (event) => {
   const _soldOutBtn = event.currentTarget;
   const isSoldOut = JSON.parse(_soldOutBtn.dataset.soldout);

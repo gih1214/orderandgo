@@ -171,12 +171,13 @@ def all_menu_list():
             for m in menus:
                 option_list = []
                 all_option_list = select_menu_option_all(m.id)
-                for o in all_option_list:
-                    option_list.append({
-                        'option_id': o.id,
-                        'option_name': o.name,
-                        'option_price': o.price
-                    })
+                if all_option_list:
+                    for o in all_option_list:
+                        option_list.append({
+                            'option_id': o.id,
+                            'option_name': o.name,
+                            'option_price': o.price
+                        })
 
                 all_menu_list.append({
                     'id': m.id,
@@ -300,10 +301,6 @@ def set_menu():
         page = page_position_num.page
         position = page_position_num.position
 
-        # page와 position이 null이면 1로 초기화
-        page = page if page is not None else 1
-        position = position if position is not None else 1
-
         if position == 24: # 24이므로 page 넘김
             page += 1
             position = 1
@@ -311,6 +308,10 @@ def set_menu():
             position += 1
         elif position > 24:
             print('ERROR : position 24를 초과할 수 없습니다.')
+
+        # page와 position이 null이면 1로 초기화
+        page = page if page is not None else 1
+        position = position if position is not None else 1
 
         images = []
         # 현재 menu 마지막 행의 id 가져오기
@@ -413,12 +414,13 @@ def set_menu():
     
     # 메뉴 삭제
     if request.method == 'DELETE':
-        json_data = json.loads(request.form.get('json_data'))
-        menu_id = json_data['id']
-        delete_menu(menu_id)
-        return jsonify({'message': '메뉴가 성공적으로 삭제되었습니다.'}), 200
-
-
+        menu_id = request.args.get('id')
+        is_delete_menu = delete_menu(menu_id)
+        if is_delete_menu :
+            return jsonify({'message': '메뉴가 성공적으로 삭제되었습니다.', 'code': 200}), 200
+        else:
+            return jsonify({'message': is_delete_menu, 'code': 400}), 200
+        
 # POS -> 매장관리 -> 상품 정보 수정 -> 생성(완료), 수정(진행중)
 @store_bp.route('/set_table', methods=['GET', 'POST', 'PATCH'])
 def set_table():

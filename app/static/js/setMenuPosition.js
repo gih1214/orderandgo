@@ -178,12 +178,19 @@ const clickChangeMenuPositionPage = (event, type) => {
 }
 
 // 카테고리 설정 클릭 시
-const clickSetCategory = (event) => {
-  openModalFun(event);
-  const _modal = document.querySelector('.modal');
-  const _modalTitle = document.querySelector('.modal-content h1');
-  const _modalBody = document.querySelector('.modal-content .modal-body');
-  _modalTitle.innerHTML = '카테고리 설정'
-  const html = ``
-
+const clickSetCategory = (event, type) => {
+  const modal = openDefaultModal();
+  modal.container.classList.add('category');
+  if(type == 'MAIN'){
+    modal.top.innerHTML = modalTopHtml('메인 카테고리 설정');
+  }else{
+    modal.top.innerHTML = modalTopHtml('서브 카테고리 설정');
+  }
+  const categorys = []; // 카테고리 리스트
+  modal.middle.innerHTML = modalSetMenuMainCategoryHtml(categorys);
+  const btns = [
+    {class: 'brand close',text: '취소', fun: ''},
+    {class: 'brand_fill close',text: '저장', fun: ''}
+  ]
+  modal.bottom.innerHTML = modalBottomHtml(btns);
 }

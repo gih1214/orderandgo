@@ -11,9 +11,7 @@ main section nav{
   align-items: center;
   justify-content: space-between;
   padding: 0px 20px;
-  
   gap: 15px;
-  
 }
 main section nav.main{}
 main section nav.sub{
@@ -46,10 +44,12 @@ main section nav ul li button {
 }
 main section nav ul li[data-state="active"] button{
   color: var(--main, #1FAA9C);
-  border-bottom: 2px solid var(--main, #1FAA9C);
   font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.3px;
+}
+main section nav:not(.sub) ul li[data-state="active"] button{
+  border-bottom: 2px solid var(--main, #1FAA9C);
 }
 main section nav.main ul li[data-state="active"] button {
   border-bottom: 2px solid var(--main, #1FAA9C);
@@ -76,8 +76,7 @@ main section nav .btn_set {
 }
 main section article {
   position: relative;
-  
-  height: calc(100vh - (40px + 47px));
+  height: calc(100vh - (40px + 49px));
   padding: 20px;
   background: #ddd;
   overflow: hidden;
@@ -85,6 +84,9 @@ main section article {
 }
 #container.order main section article{
   height: calc(100vh - (40px + 49px + 42px));
+}
+.payment #container.order main section article{
+  height: calc(100vh - (40px));
 }
 
 main section article.disabled {
@@ -280,7 +282,7 @@ main section article .table .body i.ph-plus{
   font-size: 20px;
   color: #ccc;
 }
-main section article .change_page_btn {
+.change_page_btn {
   position: absolute;
   top: 50%;
   z-index: 2;
@@ -298,18 +300,18 @@ main section article .change_page_btn {
   transform: translateY(-50%);
   transition: all .25s;
 }
-main section article .change_page_btn:hover{
+.change_page_btn:hover{
   background: #1FAA9C;
   color: #fff;
 }
-main section article.hasPrevPage .prev_page_btn,
-main section article.hasNextPage .next_page_btn {
+.hasPrevPage .prev_page_btn,
+.hasNextPage .next_page_btn {
   display: flex;
 }
-main section article .change_page_btn.prev_page_btn {
+.change_page_btn.prev_page_btn {
   left: 10px;
 }
-main section article .change_page_btn.next_page_btn {
+.change_page_btn.next_page_btn {
   right: 10px;
 }
 main section > aside{
@@ -659,19 +661,31 @@ main section > aside .custom_btns button{
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 15px;
+  width: 100%;
 }
 #container.order main section aside .items .item{
   display: flex;
   flex-flow: column;
   gap: 15px;
+  height: 89px;
   padding: 20px;
   background: #F5F5F5;
   border: 1px solid #CCCCCC;
   border-radius: 10px;
 }
+#container.order main section aside .items .item.hidden {
+  border: 1px solid rgba(0,0,0,0);
+  background: rgba(0,0,0,0);
+}
 #container.order main section aside .items .item .title {
   font-size: 16px;
   font-weight: 700;
+}
+#container.order main section aside .change_page_btn{
+}
+#container.order main section aside .change_page_btn.prev_page_btn{
+}
+#container.order main section aside .change_page_btn.next_page_btn{
 }
 
 /* ##### order ##### */
@@ -1099,6 +1113,9 @@ main section > aside .custom_btns button{
   position: relative;
   z-index: 1;
   background: #fff;
+}
+.set_menu_position main section nav.sub{
+  background: #F3FAFA;
 }
 .set_menu_position main section .set_category_btn {
   font-size: 20px;
