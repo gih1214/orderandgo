@@ -483,4 +483,7 @@ def get_table_id_yn():
         json_data = json.loads(request.form.get('json_data'))
         table_category_id = json_data['id']
         table_id_yn = select_table_id(table_category_id)
-        return jsonify({'success': table_id_yn})
+        if table_id_yn == True:
+            return jsonify({'status': True}), 200
+        else:
+            return jsonify({'status': False}), 200
