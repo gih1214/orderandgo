@@ -712,11 +712,7 @@ const clickOrder = async (event) => {
     const method = `POST`;
     const fetchData = {order_id_list:cancel_order_list.map((data)=>data.order_id)}
     const result = await fetchDataAsync(url, method, fetchData)
-    console.log('result,',result)
-    // 테이블 주문 취소
-    // @order_bp.route('/delete_order', methods=['POST'])
-    // def api_delete_order(order_id_list):
-    //   order_id_list = request.get_json()['order_id_list']
+    console.log('result,',result);
   }
 }
 // 결제하기 클릭 시
