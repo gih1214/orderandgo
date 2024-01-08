@@ -176,6 +176,7 @@ def get_table_order_list(table_id):
                     "count" : menu_option['count']
                 })
         order_list.append({
+            "order_id" : order.id,
             "id" : menu.id,
             "name" : menu.name,
             "price" : menu.price,
@@ -193,9 +194,21 @@ def get_menu_list():
 
     all_menu_list = []
     menu_categories = select_main_category(store_id) # 메인 카테고리 조회
-    for t in menu_categories:
-        category_name = t.name
-        category_id = t.id
+    for main_category in menu_categories:
+        sub_categories = select_sub_category(main_category_id)
+        sub_category_list = []
+        for sub_category in sub_categories:
+            sub_category_list.append({
+                'subCategoryId': 1,
+                'subCategory': '식사류',
+                'pageList' : 
+            })
+
+        all_menu_list.append({
+            'categoryId': main_category.id,
+            'category': main_category.name,
+            'subCategoryList': sub_category_list
+        })
 
 
     dummy = [
@@ -240,8 +253,8 @@ def get_menu_list():
 
 
     return all_menu_list
-'''
-    
+ '''
+
 
 # 테이블 -> 메뉴리스트에 필요한 메뉴 데이터 (json)
 @pos_bp.route('/get_menu_list/<table_id>', methods=['GET'])
