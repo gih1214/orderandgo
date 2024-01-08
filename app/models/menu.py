@@ -110,8 +110,13 @@ def delete_all_menu_option(menu_id):
 # 메뉴 카테고리 조회 (SELECT ALL)
 def select_main_category(store_id):
     item = MainCategory.query.filter(MainCategory.store_id == store_id).all()
-    if not item:
-        return '메인 메뉴 카테고리가 없습니다.'
+    return item
+
+# 메뉴 서브 카테고리 조회 (SELECT ALL)
+def select_sub_category(main_category_id):
+    item = db.session.query(SubCategory)\
+                    .filter(SubCategory.main_category_id == main_category_id)\
+                    .all()
     return item
 
 # 메뉴 조회 (SELECT ID)
@@ -156,14 +161,6 @@ def delete_menu(menu_id):
     db.session.delete(item)
     db.session.commit()
     return True
-
-# 서브 카테고리 조회 (SELECT ALL)
-def select_sub_category(main_category_id):
-    item = SubCategory.query.filter(SubCategory.main_category_id == main_category_id).all()
-    if not item:
-        return '서브 메뉴 카테고리가 없습니다.'
-    return item
-
 
 # store id의 모든 메뉴 조회
 def find_all_menu(store_id):

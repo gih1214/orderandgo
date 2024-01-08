@@ -1,5 +1,5 @@
 from flask import render_template, jsonify, request
-from app.models.menu import select_main_category, select_menu_all, select_menu, select_menu_option, select_menu_option_all, select_menu_all_to_main_category
+from app.models.menu import select_main_category, select_sub_category, select_menu_all, select_menu, select_menu_option, select_menu_option_all, select_menu_all_to_main_category
 from app.models.order import find_order_list, get_orders_by_store_id
 from flask_login import login_required, current_user
 
@@ -186,6 +186,8 @@ def get_table_order_list(table_id):
     
     return jsonify(order_list)
 
+
+
 '''
 # pos->테이블 클릭시
 @pos_bp.route('/get_menu_list', methods=['GET'])
@@ -195,13 +197,39 @@ def get_menu_list():
     all_menu_list = []
     menu_categories = select_main_category(store_id) # 메인 카테고리 조회
     for main_category in menu_categories:
-        sub_categories = select_sub_category(main_category_id)
+        sub_categories = select_sub_category(main_category.id)
         sub_category_list = []
         for sub_category in sub_categories:
+            sub_category_page = ~~~(sub_category.id)
+            page_list = []
+            for page in sub_category_page:
+                all_menu = ~~~~~(page.id)
+                menu_list = []
+                for menu in all_menu:
+                    all_option = ~~~(menu.id)
+                    option_list = []
+                    for option in all_option:
+                        option_list.append({
+                            'optionId':,
+                            'option':,
+                            'price':
+                        })
+                    menu_list.append({
+                        'menuId': ,
+                        'menu': ,
+                        'price': ,
+                        'page': ,
+                        'position': ,
+                        'optionList': option_list
+                    })
+                page_list.append({
+                    'page':,
+                    'menuList': menu_list
+                })
             sub_category_list.append({
-                'subCategoryId': 1,
-                'subCategory': '식사류',
-                'pageList' : 
+                'subCategoryId': ,
+                'subCategory':,
+                'pageList' : page_list
             })
 
         all_menu_list.append({
@@ -253,7 +281,7 @@ def get_menu_list():
 
 
     return all_menu_list
- '''
+'''
 
 
 # 테이블 -> 메뉴리스트에 필요한 메뉴 데이터 (json)
