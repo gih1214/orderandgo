@@ -21,8 +21,9 @@ def menu_order():
 
 
 # 테이블 주문 취소
-@order_bp.route('/delete_order/<order_id>', methods=['GET', 'POST'])
+@order_bp.route('/delete_order', methods=['POST'])
 def api_delete_order(order_id_list):
+    order_id_list = request.get_json()['order_id_list']
     res = delete_order(order_id_list)
     if res:  
         response = jsonify({'message': 'Success'})
