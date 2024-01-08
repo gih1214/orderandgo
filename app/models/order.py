@@ -95,4 +95,5 @@ def delete_order(order_id_list):
         # if order_item is None:
             # return False
         db.session.delete(order_item)
+        db.session.commit()
     return True

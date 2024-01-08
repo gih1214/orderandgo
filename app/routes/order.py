@@ -23,7 +23,6 @@ def menu_order():
 # 테이블 주문 취소
 @order_bp.route('/delete_order', methods=['POST'])
 def api_delete_order():
-    print("comming?????????")
     order_id_list = request.get_json(force=True)
     order_id_list = request.get_json()['order_id_list']
     print("order###", order_id_list)
