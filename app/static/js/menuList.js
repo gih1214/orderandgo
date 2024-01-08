@@ -35,6 +35,7 @@ fetch(`/pos/get_table_order_list/${lastPath}`, {
   }
   order_history=data.map((order)=>({
     id: order.id,
+    order_id : order.order_id,
     masterName : setMasterName(order),
     name: order.name,
     price: order.price,
@@ -60,6 +61,9 @@ const clickOrderHistoryBtn = (event) => {
   _countBtns.forEach(btn=>btn.dataset.active=false);
   closeOptionContainer();
 
+  const _orderBtn = document.querySelector('.order_btns ul li.order button');
+  _orderBtn.innerHTML = `주문취소`;
+  document.querySelector('.order_btns ul li.order').dataset.iscancel = true;
 }
 
 // 장바구니 버튼 클릭 시
@@ -75,6 +79,10 @@ const clickBasketBtn = (event) => {
   const _countBtns = document.querySelectorAll('.count_btns button.minus, .count_btns button.plus, .count_btns button.delete');
   _countBtns.forEach(btn=>btn.dataset.active=false);
   closeOptionContainer();
+
+  const _orderBtn = document.querySelector('.order_btns ul li.order button');
+  _orderBtn.innerHTML = `주문하기`;
+  document.querySelector('.order_btns ul li.order').dataset.iscancel = false;
 }
 
 
@@ -372,15 +380,17 @@ const clickBasketMenu = (event) => {
 
 // 주문내역 아이템 클릭 시
 const clickOrderMenu = (event) => {
-  const __basketMenu = document.querySelectorAll('.basket_container .basket li');
-  const target = event.currentTarget;
-  __basketMenu.forEach((_basketMenu)=>{
-    _basketMenu.classList.remove('active');
-  })
-  target.classList.add('active');
-  const _countBtns = document.querySelectorAll('.count_btns button.minus, .count_btns button.plus, .count_btns button.delete');
-  _countBtns.forEach(btn=>btn.dataset.active=true);
-  closeOptionContainer();
+  
+    const __basketMenu = document.querySelectorAll('.basket_container .basket li');
+    const target = event.currentTarget;
+    __basketMenu.forEach((_basketMenu)=>{
+      _basketMenu.classList.remove('active');
+    })
+    target.classList.add('active');
+    const _countBtns = document.querySelectorAll('.count_btns button.minus, .count_btns button.plus, .count_btns button.delete');
+    _countBtns.forEach(btn=>btn.dataset.active=true);
+    closeOptionContainer();
+
 }
 
 // 장바구니 - 클릭 시
@@ -435,8 +445,20 @@ const minusOrderListMenu = () => {
     .findIndex(el => el.classList.contains('active'))
   const target = document.querySelector('.basket li.active');
   const dataList = order_history.filter((order)=>order.masterName == target.dataset.master);
+  console.log('dataList,',dataList);
+  const targetCancelDataList = cancel_order_list.filter((data)=>data.masterName == dataList[0].masterName);
+  console.log(targetCancelDataList)
+  // 두 배열 비교 후 두번째 배열에 없는 첫번 째 배열의 인덱스 낮은 값 찾기
+  function findFirstUniqueIndex(arr1, arr2) {
+    const setArr2 = arr2.map((arr)=>arr.order_id)
+    for (let i = 0; i < arr1.length; i++) {
+      if (!setArr2.includes(arr1[i].order_id)) return i
+    }
+    return -1;
+  }
+  dataListIndex = findFirstUniqueIndex(dataList, targetCancelDataList)
   const maxCount = dataList.length;
-  const data = dataList[0];
+  const data = dataList[dataListIndex];
   if(!stringToBooleanMap[target.dataset.iscancel]){
     target.dataset.iscancel = true;
     const html = `<li class="cancel" data-count="0"></li>`
@@ -660,29 +682,42 @@ const deleteBasketMenu = (event) => {
 }
 
 // 주문하기 클릭 시
-const clickOrder = (event) => {
-  const data = {
-    table_id : lastPath,
-    order_list : deepCopy(menuAllData)
-  }
-  fetch(`/order`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  })
-  .then(response => response.json())
-  .then(data => {
-    // 받은 데이터 처리
-    console.log(data);
-    if(data == 'Success'){
-      window.location.href = '/pos/tableList'
+const clickOrder = async (event) => {
+  if(event.target.dataset.iscancel == 'false'){ // 주문하기
+    const data = {
+      table_id : lastPath,
+      order_list : deepCopy(menuAllData)
     }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
+    fetch(`/order`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      // 받은 데이터 처리
+      console.log(data);
+      if(data == 'Success'){
+        window.location.href = '/pos/tableList'
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }else{ // 주문취소
+    console.log(cancel_order_list);
+    const url = `/order/delete_order`;
+    const method = `POST`;
+    const fetchData = {order_id_list:cancel_order_list.map((data)=>data.order_id)}
+    const result = await fetchDataAsync(url, method, fetchData)
+    console.log('result,',result)
+    // 테이블 주문 취소
+    // @order_bp.route('/delete_order', methods=['POST'])
+    // def api_delete_order(order_id_list):
+    //   order_id_list = request.get_json()['order_id_list']
+  }
 }
 // 결제하기 클릭 시
 const clickPayment = (event) => {

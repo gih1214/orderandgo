@@ -194,3 +194,9 @@ const clickSetCategory = (event, type) => {
   ]
   modal.bottom.innerHTML = modalBottomHtml(btns);
 }
+
+// 카테고리 추가 버튼 클릭 시
+const clickAddCategoryBtn = (event) => {
+  const _ul = document.querySelector('.modal_middle ul');
+  _ul.insertAdjacentHTML('beforeend', modalAddCategroyLiHtml());
+}
