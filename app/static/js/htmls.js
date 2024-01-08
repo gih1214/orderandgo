@@ -1,4 +1,3 @@
-
 // 메뉴판 페이지 우측 장바구니 상단 버튼 HTML
 const posMenuListBasketTopBtnsHtml = () => {
   return `
@@ -79,9 +78,48 @@ const modalSetMenuMainCategoryHtml = (categorys) => {
         `).join('')}
       </ul>
     </div>
-    <button>
+    <button onclick="clickAddCategoryBtn(event)">
       <i class="ph ph-plus"></i>
       <span>카테고리 추가</span>
     </button>
   `;
+}
+
+// 메뉴 메인 카테고리 설정 모달 HTML
+const modalSetTableCategoryHtml = (categorys) => {
+  return `
+    <div>
+      <h3>구역명</h3>
+      <ul>
+        ${categorys.map((category, index)=>`
+        <li data-id="${category.id}" data-index="${index}">
+          <button class="move"><i class="ph-fill ph-caret-up-down"></i></button>
+          <div class="input_box">
+            <input type="text" value="${category.name}"/>
+            <i class="ph ph-pencil"></i>
+          </div>
+          <button class="delete" onclick="clickDeleteCategoryItem(event)"><i class="ph ph-trash"></i></button>
+        </li>
+        `).join('')}
+      </ul>
+    </div>
+    <button onclick="clickAddCategoryBtn(event)">
+      <i class="ph ph-plus"></i>
+      <span>구역 추가</span>
+    </button>
+  `;
+}
+
+// 카테고리 추가 버튼 클릭 시
+const modalAddCategroyLiHtml = () => {
+  return `
+    <li data-id="" data-index="">
+      <button class="move"><i class="ph-fill ph-caret-up-down"></i></button>
+      <div class="input_box">
+        <input type="text" value=""/>
+        <i class="ph ph-pencil"></i>
+      </div>
+      <button class="delete" onclick="clickDeleteCategoryItem(event)"><i class="ph ph-trash"></i></button>
+    </li>
+  `
 }

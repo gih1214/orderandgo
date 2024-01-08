@@ -217,3 +217,52 @@ const clickChangeTablePosition = (event, type) => {
   }
   createTableHtml(tableData, curCategoryIndex, curPage);
 }
+
+// 테이블 카테고리 수정 버튼 클릭 시
+const clickSetTableCategoryBtn = () => {
+  const modal = openDefaultModal();
+  modal.container.classList.add('category');
+  modal.top.innerHTML = modalTopHtml('구역 설정');
+  modal.middle.innerHTML = modalSetTableCategoryHtml(tableData);
+  const btns = [
+    {class: "close brand", text: "취소", fun: ``},
+    {class: "brand_fill", text: "저장", fun: `onclick="clickSetTabelCategroySaveBtn(event)"`}
+  ]
+  modal.bottom.innerHTML = modalBottomHtml(btns);
+}
+
+const clickSetTabelCategroySaveBtn = () => {
+  const __category = document.querySelectorAll('.modal_middle li');
+  let isSuccess = true;
+  const items = [... __category].map((_category, index)=>{
+    const name = _category.querySelector('input').value
+    const item = {
+      id: _category.dataset.id == '' ? null : Number(_category.dataset.id),
+      name: name,
+      position : index+1
+    }
+    if(name.replace(/\s+/g, '').length < 2){
+      isSuccess = false;
+      _category.querySelector('input').classList.add('required');
+    }
+    return item
+  })
+  if(!isSuccess) return alert('구역명이 올바르지 않습니다.');
+  console.log(items)
+}
+
+// 카테고리 추가 버튼 클릭 시
+const clickAddCategoryBtn = (event) => {
+  const _ul = document.querySelector('.modal_middle ul');
+  _ul.insertAdjacentHTML('beforeend', modalAddCategroyLiHtml());
+}
+
+// 카테고리 아이템 삭제 버튼 클릭 시
+const clickDeleteCategoryItem = (event) => {
+  const _li = findParentTarget(event.target, 'li');
+  const id = _li.dataset.id == '' ? null : Number(_li.dataset.id);
+  if(id){ // 이용 중인 테이블이 있는지 확인하는 api 통신
+
+  }
+  // _li.remove();
+}
