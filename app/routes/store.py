@@ -442,6 +442,7 @@ def get_table():
                 'page' : table.page,
                 'position' : table.position
             })
+        
         # page 그룹화, position 정렬
         grouped_data = {}
         for item in table_list:
@@ -475,8 +476,7 @@ def set_table_category():
         # (생성) 없을 경우
         # id, store_id, category_name, position
         store_id = current_user.id
-        json_data = json.loads(request.form.get('json_data'))
-
+        json_data = request.get_json()
         create_table_category(json_data, store_id)
 
         '''
