@@ -683,40 +683,28 @@ const deleteBasketMenu = (event) => {
 
 // 주문하기 클릭 시
 const clickOrder = async (event) => {
-  if(event.target.dataset.iscancel == 'false'){ // 주문하기
-    const data = {
+  const target = findParentTarget(event.target, 'li.order');
+  if(target.dataset.iscancel == 'false'){ // 주문하기
+    console.log('주문하기')
+    const url = `/order`;
+    const method = 'POST';
+    const fetchData = {
       table_id : lastPath,
       order_list : deepCopy(menuAllData)
+    };
+    const result = await fetchDataAsync(url, method, fetchData);
+    if(result.data = 'Success'){
+      window.location.href = '/pos/tableList'
     }
-    fetch(`/order`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-      // 받은 데이터 처리
-      console.log(data);
-      if(data == 'Success'){
-        window.location.href = '/pos/tableList'
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
   }else{ // 주문취소
-    console.log(cancel_order_list);
+    console.log('주문취소')
     const url = `/order/delete_order`;
     const method = `POST`;
     const fetchData = {order_id_list:cancel_order_list.map((data)=>data.order_id)}
     const result = await fetchDataAsync(url, method, fetchData)
-    console.log('result,',result)
-    // 테이블 주문 취소
-    // @order_bp.route('/delete_order', methods=['POST'])
-    // def api_delete_order(order_id_list):
-    //   order_id_list = request.get_json()['order_id_list']
+    if(result.data = 'Success'){
+      window.location.href = '/pos/tableList'
+    }
   }
 }
 // 결제하기 클릭 시

@@ -3,7 +3,10 @@ const lastPath = window.location.href.split('/').pop();
 // 비동기 fetch api
 async function fetchDataAsync(url, method, data, form=false){
   let newUrl = url;
-  let fetchOptions = { method};
+  let fetchOptions = { 
+    method,
+    headers: {},
+  };
   if(method !== 'GET' && form) {
     const formData = new FormData();
     formData.append('json_data', JSON.stringify(data.json_data)) 
@@ -13,6 +16,7 @@ async function fetchDataAsync(url, method, data, form=false){
     fetchOptions.body = formData
   }
   if(method !== 'GET' && !form){
+    fetchOptions.headers['Content-Type'] = 'application/json';
     fetchOptions.body = JSON.stringify(data);
   }
   if(method == 'GET' || method == 'DELETE'){

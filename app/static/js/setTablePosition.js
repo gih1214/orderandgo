@@ -258,11 +258,19 @@ const clickAddCategoryBtn = (event) => {
 }
 
 // 카테고리 아이템 삭제 버튼 클릭 시
-const clickDeleteCategoryItem = (event) => {
+const clickDeleteCategoryItem = async (event) => {
   const _li = findParentTarget(event.target, 'li');
   const id = _li.dataset.id == '' ? null : Number(_li.dataset.id);
   if(id){ // 이용 중인 테이블이 있는지 확인하는 api 통신
-
+    const url = '/store/get_table_id_yn';
+    const method = 'GET';
+    const fetchData = {id:id};
+    const result = await fetchDataAsync(url, method, fetchData);
+    console.log('result,', result);
+    if(result.status){
+      _li.remove(); 
+    }else{
+      alert('')
+    }
   }
-  // _li.remove();
 }

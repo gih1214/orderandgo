@@ -502,8 +502,7 @@ def set_table_category():
 @store_bp.route('/get_table_id_yn', methods=['GET'])
 def get_table_id_yn():
     if request.method == 'GET':
-        json_data = json.loads(request.form.get('json_data'))
-        table_category_id = json_data['id']
+        table_category_id = request.args.get('id')
         table_id_yn = select_table_id(table_category_id)
         if table_id_yn == True:
             return jsonify({'status': True}), 200
