@@ -14,7 +14,7 @@ from app.models.table import \
     delete_table_category, \
     select_table, \
     set_table_group
-from app.models import db
+from app.models import db, Menu, MenuOption
 
 
 @pos_bp.route('/tableList')
@@ -188,10 +188,9 @@ def get_table_order_list(table_id):
 
 
 
-'''
 # pos->테이블 클릭시
 @pos_bp.route('/get_menu_list', methods=['GET'])
-def get_menu_list():
+def get_main_sub_menu_list():
     store_id = current_user.id
 
     all_menu_list = []
@@ -200,35 +199,48 @@ def get_menu_list():
         sub_categories = select_sub_category(main_category.id)
         sub_category_list = []
         for sub_category in sub_categories:
-            sub_category_page = ~~~(sub_category.id)
+            # sub_category_page = ~~~(sub_category.id)
             page_list = []
-            for page in sub_category_page:
-                all_menu = ~~~~~(page.id)
-                menu_list = []
-                for menu in all_menu:
-                    all_option = ~~~(menu.id)
-                    option_list = []
-                    for option in all_option:
-                        option_list.append({
-                            'optionId':,
-                            'option':,
-                            'price':
-                        })
-                    menu_list.append({
-                        'menuId': ,
-                        'menu': ,
-                        'price': ,
-                        'page': ,
-                        'position': ,
-                        'optionList': option_list
+
+            all_menu = db.session.query(Menu)\
+                                .filter(Menu.menu_category_id == sub_category.id)\
+                                .all()
+            for menu in all_menu:
+                all_option = db.session.query(MenuOption)\
+                                    .filter(MenuOption.menu_id == menu.id)\
+                                    .all()
+                option_list = []
+                for option in all_option:
+                    option_list.append({
+                        'optionId': option.id,
+                        'option': option.name,
+                        'price': option.price
                     })
-                page_list.append({
-                    'page':,
-                    'menuList': menu_list
-                })
+                menu_dict = {
+                    'menuId': menu.id,
+                    'menu': menu.name,
+                    'price': menu.price,
+                    'page': menu.page,
+                    'position': menu.position,
+                    'optionList': option_list
+                }
+
+
+                # page_list = []
+                for p in page_list:
+                    if p['page'] == menu.page:
+                        p['menuList'].append(menu_dict)
+                        break
+                else:
+                    page_list.append({
+                        'page':menu.page,
+                        'menuList':[menu_dict]
+                    })
+
+
             sub_category_list.append({
-                'subCategoryId': ,
-                'subCategory':,
+                'subCategoryId': sub_category.id,
+                'subCategory': sub_category.name,
                 'pageList' : page_list
             })
 
@@ -239,49 +251,48 @@ def get_menu_list():
         })
 
 
-    dummy = [
-        {
-            'categoryId': 1,
-            'category': '식사류',
-            'subCategoryList': [
-                {
-                    'subCategoryId': 1,
-                    'subCategory': '식사류',
-                    'pageList' : [
-                        {
-                            'page': 1,
-                            'menuList': [
-                                {
-                                    'menuId': 1,
-                                    'menu': '짜장면',
-                                    'price': 6000,
-                                    'page': 1,
-                                    'position': 1,
-                                    'optionList': [
-                                        {
-                                            'optionId':42,
-                                            'option':'소시지',
-                                            'price':1000
-                                        },
-                                        {
-                                            'optionId':42,
-                                            'option':'소시지',
-                                            'price':1000
-                                        },
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-            ]
-        },
-    ]
+    # dummy = [
+    #     {
+    #         'categoryId': 1,
+    #         'category': '식사류',
+    #         'subCategoryList': [
+    #             {
+    #                 'subCategoryId': 1,
+    #                 'subCategory': '식사류',
+    #                 'pageList' : [
+    #                     {
+    #                         'page': 1,
+    #                         'menuList': [
+    #                             {
+    #                                 'menuId': 1,
+    #                                 'menu': '짜장면',
+    #                                 'price': 6000,
+    #                                 'page': 1,
+    #                                 'position': 1,
+    #                                 'optionList': [
+    #                                     {
+    #                                         'optionId':42,
+    #                                         'option':'소시지',
+    #                                         'price':1000
+    #                                     },
+    #                                     {
+    #                                         'optionId':42,
+    #                                         'option':'소시지',
+    #                                         'price':1000
+    #                                     },
+    #                                 ]
+    #                             }
+    #                         ]
+    #                     }
+    #                 ]
+    #             },
+    #         ]
+    #     },
+    # ]
 
 
 
     return all_menu_list
-'''
 
 
 # 테이블 -> 메뉴리스트에 필요한 메뉴 데이터 (json)
@@ -342,7 +353,9 @@ def get_menu_list(table_id):
             "pageList" : page_list
         })
 
-    print("allll_menu_list", all_menu_list)
+
+    # print("@@@#$",get_main_sub_menu_list())
+    # print("allll_menu_list", all_menu_list)
     return jsonify(all_menu_list)
 
     # # JSON 파일 경로 설정
