@@ -5,13 +5,28 @@ from app.models import Order, TableOrderList, db, Table, TableCategory
 # 테이블 카테고리
 #################
 
+# 테이블 카테고리 생성/수정
+def create_table_category(table_category_list, store_id):
+    for t in table_category_list:
+        if not t['id']: # id 없으면 신규 생성
+            table_category = TableCategory(store_id=store_id, category_name=t['category_name'], position=t['position'])
+            db.session.add(table_category)
+        else: # id 있으면 수정
+            table_category = TableCategory.query.filter(TableCategory.id == t['id']).first()
+            table_category['category_name'] = t['category_name']
+            table_category['position'] = t['position']
+    db.session.commit()
+    return True
+
 
 # # 테이블 카테고리 생성
+'''
 def create_table_category(store_id, category_name, position=None):
     table_category = TableCategory(store_id=store_id, category_name=category_name, position=position)
     db.session.add(table_category)
     db.session.commit()
     return table_category
+'''
 
 # 테이블 카테고리 조회
 def select_table_category(store_id):
