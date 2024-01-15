@@ -231,14 +231,15 @@ const clickSetTableCategoryBtn = () => {
   modal.bottom.innerHTML = modalBottomHtml(btns);
 }
 
-const clickSetTabelCategroySaveBtn = () => {
+// 테이블 카테고리 수정 내용 저장 버튼 클릭 시
+const clickSetTabelCategroySaveBtn = async (event) => {
   const __category = document.querySelectorAll('.modal_middle li');
   let isSuccess = true;
   const items = [... __category].map((_category, index)=>{
     const name = _category.querySelector('input').value
     const item = {
       id: _category.dataset.id == '' ? null : Number(_category.dataset.id),
-      name: name,
+      category_name: name,
       position : index+1
     }
     if(name.replace(/\s+/g, '').length < 2){
@@ -248,7 +249,11 @@ const clickSetTabelCategroySaveBtn = () => {
     return item
   })
   if(!isSuccess) return alert('구역명이 올바르지 않습니다.');
-  console.log(items)
+  const url = `/store/set_table_category`;
+  const method = 'POST'
+  const fetchData = items
+  const result = await fetchDataAsync(url, method, fetchData);
+  console.log(result)
 }
 
 // 카테고리 추가 버튼 클릭 시
