@@ -669,7 +669,7 @@ const clickCardPayment = (event) => { // 카드 결제 클릭 시
   const onSuccess = (data) => {
     console.log(data);
     if(data.is_finished){
-      document.querySelector('.modal').remove();
+      document.querySelector('.modal')?.remove();
       createCompletedPaymentModal(event, 'CARD');
     }else{
       location.reload();
