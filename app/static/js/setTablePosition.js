@@ -21,7 +21,7 @@ callTableList();
 const createTableHtml = (data, categoryNum, pageNum) => {
   const curData = data[categoryNum].pages[pageNum].tables;
   const categoryHtml = data.map((category,index)=> `
-    <li data-id="${category.id}" data-state="${index == 0 ? 'active': ''}">
+    <li data-id="${category.id}" data-state="${index == categoryNum ? 'active': ''}">
       <button onclick="changeTableCategory(event,${index})">${category.name}</button>
     </li>
   `).join('');
@@ -48,6 +48,21 @@ const createTableHtml = (data, categoryNum, pageNum) => {
 
   _article.classList.toggle('hasPrevPage', data[categoryNum].pages[pageNum - 1] !== undefined);
   _article.classList.toggle('hasNextPage', data[categoryNum].pages[pageNum + 1] !== undefined);
+
+}
+
+// 카테고리 클릭 시
+const changeTableCategory = (event, index) => {
+  const _table = document.querySelector('main section article .items');
+  const PAGE_INDEX = 0;
+  createTableHtml(tableData, index, PAGE_INDEX);  
+  _table.setAttribute('data-page', PAGE_INDEX);
+  const _article = document.querySelector('main section article');
+  _article.classList.remove('hasNextPage');
+  _article.classList.remove('hasPrevPage');
+  const curCategoryId = document.querySelector('main section nav ul li[data-state="active"]').dataset.id;
+  const pageLen = tableData.find((category)=>category.id == Number(curCategoryId)).pages.length;
+  if(PAGE_INDEX < pageLen-1){_article.classList.add('hasNextPage')};
 }
 
 // 테이블 영역 클릭 시
@@ -229,6 +244,10 @@ const clickSetTableCategoryBtn = () => {
     {class: "brand_fill", text: "저장", fun: `onclick="clickSetTabelCategroySaveBtn(event)"`}
   ]
   modal.bottom.innerHTML = modalBottomHtml(btns);
+  new Sortable(document.querySelector('.modal_middle ul'), {
+    handle: '.move',
+    animation: 150
+  });
 }
 
 // 테이블 카테고리 수정 내용 저장 버튼 클릭 시
