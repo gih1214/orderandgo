@@ -1,7 +1,7 @@
 import json
 from flask import session
 from sqlalchemy import desc
-from app.models import MainCategory, SubCategory, db, Menu, MenuOption
+from app.models import MainCategory, Order, SubCategory, db, Menu, MenuOption
 
 # 메뉴 id 생성
 '''
@@ -180,3 +180,15 @@ def find_last_menu_page(store_id):
     if not menu:
         return 0
     return menu
+
+# 메뉴 조회 - 메뉴가 이용 중인 테이블에 있는지 조회
+def select_menu_yn(id):
+    menu = Menu.query.filter(Menu.id == id).first()
+    if menu:
+        item = Order.query.filter(Order.menu_id == menu.id).first()
+        if item: # order 테이블에 해당 menu_id가 있으면 삭제 불가능 -> False
+            return False
+        else: # order 테이블에 없으면 삭제 가능 -> True
+            return True
+    else: # meun 테이블에 데이터가 없으므로 잘못된 접근:삭제 불가능 -> False
+        return False
