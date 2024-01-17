@@ -184,8 +184,16 @@ def create_table(data):
     return jsonify({'table_id': item.id, 'table_name': item.name}), 200
 
 # 테이블 조회 - 테이블에 해당 테이블 카테고리가 있는지 조회
+# 테이블 카테고리 삭제 시 테이블 이용 유무 확인하기 위함
 def select_table_id(id):
-    item = Table.query.filter(Table.table_category_id == id).first()
-    if not item:
-        return False
+    table_list = Table.query.filter(Table.table_category_id == id).all()
+    cnt = 0
+    for t in table_list:
+        item = db.session.query(TableOrderList).filter(TableOrderList.table_id == t.id).first()
+        if not item:
+            continue
+        else:
+            cnt += 1
+        if cnt > 0: # 이용 중인 테이블이 하나라도 있으면 False
+            return False
     return True

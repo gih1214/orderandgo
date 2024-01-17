@@ -468,7 +468,7 @@ def set_menu_position():
     if request.method == 'GET':
         return render_template('set_menu_position.html')
     
-# 테이블 카테고리
+# 테이블 카테고리 생성/수정
 @store_bp.route('/set_table_category', methods=['POST'])
 def set_table_category():
     if request.method == 'POST':
