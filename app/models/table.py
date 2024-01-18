@@ -8,19 +8,37 @@ from app.models import Order, TableOrderList, db, Table, TableCategory
 # 테이블 카테고리 생성/수정
 def create_table_category(table_category_list, store_id):
     for t in table_category_list:
+        
         if not t['id']: # id 없으면 신규 생성
+            
             table_category = TableCategory(store_id=store_id, category_name=t['category_name'], position=t['position'])
             db.session.add(table_category)
+            db.session.commit()
+            for i in range(20):
+                data = {
+                    'name': t['category_name'] + str(i+1),
+                    'seat_count' : None, 
+                    'is_group' : None,
+                    'table_category_id' : table_category.id,
+                    'page': 1,
+                    'position' : i+1
+                }
+                item = Table(name=data['name'], seat_count=data['seat_count'], is_group=data['is_group'], table_category_id=data['table_category_id'], page=data['page'], position=data['position'])
+                db.session.add(item) 
+            db.session.commit()
         else: # id 있으면 수정
             table_category = TableCategory.query.filter(TableCategory.id == t['id']).first()
-            table_category['category_name'] = t['category_name']
-            table_category['position'] = t['position']
-    db.session.commit()
+            table_category.category_name = t['category_name']
+            table_category.position = t['position']
+            db.session.commit()
     return True
 
 
 # # 테이블 카테고리 생성
-'''
+'''#     db.session.add(item)
+
+            #     db.session.commit()
+            #     db.session.refresh(item)
 def create_table_category(store_id, category_name, position=None):
     table_category = TableCategory(store_id=store_id, category_name=category_name, position=position)
     db.session.add(table_category)
@@ -66,6 +84,7 @@ def select_table(table_category_id):
     item = Table.query.filter(Table.table_category_id == table_category_id).all()
     if not item:
         return '잘못됨'
+    
     return item
 
 # 테이블 이동/합석
@@ -165,8 +184,16 @@ def create_table(data):
     return jsonify({'table_id': item.id, 'table_name': item.name}), 200
 
 # 테이블 조회 - 테이블에 해당 테이블 카테고리가 있는지 조회
+# 테이블 카테고리 삭제 시 테이블 이용 유무 확인하기 위함
 def select_table_id(id):
-    item = Table.query.filter(Table.table_category_id == id).first()
-    if not item:
-        return False
+    table_list = Table.query.filter(Table.table_category_id == id).all()
+    cnt = 0
+    for t in table_list:
+        item = db.session.query(TableOrderList).filter(TableOrderList.table_id == t.id).first()
+        if not item:
+            continue
+        else:
+            cnt += 1
+        if cnt > 0: # 이용 중인 테이블이 하나라도 있으면 False
+            return False
     return True

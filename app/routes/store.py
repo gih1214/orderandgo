@@ -8,7 +8,7 @@ from app.routes import store_bp
 
 
 from app.models.store import create_store, update_store
-from app.models.menu import check_image_exsit, check_options_exist, create_menu, create_menu_option, delete_menu, find_last_menu_page, select_main_category, select_menu, select_menu_all, select_pre_menu_id, select_sub_category, select_menu_option_all, find_all_menu, update_menu
+from app.models.menu import check_image_exsit, check_options_exist, create_menu, create_menu_option, delete_menu, find_last_menu_page, select_main_category, select_menu, select_menu_all, select_menu_yn, select_pre_menu_id, select_sub_category, select_menu_option_all, find_all_menu, update_menu
 from app.login_manager import update_store_session
 
 # 매장 생성
@@ -420,7 +420,20 @@ def set_menu():
             return jsonify({'message': '메뉴가 성공적으로 삭제되었습니다.', 'code': 200}), 200
         else:
             return jsonify({'message': is_delete_menu, 'code': 400}), 200
-        
+
+# 메뉴 삭제 시 테이블 이용 중 유무 확인 API
+# 메뉴 삭제 버튼 클릭 시 해당 메뉴가 이용 중인 테이블에 있는지 조회하는 기능
+# True, False 리턴
+@store_bp.route('/get_menu_yn', methods=['GET'])
+def get_menu_yn():
+    if request.method == 'GET':
+        menu_id = request.args.get('id')
+        menu_yn = select_menu_yn(menu_id)
+        if menu_yn == True:
+            return jsonify({'status': True}), 200
+        else:
+            return jsonify({'status': False}), 200
+
 # POS -> 매장관리 -> 상품 정보 수정 -> 생성(완료), 수정(진행중)
 @store_bp.route('/set_table', methods=['GET', 'POST', 'PATCH'])
 def set_table():
@@ -442,6 +455,7 @@ def get_table():
                 'page' : table.page,
                 'position' : table.position
             })
+        
         # page 그룹화, position 정렬
         grouped_data = {}
         for item in table_list:
@@ -467,7 +481,7 @@ def set_menu_position():
     if request.method == 'GET':
         return render_template('set_menu_position.html')
     
-# 테이블 카테고리
+# 테이블 카테고리 생성/수정
 @store_bp.route('/set_table_category', methods=['POST'])
 def set_table_category():
     if request.method == 'POST':
@@ -475,8 +489,7 @@ def set_table_category():
         # (생성) 없을 경우
         # id, store_id, category_name, position
         store_id = current_user.id
-        json_data = json.loads(request.form.get('json_data'))
-
+        json_data = request.get_json()
         create_table_category(json_data, store_id)
 
         '''
