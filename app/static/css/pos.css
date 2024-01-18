@@ -226,7 +226,7 @@ main section article .table .body ul li{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   
 }
 main section article .table .body ul li.order_more {
@@ -251,7 +251,7 @@ main section article .table .table_state {
   border-radius: 50px;
   font-weight: 700;
   font-size: 10px;
-  line-height: 12px;
+  line-height: 10px;
 }
 main section article .table[data-state="0"] .table_state {
   border-color: #F46325;

@@ -51,7 +51,7 @@ function mergeOrders(orders) {
 const createHtml = (tablePageData) => {
   const _tableCategory = document.querySelector('main section nav ul');
   const _table = document.querySelector('main section article .items');
-  
+  console.log('실행됨')
   let nav_html = '';
   tablePageData.forEach((data, index)=>{
     nav_html += `
@@ -113,7 +113,9 @@ const changeTableHtml = (tables) => {
   tables.forEach((table,index)=>{
     forArray[table.position-1] = table
   })
+  console.log(forArray.length)
   let html = '';
+
   html = forArray.map((table, index)=>`
   ${table == false ? `<button></button>` : `
     <button class="table item ${table.select ? 'select' : ''}" data-id="${table.tableId}" data-state="${table.statusId}" style="${table.groupId != 0 ? "border: 1px solid " + table.groupColor : ""}"onclick="clickTable(${table.tableId})">
