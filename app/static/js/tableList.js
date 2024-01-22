@@ -51,7 +51,7 @@ function mergeOrders(orders) {
 const createHtml = (tablePageData) => {
   const _tableCategory = document.querySelector('main section nav ul');
   const _table = document.querySelector('main section article .items');
-  
+  console.log('실행됨')
   let nav_html = '';
   tablePageData.forEach((data, index)=>{
     nav_html += `
@@ -107,12 +107,9 @@ const changeTableCategory = (event, index) => {
 }
 
 const changeTableHtml = (tables) => {
-  console.log('changeTableHtml',tables)
   tables.sort((a,b)=> a.position-b.position);
-  const forArray = Array.from({ length: tables[tables.length - 1].position }, () => false);
-  tables.forEach((table,index)=>{
-    forArray[table.position-1] = table
-  })
+  const forArray = new Array(20).fill(false)
+  tables.forEach((table, index)=> forArray[table.position-1] = table);
   let html = '';
   html = forArray.map((table, index)=>`
   ${table == false ? `<button></button>` : `

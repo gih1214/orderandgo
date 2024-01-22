@@ -80,6 +80,7 @@ const createSeleteBox = (category, fun, target, type, ko_category) => {
         <i class="ph ph-caret-down"></i>
     </button>
     <ul class="dropdown-list">
+    <li onclick="${fun}(event)" data-category="${type}" data-id="0" data-name="${ko_category}">${ko_category}</li>
     ${category[type].map(({id, name})=>`
       <li onclick="${fun}(event)" data-category="${type}" data-id="${id}" data-name="${name}">${name}</li>
     `).join('')}
@@ -521,6 +522,11 @@ const clickDeleteMenuData = async (e, id) => {
   const method = `DELETE`;
   const fetchData = {id:id};
   const result = await fetchDataAsync(url, method, fetchData);
+  console.log('result,',result)
+  if(result.code == 422){
+    alert(result.message)
+    return;
+  }
   if(result.code == 200){
     window.location.reload()
   }
@@ -531,4 +537,25 @@ const toggleSoldOut = (event) => {
   _soldOutBtn.dataset.soldout = !isSoldOut;
   const _checkBox = _soldOutBtn.nextElementSibling;
   _checkBox.checked = !_checkBox.checked;
+}
+
+// 메뉴 조회 페이지 상단 조회 클릭 시
+const clickSearchMenuData = async (event) => {
+  console.log(event);
+  let main_category_id = document.querySelector('.seletebox_main_category button').dataset.id ;
+  main_category_id = main_category_id == '' || main_category_id == 0 ? null : Number(main_category_id);
+  let sub_category_id = document.querySelector('.seletebox_sub_category button').dataset.id;
+  sub_category_id = sub_category_id == ''|| sub_category_id == 0  ? null : Number(sub_category_id);
+  const is_name = Number(document.querySelector('.seletebox_menu button').dataset.id);
+  const search = document.querySelector('.search_box').value ?? null;
+  
+  const fetchData = {};
+  if(main_category_id){fetchData.main_category_id = main_category_id}
+  if(sub_category_id){fetchData.sub_category_id = sub_category_id}
+  if(is_name){fetchData.is_name = is_name}
+  if(search){fetchData.search = search};
+  const result = await fetchDataAsync(`/store/all_menu_list`, 'GET', fetchData);
+  console.log(result);
+  allMenuData = result;
+  createMenuTable(result);
 }
