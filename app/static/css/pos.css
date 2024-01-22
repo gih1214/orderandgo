@@ -97,6 +97,7 @@ main section article .items{
   grid-template-columns: repeat(5, 1fr);
   gap: 15px;
   grid-auto-rows: minmax(0, 1fr); 
+  height: 100%;
 }
 main section article .item{
   position: relative;

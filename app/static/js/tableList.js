@@ -107,15 +107,10 @@ const changeTableCategory = (event, index) => {
 }
 
 const changeTableHtml = (tables) => {
-  console.log('changeTableHtml',tables)
   tables.sort((a,b)=> a.position-b.position);
-  const forArray = Array.from({ length: tables[tables.length - 1].position }, () => false);
-  tables.forEach((table,index)=>{
-    forArray[table.position-1] = table
-  })
-  console.log(forArray.length)
+  const forArray = new Array(20).fill(false)
+  tables.forEach((table, index)=> forArray[table.position-1] = table);
   let html = '';
-
   html = forArray.map((table, index)=>`
   ${table == false ? `<button></button>` : `
     <button class="table item ${table.select ? 'select' : ''}" data-id="${table.tableId}" data-state="${table.statusId}" style="${table.groupId != 0 ? "border: 1px solid " + table.groupColor : ""}"onclick="clickTable(${table.tableId})">

@@ -302,8 +302,9 @@ const showMenuOptionHtml = (optionDatas) => {
 
 // 옵션 리스트 HTML 만들기
 const createMenuOptionsHtml = (optionPageData) => {
+  const maxOptionBox = optionPageData.length < 4 ? 4 : 8
   let html = ``;
-  for(let i=0; i<8; i++){
+  for(let i=0; i<maxOptionBox; i++){
     html += `
     ${optionPageData[i] ? `
     <button data-id="${optionPageData[i].optionId}" class="menu item" onclick="clickMenuOption(event)" >
