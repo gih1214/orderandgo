@@ -121,14 +121,14 @@ const changeTableHtml = (tables) => {
         <i class="ph-fill ph-check-fat"></i>
       </div>
       <div class="transparent_move_box" onclick="clickTransparentMoveTable(event)">
-        <i class="ph-fill ph-check-fat"></i>
+        <i class="ph ph-arrows-out-cardinal"></i>
       </div>
       <div class="title">
         <h2>${table.table} <i class="ph-fill ph-bell-ringing"></i></h2>
         <div class="table_state">${table.statusId == 0 ? '조리 중' : table.statusId == 1 ? '완료' : table.statusId == 2 ? '조리대기' : ''}</div>
       </div>
       <div class="body">
-        <i class="ph-bold ph-plus"></i>
+        <i class="ph ph-plus"></i>
         <ul>
           ${table.orderList.length != 0 ? `${table.orderList.map((order, orderIndex)=>`${orderIndex <= 2 ? `
           <li data-id="${order.menuId}">
