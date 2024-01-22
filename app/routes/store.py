@@ -2,7 +2,7 @@ import json
 import os
 from flask import render_template, request, jsonify
 from flask_login import login_required, current_user
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 from app.models.menu_category import get_main_and_sub_category_by_menu_id, select_main_and_sub_category_by_store_id
 from app.models.table import create_table_category, select_table, select_table_category, select_table_id
 from app.routes import store_bp
@@ -156,7 +156,7 @@ def get_sub_category():
 def all_menu_list():
     get_main_category_id = request.args.get('main_category_id', None)
     get_sub_category_id = request.args.get('sub_category_id', None)
-    get_is_name = request.args.get('is_name', None)
+    get_is_name = request.args.get('is_name', 0)
     get_search = request.args.get('search', None)
 
     store_id = current_user.id
@@ -183,21 +183,23 @@ def all_menu_list():
             sub_category_id = s.id # 메인 카테고리 ID
             sub_category_name = s.name # 메인 카테고리명
             # menus = select_menu_all(sub_category_id) # 메뉴 조회
-            menus = db.session.query(Menu.name, Menu.price, MenuOption.name.label('option_name'))\
-                                .join(MenuOption, MenuOption.menu_id == Menu.id)\
+            menus = db.session.query(Menu.id, Menu.name, Menu.price, Menu.image, Menu.main_description, 
+                                     Menu.sub_description, Menu.is_soldout, Menu.created_at, Menu.page,
+                                    Menu.position, Menu.menu_category_id, 
+                                    func.group_concat(MenuOption.name).label('option_name'))\
+                                .outerjoin(MenuOption, MenuOption.menu_id == Menu.id)\
                                 .filter(Menu.menu_category_id == sub_category_id)
             if get_search is not None:
                 if get_is_name == 0:
                     menus = menus.filter(or_(
-                            Menu.name.ilike('%{}%'.format(get_search.replace(' ', '%'))),
-                            Menu.author.ilike('%{}%'.format(get_search.replace(' ', '%'))),
-                            Menu.price.ilike('%{}%'.format(get_search.replace(' ', '%')))
-                        )
-                    )
+                                                Menu.name.ilike('%{}%'.format(get_search.replace(' ', '%'))),
+                                                MenuOption.name.ilike('%{}%'.format(get_search.replace(' ', '%'))),
+                                                Menu.price.ilike('%{}%'.format(get_search.replace(' ', '%')))
+                                            )
+                                        )
                 else:
                     menus = menus.filter(Menu.name.ilike('%{}%'.format(get_search.replace(' ', '%'))))
-            menus = menus.all()
-
+            menus = menus.group_by(Menu.id).all()
             #sorted_menus = sorted(menus, key=lambda menu: (menu.page, menu.position))
 
             for m in menus:
