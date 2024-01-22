@@ -2,9 +2,11 @@ import json
 import os
 from flask import render_template, request, jsonify
 from flask_login import login_required, current_user
+from sqlalchemy import or_
 from app.models.menu_category import get_main_and_sub_category_by_menu_id, select_main_and_sub_category_by_store_id
 from app.models.table import create_table_category, select_table, select_table_category, select_table_id
 from app.routes import store_bp
+from app.models import MainCategory, SubCategory, db, Menu, MenuOption
 
 
 from app.models.store import create_store, update_store
@@ -152,20 +154,50 @@ def get_sub_category():
 # POS -> 매장관리 -> 상품 정보 수정 -> 전체 메뉴 조회 기능
 @store_bp.route('/all_menu_list', methods=['GET'])
 def all_menu_list():
-    # TODO : store_id 세션에서 받아오기, 현재 임시로 값 넣음
+    get_main_category_id = request.args.get('main_category_id', None)
+    get_sub_category_id = request.args.get('sub_category_id', None)
+    get_is_name = request.args.get('is_name', None)
+    get_search = request.args.get('search', None)
+
     store_id = current_user.id
     all_menu_list = []
-    main_categories = select_main_category(store_id) # 메인 카테고리 조회
+    # select_main_category(store_id) # 메인 카테고리 조회
+    main_categories = db.session.query(MainCategory)\
+                                .filter(MainCategory.store_id == store_id)
+    if get_main_category_id is not None:
+        main_categories = main_categories.filter(MainCategory.id == get_main_category_id)
+    main_categories = main_categories.all()
 
     for t in main_categories:
         main_category_id = t.id # 메인 카테고리 ID
         main_category_name = t.name # 메인 카테고리명
-        sub_categories = select_sub_category(main_category_id) # 서브 카테고리 조회
+
+        # sub_categories = select_sub_category(main_category_id) # 서브 카테고리 조회
+        sub_categories = db.session.query(SubCategory)\
+                                    .filter(SubCategory.main_category_id == main_category_id)
+        if get_sub_category_id is not None:
+            sub_categories = sub_categories.filter(SubCategory.id == get_sub_category_id)
+        sub_categories = sub_categories.all()
 
         for s in sub_categories:
             sub_category_id = s.id # 메인 카테고리 ID
             sub_category_name = s.name # 메인 카테고리명
-            menus = select_menu_all(sub_category_id) # 메뉴 조회
+            # menus = select_menu_all(sub_category_id) # 메뉴 조회
+            menus = db.session.query(Menu.name, Menu.price, MenuOption.name.label('option_name'))\
+                                .join(MenuOption, MenuOption.menu_id == Menu.id)\
+                                .filter(Menu.menu_category_id == sub_category_id)
+            if get_search is not None:
+                if get_is_name == 0:
+                    menus = menus.filter(or_(
+                            Menu.name.ilike('%{}%'.format(get_search.replace(' ', '%'))),
+                            Menu.author.ilike('%{}%'.format(get_search.replace(' ', '%'))),
+                            Menu.price.ilike('%{}%'.format(get_search.replace(' ', '%')))
+                        )
+                    )
+                else:
+                    menus = menus.filter(Menu.name.ilike('%{}%'.format(get_search.replace(' ', '%'))))
+            menus = menus.all()
+
             #sorted_menus = sorted(menus, key=lambda menu: (menu.page, menu.position))
 
             for m in menus:
