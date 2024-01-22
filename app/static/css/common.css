@@ -362,7 +362,7 @@ header .center{
   display: flex;
   flex: 1;
   justify-content: space-between;
-  padding: 10px 15px 10px 10px;
+  padding: 10px 15px 10px 0px;
 }
 header .center img {
   height: 20px
@@ -379,7 +379,7 @@ header .home_btn:focus-visible{
 header .center .header_info{
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
   font-weight: 500;
   font-size: 14px;
   line-height: 17px;
