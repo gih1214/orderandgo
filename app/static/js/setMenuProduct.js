@@ -512,7 +512,20 @@ const clickDeleteMenu = (e) => {
   const menuIdList = menuList.map((menu) => Number(menu.dataset.id));
 
   // 삭제 api 연결,
-  menuList.forEach((menu)=>{menu.remove()});
+  menuList.forEach( async (menu)=>{
+    const id = Number(menu.dataset.id);
+    const url = `/store/set_menu`;
+    const method = `DELETE`;
+    const fetchData = {id:id};
+    const result = await fetchDataAsync(url, method, fetchData);
+    if(result.code == 200){
+      menu.remove();
+    }
+    if(result.code == 422){
+      const name = document.querySelector('.article_bottom ul li:not(:first-child) div:nth-child(4) span').textContent;
+      alert(`${name} : ${result.message}`);
+    }
+  });
 
 
 }
@@ -541,7 +554,6 @@ const toggleSoldOut = (event) => {
 
 // 메뉴 조회 페이지 상단 조회 클릭 시
 const clickSearchMenuData = async (event) => {
-  console.log(event);
   let main_category_id = document.querySelector('.seletebox_main_category button').dataset.id ;
   main_category_id = main_category_id == '' || main_category_id == 0 ? null : Number(main_category_id);
   let sub_category_id = document.querySelector('.seletebox_sub_category button').dataset.id;
