@@ -415,24 +415,17 @@ def set_menu():
     # 메뉴 삭제
     if request.method == 'DELETE':
         menu_id = request.args.get('id')
-        is_delete_menu = delete_menu(menu_id)
-        if is_delete_menu :
-            return jsonify({'message': '메뉴가 성공적으로 삭제되었습니다.', 'code': 200}), 200
-        else:
-            return jsonify({'message': is_delete_menu, 'code': 400}), 200
-
-# 메뉴 삭제 시 테이블 이용 중 유무 확인 API
-# 메뉴 삭제 버튼 클릭 시 해당 메뉴가 이용 중인 테이블에 있는지 조회하는 기능
-# True, False 리턴
-@store_bp.route('/get_menu_yn', methods=['GET'])
-def get_menu_yn():
-    if request.method == 'GET':
-        menu_id = request.args.get('id')
-        menu_yn = select_menu_yn(menu_id)
+        # 해당 메뉴가 이용 중인 테이블에 있는지 조회
+        menu_yn = select_menu_yn(menu_id) # 삭제 가능 True, 삭제 불가능 False
         if menu_yn == True:
-            return jsonify({'status': True}), 200
+            # 삭제 진행
+            is_delete_menu = delete_menu(menu_id)
+            if is_delete_menu == True:
+                return jsonify({'message': '메뉴가 성공적으로 삭제되었습니다.', 'code': 200}), 200
+            else:
+                return jsonify({'message': '없는 메뉴입니다.', 'code': 400}), 200
         else:
-            return jsonify({'status': False}), 200
+            return jsonify({'message': '이용 중인 메뉴로 삭제가 불가능합니다.', 'code': 422}), 200
 
 # POS -> 매장관리 -> 상품 정보 수정 -> 생성(완료), 수정(진행중)
 @store_bp.route('/set_table', methods=['GET', 'POST', 'PATCH'])

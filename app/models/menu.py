@@ -148,14 +148,12 @@ def select_menu_all_to_main_category(main_category_id):
 
 # 메뉴 삭제
 def delete_menu(menu_id):
-    print('menu_id,',menu_id)
     item = Menu.query.filter(Menu.id == menu_id).first()
     if not item:
-        return '없는 메뉴입니다.'
+        return False
     
     # 메뉴 옵션 삭제
     delete_options = delete_all_menu_option(menu_id)
-    print(delete_options)
 
     # 메뉴 삭제
     db.session.delete(item)
