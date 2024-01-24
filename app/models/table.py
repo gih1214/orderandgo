@@ -124,11 +124,11 @@ def update_table(table_id, change_dict):
 def delete_table(table_id):
     item = Table.query.filter(Table.id == table_id).first()
     if not item:
-        return '잘못됨'
-    
-    db.session.delete(item)
-    db.session.commit()
-    return True
+        return False
+    else:
+        db.session.delete(item)
+        db.session.commit()
+        return True
 
 
 # 테이블 그룹 설정
@@ -197,3 +197,18 @@ def select_table_id(id):
         if cnt > 0: # 이용 중인 테이블이 하나라도 있으면 False
             return False
     return True
+
+# 테이블 사용유무 조회
+def select_table_yn(id):
+    table = Table.query.filter(Table.id == id).first()
+    if table:
+        item = TableOrderList.query.filter(TableOrderList.table_id == table.id).first()
+        if item: # 테이블오더리스트에 있을 경우
+            if item.checkingout_at is None: # 체킹아웃 시간 없으면 이용 중이므로 삭제 불가능
+                return False
+            else: # 체킹아웃 시간 있으면 이용완료이므로 삭제 가능
+                return True
+        else: # 테이블오더리스트에 없으면 삭제 가능
+            return True
+    else:  # menu 테이블에 데이터가 없으므로 잘못된 접근: 삭제 불가능 -> False
+        return False

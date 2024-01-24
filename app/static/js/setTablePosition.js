@@ -199,13 +199,16 @@ const callChangeTablePostion = async (data, onSuccess) => { // 테이블 위치 
 }
 
 const callDeleteTable = async (id, onSuccess) => { // 테이블 삭제
-  fetch(`/adm/table/${id}`, {
-    method: 'DELETE',
-  })
-  .then(data => onSuccess(data))
-  .catch(error => {
-    console.error('Error:', error);
-  });
+  const result = await fetchDataAsync(`/store/set_table`, 'DELETE', {id: id});
+  console.log(result)
+  onSuccess(result)
+  // fetch(`/adm/table/${id}`, {
+  //   method: 'DELETE',
+  // })
+  // .then(data => onSuccess(data))
+  // .catch(error => {
+  //   console.error('Error:', error);
+  // });
 }
 const callChangeTableName = async (event, id) => {
   const _modal = document.querySelector('.modal');
