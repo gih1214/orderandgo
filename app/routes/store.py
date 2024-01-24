@@ -3,7 +3,7 @@ import os
 from flask import render_template, request, jsonify
 from flask_login import login_required, current_user
 from app.models.menu_category import get_main_and_sub_category_by_menu_id, select_main_and_sub_category_by_store_id
-from app.models.table import create_table_category, select_table, select_table_category, select_table_id
+from app.models.table import create_table_category, delete_table, select_table, select_table_category, select_table_id, select_table_yn
 from app.routes import store_bp
 
 
@@ -427,11 +427,26 @@ def set_menu():
         else:
             return jsonify({'message': '이용 중인 메뉴로 삭제가 불가능합니다.', 'code': 422}), 200
 
-# POS -> 매장관리 -> 상품 정보 수정 -> 생성(완료), 수정(진행중)
-@store_bp.route('/set_table', methods=['GET', 'POST', 'PATCH'])
+# 매장관리 -> POS관리 -> 테이블 설정
+@store_bp.route('/set_table', methods=['GET', 'POST', 'PATCH', 'DELETE'])
 def set_table():
     if request.method == 'GET':
         return render_template('set_table_position.html')
+    
+    # 테이블 삭제
+    if request.method == 'DELETE':
+        table_id = request.args.get('id')
+        # 해당 테이블 이용 유무 확인
+        table_yn = select_table_yn(table_id) # 삭제 가능 True, 삭제 불가능 False
+        if table_yn == True:
+            # 삭제 진행
+            is_delete_talbe = delete_table(table_id)
+            if is_delete_talbe == True:
+                return jsonify({'message': '테이블이 성공적으로 삭제되었습니다.', 'code': 200}), 200
+            else:
+                return jsonify({'message': '없는 테이블입니다.', 'code': 400}), 200
+        else:
+            return jsonify({'message': '이용 중인 테이블로 삭제가 불가능합니다.', 'code': 422}), 200
     
 @store_bp.route('/get_table', methods=['GET'])
 def get_table():
