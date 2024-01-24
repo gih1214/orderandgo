@@ -6,7 +6,7 @@ let state = {
   click_item : null,
 }
 // 메뉴판 메뉴 리스트 가져오기
-fetch(`/pos/get_menu_list/${lastPath}`, {
+fetch(`/pos/get_menu_list`, {
   method: 'GET',
 })
 .then(response => response.json())

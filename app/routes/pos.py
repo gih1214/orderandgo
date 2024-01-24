@@ -295,6 +295,7 @@ def get_main_sub_menu_list():
     return all_menu_list
 
 
+'''
 # 테이블 -> 메뉴리스트에 필요한 메뉴 데이터 (json)
 @pos_bp.route('/get_menu_list/<table_id>', methods=['GET'])
 def get_menu_list(table_id):
@@ -366,6 +367,8 @@ def get_menu_list(table_id):
     #     json_data = json.load(file)
     # print(json_data)
     # return jsonify(json_data)
+'''
+
 
 # 테이블 이동/합석
 @pos_bp.route('/set_table', methods=['PUT'])
