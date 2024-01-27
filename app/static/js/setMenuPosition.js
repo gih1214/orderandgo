@@ -5,65 +5,67 @@ let state = {
   has_click_item : false,
   click_item : null,
 }
-// 메뉴판 메뉴 리스트 가져오기
-fetch(`/pos/get_menu_list`, {
-  method: 'GET',
-})
-.then(response => response.json())
-.then(data => {
-  // 받은 데이터 처리
-  console.log(data);
-  menuData = data;
-  createMenuHtml(data, curCategoryIndex, curPage);
-})
-.catch(error => {
-  console.error('Error:', error);
-});
+let indexData = {
+  main: 0,
+  sub: 0,
+  page: 0
+}
+const initGetMenuList = async () => {
+  const url = `/pos/get_menu_list`;
+  const method = `GET`;
+  const fetchData = {};
+  const result = await fetchDataAsync(url, method, fetchData);
+  console.log(result);
+  menuData = result;
+  createHtml(result);
+}
+initGetMenuList();
 
-const createMenuHtml = (data, categoryNum, pageNum) => {
-  const _menuCatgory = document.querySelector('main section nav ul');
-  const _menu = document.querySelector('main section article .items');
-  let nav_html = '';
-  data.forEach(({categoryId, category, pageList}, index)=>{
-    
-    nav_html += `
-      <li data-id="${categoryId}" data-state="${index == categoryNum ? 'active': ''}">
-        <button onclick="changeMenuCategory(event, ${index})">${category}</button>
-      </li>
-    `
-    _menuCatgory.innerHTML = nav_html;
-    if(index != categoryNum) return;
-    const menus = pageList[pageNum].menuList;
-    const menus_html = changeMenuHtml(menus, categoryNum, pageNum);
-    _menu.innerHTML = menus_html;
-    _menu.setAttribute('data-page', pageNum);
-    const _article = document.querySelector('main section article');
-    const pageLen = menuData[categoryNum].pageList.length;
+const createHtml = (menuPageData) => {
+  const _mainCatgory = document.querySelector('main section nav.main ul');
+  _mainCatgory.innerHTML = menuPageData.map((data,index)=>`
+    <li data-id="${data.categoryId}" data-state="${index == indexData.main ? 'active': ''}">
+      <button onclick="changeMenuCategory(event, ${index})">${data.category}</button>
+    </li>
+  `).join('');
 
-    if(0 < pageNum){
-      _article.classList.add('hasPrevPage');
-    }
-    if(pageNum < pageLen){
-      _article.classList.add('hasNextPage');
-    }
-  })
+
+  const _subCatgory = document.querySelector('main section nav.sub ul');
+  const subCategoryData = menuPageData[indexData.main].subCategoryList;
+  _subCatgory.innerHTML = subCategoryData.map((data, index)=>`
+    <li data-id="${data.subCategoryId}" data-state="${index == indexData.sub ? 'active': ''}">
+      <button onclick="changeMainMenuCategory(event, ${index})">${data.subCategory}</button>
+    </li>
+  `).join('');
+
+  const _menuList = document.querySelector('main section article .items');
+  const menuListData = subCategoryData[indexData.sub].pageList[indexData.page].menuList;
+  _menuList.innerHTML = changeMenuHtml(menuListData)
+  _menuList.setAttribute('data-page', indexData.page);
+
+  const _article = document.querySelector('main section article')
+  const maxPageIndex = menuData[indexData.main].subCategoryList[indexData.sub].pageList.length - 1;
+  _article.classList.remove('hasNextPage');
+  _article.classList.remove('hasPrevPage');
+  if(0 < indexData.page){_article.classList.add('hasPrevPage')};
+  if(indexData.page < maxPageIndex){_article.classList.add('hasNextPage')};
 }
 
 // 메뉴 html 변경
-const changeMenuHtml = (menus, categoryNum, pageNum) => {
-  menus.sort((a,b)=> a.position-b.position);
+const changeMenuHtml = (menus) => {
+  menus.sort((a,b)=> a.position - b.position);
   const forArray = Array.from({ length: 24 }, () => false);
   menus.forEach((menu)=>forArray[menu.position-1] = menu);
   return forArray.map((menu,index)=> `
     ${menu == false ? `
-      <button class="menu item hidden" data-active="false" data-page="${pageNum}" data-position="${index+1}" onclick="clickMenu(event)"></button>` 
+      <button class="menu item hidden" data-active="false" data-page="${indexData.page}" data-position="${index+1}" onclick="clickMenu(event)"></button>` 
       : `
       <button class="menu item" 
         data-active="${state.has_click_item && menu.menuId == Number(state.click_item.id) ? `true` : `false`}" 
         data-id="${menu.menuId}" 
         data-name="${menu.menu}" 
         data-price="${menu.price}" 
-        data-page="${pageNum}" 
+        data-page="${indexData.page}" 
         data-position="${index+1}" 
         onclick="clickMenu(event)"
       >
@@ -166,15 +168,28 @@ const clickMenu = (event) => {
   
 }
 
-// 페이지 변경
-const clickChangeMenuPositionPage = (event, type) => {
-  if(type == 'prev'){ // 이전 페이지
-    curPage -= 1;
-  }
-  if(type == 'next') { // 다음 페이지
-    curPage += 1;
-  }
-  createMenuHtml(menuData, curCategoryIndex, curPage);
+
+// 페이지 변경 클릭 시
+const clickChageMenuListPageBtn = (event, type) => {
+  const maxPageIndex = menuData[indexData.main].subCategoryList[indexData.sub].pageList.length - 1;
+  if(type == 'prev') indexData.page -= 1;
+  if(type == 'next' && indexData.page < maxPageIndex) indexData.page += 1;
+  createHtml(menuData);
+}
+
+// 메뉴 카테고리 변경
+const changeMenuCategory = (event, index) => {
+  indexData.main = index;
+  indexData.sub = 0;
+  indexData.page = 0;
+  createHtml(menuData);
+}
+
+// 서브 카테고리 변경
+const changeMainMenuCategory = (event, index) => {
+  indexData.sub = index;
+  indexData.page = 0;
+  createHtml(menuData);
 }
 
 // 카테고리 설정 클릭 시
