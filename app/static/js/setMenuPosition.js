@@ -165,9 +165,7 @@ const clickMenu = (event) => {
     }
     return 
   }
-  
 }
-
 
 // 페이지 변경 클릭 시
 const clickChageMenuListPageBtn = (event, type) => {
@@ -196,22 +194,54 @@ const changeMainMenuCategory = (event, index) => {
 const clickSetCategory = (event, type) => {
   const modal = openDefaultModal();
   modal.container.classList.add('category');
+  let categorys = [];
   if(type == 'MAIN'){
     modal.top.innerHTML = modalTopHtml('메인 카테고리 설정');
+    categorys = menuData.map(data => ({
+      name: data.category,
+      id: data.categoryId
+    }));    
   }else{
     modal.top.innerHTML = modalTopHtml('서브 카테고리 설정');
+    categorys = menuData[indexData.main].subCategoryList.map(data => ({
+      name: data.subCategory,
+      id : data.subCategoryId
+    }));
   }
-  const categorys = []; // 카테고리 리스트
   modal.middle.innerHTML = modalSetMenuMainCategoryHtml(categorys);
   const btns = [
     {class: 'brand close',text: '취소', fun: ''},
     {class: 'brand_fill close',text: '저장', fun: ''}
   ]
   modal.bottom.innerHTML = modalBottomHtml(btns);
+
+  new Sortable(document.querySelector('.modal_middle ul'), {
+    handle: '.move',
+    animation: 150
+  });
 }
 
 // 카테고리 추가 버튼 클릭 시
 const clickAddCategoryBtn = (event) => {
   const _ul = document.querySelector('.modal_middle ul');
   _ul.insertAdjacentHTML('beforeend', modalAddCategroyLiHtml());
+}
+
+// 카테고리 삭제 버튼 클릭 시
+const clickDeleteCategoryItem = async (event) => {
+  const _li = findParentTarget(event.target, 'li');
+  const id = _li.dataset.id == '' ? null : Number(_li.dataset.id);
+  if(id){ // 이용 중인 메뉴 카테고리가 있는지 확인하는 api 통신
+    _li.remove(); 
+    // const url = '/store/get_table_id_yn';
+    // const method = 'GET';
+    // const fetchData = {id:id};
+    // const result = await fetchDataAsync(url, method, fetchData);
+    // console.log('result,', result);
+    // if(result.status){
+    //   _li.remove(); 
+    // }else{
+    //   alert('')
+    // }
+  }
 }

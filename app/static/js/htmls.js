@@ -67,13 +67,13 @@ const modalSetMenuMainCategoryHtml = (categorys) => {
       <h3>카테고리명</h3>
       <ul>
         ${categorys.map((category)=>`
-        <li>
+        <li data-id="${category.id}">
           <button class="move"><i class="ph-fill ph-caret-up-down"></i></button>
           <div class="input_box">
-            <input type="text"/>
+            <input type="text" value="${category.name}" />
             <i class="ph ph-pencil"></i>
           </div>
-          <button class="delete"><i class="ph ph-trash"></i></button>
+          <button class="delete" onclick="clickDeleteCategoryItem(event)"><i class="ph ph-trash"></i></button>
         </li>
         `).join('')}
       </ul>
