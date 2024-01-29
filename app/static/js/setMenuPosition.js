@@ -99,7 +99,9 @@ const clickMenu = (event) => {
       position: position,
       name: name,
       price: price,
-      el: _target
+      el: _target,
+      main: menuData[indexData.main].categoryId,
+      sub : menuData[indexData.main].subCategoryList[indexData.sub].subCategoryId
     }
     return 
   }
@@ -112,10 +114,16 @@ const clickMenu = (event) => {
     }
     // 위치 변경 api
     if(isHidden){ // 단일 위치 변경
+      console.log('state,',state.click_item);
+      const fetchData = [{
+        menu_id : state.click_item.id,
+        sub_category_id : state.click_item.sub,
+        page : state.click_item.page,
+        position : state.click_item.position
+      }]
       _target.dataset.id = state.click_item.id;
       _target.dataset.name = state.click_item.name;
       _target.dataset.price = state.click_item.price;
-      
       _target.classList.remove('hidden');
       _target.innerHTML = `
         <div class="title">
@@ -132,9 +140,20 @@ const clickMenu = (event) => {
       state.click_item.el.innerHTML = ``;
       state.has_click_item=false;
       state.click_item=null;
-
     }else{ // 멀티 위치 변경
       console.log(state.click_item.el, _target)
+      const fetchData = [{
+        menu_id : state.click_item.id,
+        sub_category_id : state.click_item.sub,
+        page : state.click_item.page,
+        position : state.click_item.position
+      },{
+        menu_id : Number(_target.dataset.id),
+        sub_category_id : menuData[indexData.main].subCategoryList[indexData.sub].subCategoryId,
+        page : Number(_target.dataset.page),
+        position :Number(_target.dataset.position)
+      }]
+      console.log(fetchData)
       // 이전 클릭 요소 변경
       const _activeTarget = document.querySelector(`button.menu.item[data-id="${state.click_item.id}"]`)
       _activeTarget.dataset.id=_target.dataset.id;
