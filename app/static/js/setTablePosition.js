@@ -20,7 +20,7 @@ callTableList();
 // 테이블 html 만들기
 const createTableHtml = (data, categoryNum, pageNum) => {
   const curData = data[categoryNum].pages[pageNum].tables;
-  const categoryHtml = data.map((category,index)=> `
+  const categoryHtml = data.sort((a,b)=>a.position - b.position).map((category,index)=> `
     <li data-id="${category.id}" data-state="${index == categoryNum ? 'active': ''}">
       <button onclick="changeTableCategory(event,${index})">${category.name}</button>
     </li>
@@ -276,6 +276,11 @@ const clickSetTabelCategroySaveBtn = async (event) => {
   const fetchData = items
   const result = await fetchDataAsync(url, method, fetchData);
   console.log(result)
+  if(result.code != 200){
+    return alert(result.msg);
+  }
+  alert(result.msg)
+  window.location.reload();
 }
 
 // 카테고리 추가 버튼 클릭 시

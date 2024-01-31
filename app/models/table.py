@@ -8,7 +8,6 @@ from app.models import Order, TableOrderList, db, Table, TableCategory
 # 테이블 카테고리 생성/수정
 def create_table_category(table_category_list, store_id):
     for t in table_category_list:
-        
         if not t['id']: # id 없으면 신규 생성
             
             table_category = TableCategory(store_id=store_id, category_name=t['category_name'], position=t['position'])
