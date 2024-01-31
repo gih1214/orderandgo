@@ -181,6 +181,8 @@ button.brand {
   display: flex;
   flex-flow: column;
   gap: 15px;
+  max-height: 210px;
+  overflow: scroll;
 }
 .modal.category .modal_middle > div ul li {
   display: flex;

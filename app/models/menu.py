@@ -109,13 +109,16 @@ def delete_all_menu_option(menu_id):
 
 # 메뉴 카테고리 조회 (SELECT ALL)
 def select_main_category(store_id):
-    item = MainCategory.query.filter(MainCategory.store_id == store_id).all()
+    item = MainCategory.query.filter(MainCategory.store_id == store_id)\
+                        .order_by(MainCategory.position)\
+                        .all()
     return item
 
 # 메뉴 서브 카테고리 조회 (SELECT ALL)
 def select_sub_category(main_category_id):
     item = db.session.query(SubCategory)\
                     .filter(SubCategory.main_category_id == main_category_id)\
+                    .order_by(SubCategory.position)\
                     .all()
     return item
 
@@ -193,11 +196,12 @@ def select_menu_yn(id):
 
 # 메뉴 위치 변경
 def move_menu(json_data):
+    print('json_data,',json_data)
     for m in json_data:
-        menu = Menu.query.filter(Menu.id == m['id']).first()
+        menu = Menu.query.filter(Menu.id == m['menu_id']).first()
         if not menu: # 잘못된 접근 - 메뉴 id 없음
             return False
-        menu.menu_category_id = m['menu_category_id']
+        menu.menu_category_id = m['sub_category_id']
         menu.page = m['page']
         menu.position = m['position']
         db.session.commit()
