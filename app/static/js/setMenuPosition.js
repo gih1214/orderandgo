@@ -5,65 +5,67 @@ let state = {
   has_click_item : false,
   click_item : null,
 }
-// 메뉴판 메뉴 리스트 가져오기
-fetch(`/pos/get_menu_list/${lastPath}`, {
-  method: 'GET',
-})
-.then(response => response.json())
-.then(data => {
-  // 받은 데이터 처리
-  console.log(data);
-  menuData = data;
-  createMenuHtml(data, curCategoryIndex, curPage);
-})
-.catch(error => {
-  console.error('Error:', error);
-});
+let indexData = {
+  main: 0,
+  sub: 0,
+  page: 0
+}
+const initGetMenuList = async () => {
+  const url = `/pos/get_menu_list`;
+  const method = `GET`;
+  const fetchData = {};
+  const result = await fetchDataAsync(url, method, fetchData);
+  console.log(result);
+  menuData = result;
+  createHtml(result);
+}
+initGetMenuList();
 
-const createMenuHtml = (data, categoryNum, pageNum) => {
-  const _menuCatgory = document.querySelector('main section nav ul');
-  const _menu = document.querySelector('main section article .items');
-  let nav_html = '';
-  data.forEach(({categoryId, category, pageList}, index)=>{
-    
-    nav_html += `
-      <li data-id="${categoryId}" data-state="${index == categoryNum ? 'active': ''}">
-        <button onclick="changeMenuCategory(event, ${index})">${category}</button>
-      </li>
-    `
-    _menuCatgory.innerHTML = nav_html;
-    if(index != categoryNum) return;
-    const menus = pageList[pageNum].menuList;
-    const menus_html = changeMenuHtml(menus, categoryNum, pageNum);
-    _menu.innerHTML = menus_html;
-    _menu.setAttribute('data-page', pageNum);
-    const _article = document.querySelector('main section article');
-    const pageLen = menuData[categoryNum].pageList.length;
+const createHtml = (menuPageData) => {
+  const _mainCatgory = document.querySelector('main section nav.main ul');
+  _mainCatgory.innerHTML = menuPageData.map((data,index)=>`
+    <li data-id="${data.categoryId}" data-state="${index == indexData.main ? 'active': ''}">
+      <button onclick="changeMenuCategory(event, ${index})">${data.category}</button>
+    </li>
+  `).join('');
 
-    if(0 < pageNum){
-      _article.classList.add('hasPrevPage');
-    }
-    if(pageNum < pageLen){
-      _article.classList.add('hasNextPage');
-    }
-  })
+
+  const _subCatgory = document.querySelector('main section nav.sub ul');
+  const subCategoryData = menuPageData[indexData.main].subCategoryList;
+  _subCatgory.innerHTML = subCategoryData.map((data, index)=>`
+    <li data-id="${data.subCategoryId}" data-state="${index == indexData.sub ? 'active': ''}">
+      <button onclick="changeMainMenuCategory(event, ${index})">${data.subCategory}</button>
+    </li>
+  `).join('');
+
+  const _menuList = document.querySelector('main section article .items');
+  const menuListData = subCategoryData[indexData.sub].pageList[indexData.page].menuList;
+  _menuList.innerHTML = changeMenuHtml(menuListData)
+  _menuList.setAttribute('data-page', indexData.page);
+
+  const _article = document.querySelector('main section article')
+  const maxPageIndex = menuData[indexData.main].subCategoryList[indexData.sub].pageList.length - 1;
+  _article.classList.remove('hasNextPage');
+  _article.classList.remove('hasPrevPage');
+  if(0 < indexData.page){_article.classList.add('hasPrevPage')};
+  if(indexData.page < maxPageIndex){_article.classList.add('hasNextPage')};
 }
 
 // 메뉴 html 변경
-const changeMenuHtml = (menus, categoryNum, pageNum) => {
-  menus.sort((a,b)=> a.position-b.position);
+const changeMenuHtml = (menus) => {
+  menus.sort((a,b)=> a.position - b.position);
   const forArray = Array.from({ length: 24 }, () => false);
   menus.forEach((menu)=>forArray[menu.position-1] = menu);
   return forArray.map((menu,index)=> `
     ${menu == false ? `
-      <button class="menu item hidden" data-active="false" data-page="${pageNum}" data-position="${index+1}" onclick="clickMenu(event)"></button>` 
+      <button class="menu item hidden" data-active="false" data-page="${indexData.page}" data-position="${index+1}" onclick="clickMenu(event)"></button>` 
       : `
       <button class="menu item" 
         data-active="${state.has_click_item && menu.menuId == Number(state.click_item.id) ? `true` : `false`}" 
         data-id="${menu.menuId}" 
         data-name="${menu.menu}" 
         data-price="${menu.price}" 
-        data-page="${pageNum}" 
+        data-page="${indexData.page}" 
         data-position="${index+1}" 
         onclick="clickMenu(event)"
       >
@@ -97,7 +99,9 @@ const clickMenu = (event) => {
       position: position,
       name: name,
       price: price,
-      el: _target
+      el: _target,
+      main: menuData[indexData.main].categoryId,
+      sub : menuData[indexData.main].subCategoryList[indexData.sub].subCategoryId
     }
     return 
   }
@@ -110,10 +114,16 @@ const clickMenu = (event) => {
     }
     // 위치 변경 api
     if(isHidden){ // 단일 위치 변경
+      console.log('state,',state.click_item);
+      const fetchData = [{
+        menu_id : state.click_item.id,
+        sub_category_id : state.click_item.sub,
+        page : state.click_item.page,
+        position : state.click_item.position
+      }]
       _target.dataset.id = state.click_item.id;
       _target.dataset.name = state.click_item.name;
       _target.dataset.price = state.click_item.price;
-      
       _target.classList.remove('hidden');
       _target.innerHTML = `
         <div class="title">
@@ -130,9 +140,20 @@ const clickMenu = (event) => {
       state.click_item.el.innerHTML = ``;
       state.has_click_item=false;
       state.click_item=null;
-
     }else{ // 멀티 위치 변경
       console.log(state.click_item.el, _target)
+      const fetchData = [{
+        menu_id : state.click_item.id,
+        sub_category_id : state.click_item.sub,
+        page : state.click_item.page,
+        position : state.click_item.position
+      },{
+        menu_id : Number(_target.dataset.id),
+        sub_category_id : menuData[indexData.main].subCategoryList[indexData.sub].subCategoryId,
+        page : Number(_target.dataset.page),
+        position :Number(_target.dataset.position)
+      }]
+      console.log(fetchData)
       // 이전 클릭 요소 변경
       const _activeTarget = document.querySelector(`button.menu.item[data-id="${state.click_item.id}"]`)
       _activeTarget.dataset.id=_target.dataset.id;
@@ -163,40 +184,83 @@ const clickMenu = (event) => {
     }
     return 
   }
-  
 }
 
-// 페이지 변경
-const clickChangeMenuPositionPage = (event, type) => {
-  if(type == 'prev'){ // 이전 페이지
-    curPage -= 1;
-  }
-  if(type == 'next') { // 다음 페이지
-    curPage += 1;
-  }
-  createMenuHtml(menuData, curCategoryIndex, curPage);
+// 페이지 변경 클릭 시
+const clickChageMenuListPageBtn = (event, type) => {
+  const maxPageIndex = menuData[indexData.main].subCategoryList[indexData.sub].pageList.length - 1;
+  if(type == 'prev') indexData.page -= 1;
+  if(type == 'next' && indexData.page < maxPageIndex) indexData.page += 1;
+  createHtml(menuData);
+}
+
+// 메뉴 카테고리 변경
+const changeMenuCategory = (event, index) => {
+  indexData.main = index;
+  indexData.sub = 0;
+  indexData.page = 0;
+  createHtml(menuData);
+}
+
+// 서브 카테고리 변경
+const changeMainMenuCategory = (event, index) => {
+  indexData.sub = index;
+  indexData.page = 0;
+  createHtml(menuData);
 }
 
 // 카테고리 설정 클릭 시
 const clickSetCategory = (event, type) => {
   const modal = openDefaultModal();
   modal.container.classList.add('category');
+  let categorys = [];
   if(type == 'MAIN'){
     modal.top.innerHTML = modalTopHtml('메인 카테고리 설정');
+    categorys = menuData.map(data => ({
+      name: data.category,
+      id: data.categoryId
+    }));    
   }else{
     modal.top.innerHTML = modalTopHtml('서브 카테고리 설정');
+    categorys = menuData[indexData.main].subCategoryList.map(data => ({
+      name: data.subCategory,
+      id : data.subCategoryId
+    }));
   }
-  const categorys = []; // 카테고리 리스트
   modal.middle.innerHTML = modalSetMenuMainCategoryHtml(categorys);
   const btns = [
     {class: 'brand close',text: '취소', fun: ''},
     {class: 'brand_fill close',text: '저장', fun: ''}
   ]
   modal.bottom.innerHTML = modalBottomHtml(btns);
+
+  new Sortable(document.querySelector('.modal_middle ul'), {
+    handle: '.move',
+    animation: 150
+  });
 }
 
 // 카테고리 추가 버튼 클릭 시
 const clickAddCategoryBtn = (event) => {
   const _ul = document.querySelector('.modal_middle ul');
   _ul.insertAdjacentHTML('beforeend', modalAddCategroyLiHtml());
+}
+
+// 카테고리 삭제 버튼 클릭 시
+const clickDeleteCategoryItem = async (event) => {
+  const _li = findParentTarget(event.target, 'li');
+  const id = _li.dataset.id == '' ? null : Number(_li.dataset.id);
+  if(id){ // 이용 중인 메뉴 카테고리가 있는지 확인하는 api 통신
+    _li.remove(); 
+    // const url = '/store/get_table_id_yn';
+    // const method = 'GET';
+    // const fetchData = {id:id};
+    // const result = await fetchDataAsync(url, method, fetchData);
+    // console.log('result,', result);
+    // if(result.status){
+    //   _li.remove(); 
+    // }else{
+    //   alert('')
+    // }
+  }
 }

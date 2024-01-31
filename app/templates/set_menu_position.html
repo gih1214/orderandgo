@@ -110,10 +110,10 @@
             <button class="menu item hidden"></button>
             <button class="menu item hidden"></button>
           </div>
-          <button class="change_page_btn prev_page_btn" onclick="clickChangeMenuPositionPage(event, 'prev')">
+          <button class="change_page_btn prev_page_btn" onclick="clickChageMenuListPageBtn(event, 'prev')">
             <i class="ph ph-caret-left"></i>
           </button>
-          <button class="change_page_btn next_page_btn" onclick="clickChangeMenuPositionPage(event, 'next')">
+          <button class="change_page_btn next_page_btn" onclick="clickChageMenuListPageBtn(event, 'next')">
             <i class="ph ph-caret-right"></i>
           </button>
         </article>
@@ -183,6 +183,8 @@
 
   <!-- 공통 스크립트 -->
   <script src="/static/js/common.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js" ></script>
+
   <!-- 전용 스크립트 -->
   <script src="/static/js/setMenuPosition.js"></script>
 </body>
