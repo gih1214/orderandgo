@@ -39,6 +39,7 @@ const createHtml = (menuPageData) => {
   `).join('');
 
   const _menuList = document.querySelector('main section article .items');
+  subCategoryData[indexData.sub].pageList.sort((a, b) => a.page - b.page);
   const menuListData = subCategoryData[indexData.sub].pageList[indexData.page].menuList;
   _menuList.innerHTML = changeMenuHtml(menuListData)
   _menuList.setAttribute('data-page', indexData.page);
@@ -47,25 +48,27 @@ const createHtml = (menuPageData) => {
   const maxPageIndex = menuData[indexData.main].subCategoryList[indexData.sub].pageList.length - 1;
   _article.classList.remove('hasNextPage');
   _article.classList.remove('hasPrevPage');
+  console.log(indexData.page, maxPageIndex)
   if(0 < indexData.page){_article.classList.add('hasPrevPage')};
   if(indexData.page < maxPageIndex){_article.classList.add('hasNextPage')};
 }
 
 // 메뉴 html 변경
 const changeMenuHtml = (menus) => {
+  console.log('menus,',menus)
   menus.sort((a,b)=> a.position - b.position);
   const forArray = Array.from({ length: 24 }, () => false);
   menus.forEach((menu)=>forArray[menu.position-1] = menu);
   return forArray.map((menu,index)=> `
     ${menu == false ? `
-      <button class="menu item hidden" data-active="false" data-page="${indexData.page}" data-position="${index+1}" onclick="clickMenu(event)"></button>` 
+      <button class="menu item hidden" data-active="false" data-page="${indexData.page+1}" data-position="${index+1}" onclick="clickMenu(event)"></button>` 
       : `
       <button class="menu item" 
         data-active="${state.has_click_item && menu.menuId == Number(state.click_item.id) ? `true` : `false`}" 
         data-id="${menu.menuId}" 
         data-name="${menu.menu}" 
         data-price="${menu.price}" 
-        data-page="${indexData.page}" 
+        data-page="${indexData.page+1}" 
         data-position="${index+1}" 
         onclick="clickMenu(event)"
       >
@@ -80,7 +83,7 @@ const changeMenuHtml = (menus) => {
 }
 
 // 메뉴 영역 클릭 시
-const clickMenu = (event) => {
+const clickMenu = async (event) => {
   const _target = event.currentTarget;
   const isHidden = _target.classList.contains('hidden');
   if(isHidden && !state.has_click_item) { // 빈 영역만 클릭 
@@ -115,12 +118,19 @@ const clickMenu = (event) => {
     // 위치 변경 api
     if(isHidden){ // 단일 위치 변경
       console.log('state,',state.click_item);
+      const url = `/store/set_menu_position`;
+      const method = 'PATCH';
       const fetchData = [{
         menu_id : state.click_item.id,
-        sub_category_id : state.click_item.sub,
-        page : state.click_item.page,
-        position : state.click_item.position
+        sub_category_id : menuData[indexData.main].subCategoryList[indexData.sub].subCategoryId,
+        page : page,
+        position : position
       }]
+      console.log('fetchData,',fetchData)
+      const result = await fetchDataAsync(url, method, fetchData);
+      if(result.code != 200){
+        return alert(result.msg);
+      }
       _target.dataset.id = state.click_item.id;
       _target.dataset.name = state.click_item.name;
       _target.dataset.price = state.click_item.price;
@@ -142,31 +152,40 @@ const clickMenu = (event) => {
       state.click_item=null;
     }else{ // 멀티 위치 변경
       console.log(state.click_item.el, _target)
+      const url = `/store/set_menu_position`;
+      const method = 'PATCH';
       const fetchData = [{
         menu_id : state.click_item.id,
+        sub_category_id : menuData[indexData.main].subCategoryList[indexData.sub].subCategoryId,
+        page : Number(_target.dataset.page),
+        position : Number(_target.dataset.position)
+      },{
+        menu_id : Number(_target.dataset.id),
         sub_category_id : state.click_item.sub,
         page : state.click_item.page,
         position : state.click_item.position
-      },{
-        menu_id : Number(_target.dataset.id),
-        sub_category_id : menuData[indexData.main].subCategoryList[indexData.sub].subCategoryId,
-        page : Number(_target.dataset.page),
-        position :Number(_target.dataset.position)
       }]
+
       console.log(fetchData)
+      const result = await fetchDataAsync(url, method, fetchData);
+      if(result.code != 200){
+        return alert(result.msg);
+      }
       // 이전 클릭 요소 변경
       const _activeTarget = document.querySelector(`button.menu.item[data-id="${state.click_item.id}"]`)
-      _activeTarget.dataset.id=_target.dataset.id;
-      _activeTarget.dataset.name=_target.dataset.name;
-      _activeTarget.dataset.price=_target.dataset.price;
-      _activeTarget.dataset.active=false;
-      _activeTarget.innerHTML = `
-        <div class="title">
-          <h2 class="ellipsis">${_target.dataset.name}</h2>
-        </div>
-        <span class="price">${_target.dataset.price.toLocaleString()}원</span>
-        <div class="active"><i class="ph ph-arrows-out-cardinal"></i></div>
-      `;
+      if(_activeTarget){
+        _activeTarget.dataset.id=_target.dataset.id;
+        _activeTarget.dataset.name=_target.dataset.name;
+        _activeTarget.dataset.price=_target.dataset.price;
+        _activeTarget.dataset.active=false;
+        _activeTarget.innerHTML = `
+          <div class="title">
+            <h2 class="ellipsis">${_target.dataset.name}</h2>
+          </div>
+          <span class="price">${_target.dataset.price.toLocaleString()}원</span>
+          <div class="active"><i class="ph ph-arrows-out-cardinal"></i></div>
+        `;
+      }
       // 최근 클릭 요소 변경
       _target.dataset.id = state.click_item.id;
       _target.dataset.name = state.click_item.name;

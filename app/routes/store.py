@@ -528,9 +528,14 @@ def set_menu_position():
         json_data = request.get_json()
         set_menu_psn = move_menu(json_data)
         if set_menu_psn == True:
-            return jsonify({'message': '메뉴 위치가 변경되었습니다.'}), 200
+            return jsonify({
+                'code' : 200,
+                'message': '메뉴 위치가 변경되었습니다.'}), 200
         else:
-            return jsonify({'message': '메뉴 이동 실패'}), 400
+            return jsonify({
+                'code' : 400,
+                'message': '메뉴 이동 실패'
+                }), 400
     
 # 테이블 카테고리 생성/수정
 @store_bp.route('/set_table_category', methods=['POST'])
