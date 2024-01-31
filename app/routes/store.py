@@ -10,7 +10,7 @@ from app.models import MainCategory, SubCategory, db, Menu, MenuOption
 
 
 from app.models.store import create_store, update_store
-from app.models.menu import check_image_exsit, check_options_exist, create_menu, create_menu_option, delete_menu, find_last_menu_page, select_main_category, select_menu, select_menu_all, select_menu_yn, select_pre_menu_id, select_sub_category, select_menu_option_all, find_all_menu, update_menu
+from app.models.menu import check_image_exsit, check_options_exist, create_menu, create_menu_option, delete_menu, find_last_menu_page, move_menu, select_main_category, select_menu, select_menu_all, select_menu_yn, select_pre_menu_id, select_sub_category, select_menu_option_all, find_all_menu, update_menu
 from app.login_manager import update_store_session
 
 # 매장 생성
@@ -522,6 +522,20 @@ def get_table():
 def set_menu_position():
     if request.method == 'GET':
         return render_template('set_menu_position.html')
+    
+    # 메뉴 위치 수정
+    if request.method == 'PATCH':
+        json_data = request.get_json()
+        set_menu_psn = move_menu(json_data)
+        if set_menu_psn == True:
+            return jsonify({
+                'code' : 200,
+                'message': '메뉴 위치가 변경되었습니다.'}), 200
+        else:
+            return jsonify({
+                'code' : 400,
+                'message': '메뉴 이동 실패'
+                }), 400
     
 # 테이블 카테고리 생성/수정
 @store_bp.route('/set_table_category', methods=['POST'])

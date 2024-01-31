@@ -1,5 +1,5 @@
 import json
-from flask import session
+from flask import jsonify, session
 from sqlalchemy import desc
 from app.models import MainCategory, Order, SubCategory, db, Menu, MenuOption
 
@@ -193,3 +193,16 @@ def select_menu_yn(id):
             return True
     else: # meun 테이블에 데이터가 없으므로 잘못된 접근:삭제 불가능 -> False
         return False
+
+# 메뉴 위치 변경
+def move_menu(json_data):
+    print('json_data,',json_data)
+    for m in json_data:
+        menu = Menu.query.filter(Menu.id == m['menu_id']).first()
+        if not menu: # 잘못된 접근 - 메뉴 id 없음
+            return False
+        menu.menu_category_id = m['sub_category_id']
+        menu.page = m['page']
+        menu.position = m['position']
+        db.session.commit()
+    return True

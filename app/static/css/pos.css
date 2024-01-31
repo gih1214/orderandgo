@@ -14,7 +14,9 @@ main section nav{
   gap: 15px;
   border-bottom: 1px solid #ccc;
 }
-main section nav.main{}
+main section nav.main{
+  border-bottom: 0px;
+}
 main section nav.sub{
   background: #F3FAFA;
   border-bottom: 1px solid #CCC;
