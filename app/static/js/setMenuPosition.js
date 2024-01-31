@@ -104,7 +104,9 @@ const clickMenu = async (event) => {
       price: price,
       el: _target,
       main: menuData[indexData.main].categoryId,
-      sub : menuData[indexData.main].subCategoryList[indexData.sub].subCategoryId
+      mainIndex: indexData.main,
+      sub : menuData[indexData.main].subCategoryList[indexData.sub].subCategoryId,
+      subIndex: indexData.sub
     }
     return 
   }
@@ -117,7 +119,6 @@ const clickMenu = async (event) => {
     }
     // 위치 변경 api
     if(isHidden){ // 단일 위치 변경
-      console.log('state,',state.click_item);
       const url = `/store/set_menu_position`;
       const method = 'PATCH';
       const fetchData = [{
@@ -126,32 +127,33 @@ const clickMenu = async (event) => {
         page : page,
         position : position
       }]
-      console.log('fetchData,',fetchData)
       const result = await fetchDataAsync(url, method, fetchData);
       if(result.code != 200){
         return alert(result.msg);
       }
-      _target.dataset.id = state.click_item.id;
-      _target.dataset.name = state.click_item.name;
-      _target.dataset.price = state.click_item.price;
-      _target.classList.remove('hidden');
-      _target.innerHTML = `
-        <div class="title">
-          <h2 class="ellipsis">${state.click_item.name}</h2>
-        </div>
-        <span class="price">${state.click_item.price.toLocaleString()}원</span>
-        <div class="active"><i class="ph ph-arrows-out-cardinal"></i></div>
-      `
-      state.click_item.el.classList.add('hidden');
-      state.click_item.el.dataset.id='';
-      state.click_item.el.dataset.name='';
-      state.click_item.el.dataset.price='';
-      state.click_item.el.dataset.active=false;
-      state.click_item.el.innerHTML = ``;
+      const mainIndex = state.click_item.mainIndex;
+      const subIndex = state.click_item.subIndex;
+      const menuId = state.click_item.id;
+      const pageList = menuData[mainIndex].subCategoryList[subIndex].pageList;
+      const pageIndex = pageList.findIndex(p => p.page == state.click_item.page);
+      const menuList = pageList[pageIndex].menuList;
+      const menuIndex = menuList.findIndex(m => m.menuId == menuId);
+      if (menuIndex !== -1) {
+        const foundMenu = menuList.splice(menuIndex, 1)[0];
+        foundMenu.position = position
+        foundMenu.page = page
+        menuData[indexData.main]
+          .subCategoryList[indexData.sub]
+          .pageList
+          .find(data=> data.page == page)
+          .menuList
+          .push(foundMenu)
+      }
       state.has_click_item=false;
       state.click_item=null;
+      createHtml(menuData)
+
     }else{ // 멀티 위치 변경
-      console.log(state.click_item.el, _target)
       const url = `/store/set_menu_position`;
       const method = 'PATCH';
       const fetchData = [{
@@ -165,41 +167,31 @@ const clickMenu = async (event) => {
         page : state.click_item.page,
         position : state.click_item.position
       }]
-
-      console.log(fetchData)
       const result = await fetchDataAsync(url, method, fetchData);
       if(result.code != 200){
         return alert(result.msg);
       }
-      // 이전 클릭 요소 변경
-      const _activeTarget = document.querySelector(`button.menu.item[data-id="${state.click_item.id}"]`)
-      if(_activeTarget){
-        _activeTarget.dataset.id=_target.dataset.id;
-        _activeTarget.dataset.name=_target.dataset.name;
-        _activeTarget.dataset.price=_target.dataset.price;
-        _activeTarget.dataset.active=false;
-        _activeTarget.innerHTML = `
-          <div class="title">
-            <h2 class="ellipsis">${_target.dataset.name}</h2>
-          </div>
-          <span class="price">${_target.dataset.price.toLocaleString()}원</span>
-          <div class="active"><i class="ph ph-arrows-out-cardinal"></i></div>
-        `;
+      const firTargetData = menuData[state.click_item.mainIndex]
+        .subCategoryList[state.click_item.subIndex]
+        .pageList
+        .find(data=>data.page == state.click_item.page)
+        .menuList
+        .find(data=>data.menuId == state.click_item.id);
+      const secTargetData = menuData[indexData.main]
+        .subCategoryList[indexData.sub]
+        .pageList
+        .find(data=>data.page == Number(_target.dataset.page))
+        .menuList
+        .find(data=>data.menuId == Number(_target.dataset.id));
+
+      const temp = {...firTargetData};
+      for (let key of ['menu', 'menuId', 'optionList', 'price']) {
+        firTargetData[key] = secTargetData[key];
+        secTargetData[key] = temp[key];
       }
-      // 최근 클릭 요소 변경
-      _target.dataset.id = state.click_item.id;
-      _target.dataset.name = state.click_item.name;
-      _target.dataset.price = state.click_item.price;
-      _target.dataset.active = false;
-      _target.innerHTML = `
-        <div class="title">
-          <h2 class="ellipsis">${state.click_item.name}</h2>
-        </div>
-        <span class="price">${state.click_item.price.toLocaleString()}원</span>
-        <div class="active"><i class="ph ph-arrows-out-cardinal"></i></div>
-      `
       state.has_click_item=false;
       state.click_item=null;
+      createHtml(menuData)
     }
     return 
   }
