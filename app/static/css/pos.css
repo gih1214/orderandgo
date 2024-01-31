@@ -484,6 +484,7 @@ main section > aside .custom_btns button{
 .basket_container > .count_btns button.order_history,
 .basket_container > .count_btns button.new_order{
   flex: 1;
+  font-size: 14px;
 }
 .basket_container > .count_btns button[data-active="true"].order_history,
 .basket_container > .count_btns button[data-active="true"].new_order{
@@ -495,9 +496,6 @@ main section > aside .custom_btns button{
 }
 .basket_container > .count_btns button.order_history[data-check="true"] + button.new_order {
   display: flex;
-}
-.basket_container > .count_btns button.order_history {
-  font-size: 14px;
 }
 .basket_container .basket{
   display: flex;
