@@ -1,10 +1,11 @@
 from flask import render_template, jsonify, request, session
+from flask_login import current_user
 import os
 
 from app.routes import adm_bp
-from app.models import db, Store, TableCategory, Table
+from app.models import db, Store, TableCategory, Table, MainCategory, SubCategory, Menu, Order
 # from app.models.user import create_user
-from app.models.menu_category import create_main_category, create_sub_category
+from app.models.menu_category import create_main_category, create_sub_category, find_last_main_category_position, find_last_sub_category_position
 from app.models.store import create_store, delete_store, update_store
 from app.models.menu import create_menu, create_menu_option, delete_menu, update_menu
 from app.models.table import update_table_name, update_table_position, create_table, delete_table
@@ -251,7 +252,8 @@ def create_menu_main_category():
         # store_id  = menu_main_category_data['store_id']
         store_id = 1    # temp
         name = menu_main_category_data['mainCategoryName']
-        main_category = create_main_category(store_id, name)
+        last_position = find_last_main_category_position(store_id)
+        main_category = create_main_category(store_id, name, last_position)
         #create_sub_category(main_category.id, '{}-1'.format(main_category.name))
 
     return jsonify({'message': '메뉴 메인 카테고리를 성공적으로 생성되었습니다.'}), 201
@@ -285,7 +287,9 @@ def create_menu_sub_category():
     menu_sub_category_data = request.get_json()
     main_category_id = menu_sub_category_data['mainCategoryId']
     name = menu_sub_category_data['subCategoryName']
-    create_sub_category(main_category_id, name)
+
+    last_position = find_last_sub_category_position(main_category_id)
+    create_sub_category(main_category_id, name, last_position)
 
     return jsonify({'message': '메뉴 서브 카테고리를 성공적으로 생성되었습니다.'}), 201
 
@@ -398,4 +402,146 @@ def api_update_table_position():
     return update_table_position(table_id_fir, table_id_sec)
 
 ### 테이블 끝 ###
+####################
+
+# 메인카테고리 수정
+@adm_bp.route('/update_main_category', methods=['PATCH'])
+def api_update_main_category():
+    data = request.get_json()
+    main_category_list = data['main_category_list']
+    dummy = [
+        {
+            'id': 1,
+            'name': '식사',
+            'position': 1,
+        },
+        {
+            'id': 12,
+            'name': '식사2',
+            'position': 2,
+        },
+    ]
+
+    store_id = current_user.store_id
+    main_categories = db.session.query(MainCategory)\
+                                    .filter(MainCategory.store_id == store_id)\
+                                    .all()
+    main_category_id_list = [m.id for m in main_categories]
+    left_main_category_id_list = [m.id for m in main_categories]
+    for main_category in main_category_list:
+        if main_category['id'] in main_category_id_list:     # 원래 있던 카테고리
+            category_item = session.query(MainCategory)\
+                                .filter(MainCategory.id == main_category['id']).first()
+            category_item.name = main_category['name']
+            category_item.position = main_category['position']
+
+            left_main_category_id_list.remove(main_category['id'])
+        else:                               # 새로 생성된 카테고리
+            item = MainCategory(store_id=store_id, name=main_category['name'], position=main_category['position'])
+            session.add(item)
+            
+        session.commit()
+
+    if len(left_main_category_id_list) > 0:                # 삭제된 카테고리
+        for main_category in left_main_category_id_list:
+            sub_categories = db.session.query(SubCategory)\
+                                        .filter(SubCategory.main_category_id == main_category['id'])\
+                                        .all()
+            for s in sub_categories:
+                menus = db.session.query(Menu)\
+                                    .filter(Menu.menu_category_id == s.id)\
+                                    .all()
+                for m in menus:
+                    session.delete(m)
+                session.commit()
+                session.delete(s)
+            session.commit()
+            item = session.query(MainCategory)\
+                            .filter(MainCategory.id == main_category['id']).first()
+            session.delete(item)
+        session.commit()
+    return True
+
+
+# 서브카테고리 수정
+@adm_bp.route('/update_sub_category', methods=['PATCH'])
+def api_update_sub_category():
+    data = request.get_json()
+    sub_category_list = data['sub_category_list']
+    dummy = [
+        {
+            'id': 1,
+            'name': '식사',
+            'position': 1,
+        },
+        {
+            'id': 12,
+            'name': '식사2',
+            'position': 2,
+        },
+    ]
+
+    main_category_id = db.session.query(SubCategory.main_category_id)\
+                                .filter(SubCategory.id == sub_category_list[0]['id'])\
+                                .scalar()
+    sub_categories = db.session.query(SubCategory)\
+                                    .filter(SubCategory.main_category_id == main_category_id)\
+                                    .all()
+    sub_category_id_list = [m.id for m in sub_categories]
+    left_sub_category_id_list = [m.id for m in sub_categories]
+    for sub_category in sub_category_list:
+        if sub_category['id'] in sub_category_id_list:     # 원래 있던 카테고리
+            category_item = session.query(SubCategory)\
+                                .filter(SubCategory.id == sub_category['id']).first()
+            category_item.name = sub_category['name']
+            category_item.position = sub_category['position']
+
+            left_sub_category_id_list.remove(sub_category['id'])
+        else:                               # 새로 생성된 카테고리
+            item = SubCategory(main_category_id=main_category_id, name=sub_category['name'], position=sub_category['position'])
+            session.add(item)
+
+        session.commit()
+
+    if len(left_sub_category_id_list) > 0:                # 삭제된 카테고리
+        for s in left_sub_category_id_list:
+            menus = db.session.query(Menu)\
+                                .filter(Menu.menu_category_id == s.id)\
+                                .all()
+            for m in menus:
+                session.delete(m)
+            session.commit()
+            session.delete(s)
+        session.commit()
+    return True
+
+
+@adm_bp.route('/check_delete_category', methods=['GET'])
+def api_check_delete_category():
+    main_category_id = request.args.get('main_category_id', None)
+    sub_category_id = request.args.get('sub_category_id', None)
+
+    store_id = current_user.store_id
+    if main_category_id is not None:
+        check = db.session.query(Order)\
+                            .join(Menu, Menu.id == Order.menu_id)\
+                            .join(SubCategory, SubCategory.id == Menu.menu_category_id)\
+                            .join(MainCategory, MainCategory.id == SubCategory.main_category_id)\
+                            .filter(MainCategory.id == main_category_id)\
+                            .all()
+    elif sub_category_id is not None:
+        check = db.session.query(Order)\
+                            .join(Menu, Menu.id == Order.menu_id)\
+                            .join(SubCategory, SubCategory.id == Menu.menu_category_id)\
+                            .filter(SubCategory.id == sub_category_id)\
+                            .all()
+    if check is not None:
+        return jsonify({'status': False}), 200
+    else:
+        return jsonify({'status': True}), 200
+
+####################
+### 카테고리 수정 시작 ###
+
+### 카테고리 수정 끝 ###
 ####################
