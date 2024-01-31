@@ -259,7 +259,7 @@ const setMenuHtml = ({id, imgList,name,price,description,category,options, is_so
         <label for="">
           <span>메뉴명</span>
           <div class="is_soldout ${is_soldout?'true':''}">
-            <span>Sold out</span>
+            <span>sold out</span>
             <button onclick="toggleSoldOut(event)" data-soldout="${is_soldout}">
               <div class="ball"></div>
             </button>

@@ -109,13 +109,16 @@ def delete_all_menu_option(menu_id):
 
 # 메뉴 카테고리 조회 (SELECT ALL)
 def select_main_category(store_id):
-    item = MainCategory.query.filter(MainCategory.store_id == store_id).all()
+    item = MainCategory.query.filter(MainCategory.store_id == store_id)\
+                        .order_by(MainCategory.position)\
+                        .all()
     return item
 
 # 메뉴 서브 카테고리 조회 (SELECT ALL)
 def select_sub_category(main_category_id):
     item = db.session.query(SubCategory)\
                     .filter(SubCategory.main_category_id == main_category_id)\
+                    .order_by(SubCategory.position)\
                     .all()
     return item
 

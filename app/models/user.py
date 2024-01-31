@@ -71,8 +71,8 @@ def create_store_user(user_id, store_id, password, name, logo_img):
     db.session.commit()
     
     # 메뉴 메인, 서브 카테고리 생성
-    main_category = create_main_category(store.id, '메인')
-    create_sub_category(main_category.id, '메인')
+    main_category = create_main_category(store.id, '메인', 1)
+    create_sub_category(main_category.id, '메인', 1)
     # 테이블 카테고리 생성
     table_category_item = create_table_category(store.id, '매장')
 
