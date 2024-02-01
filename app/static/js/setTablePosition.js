@@ -181,7 +181,6 @@ const callCreateTable = async (data, onSuccess) => { // 테이블 생성
 }
 
 const callChangeTablePostion = async (data, onSuccess) => { // 테이블 위치 변경
-  console.log(data, onSuccess)
   fetchData('/adm/update_table_position', 'PATCH', data, onSuccess)
 }
 

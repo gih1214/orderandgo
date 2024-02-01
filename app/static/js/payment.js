@@ -150,7 +150,7 @@ const setPaymentData = (curPaymentPrice=false) => {
       <div data-id="" data-type="" data-count="" data-master="" class="menu" onclick="">
         <div class="count addition"><i class="ph ph-plus"></i></div>
         <h2>추가 금액</h2>
-        <span class="price">${payment_history.extra_charge.toLocaleString()} 원</span>
+        <span class="price">${payment_history.extra_charge.toLocaleString()}원</span>
       </div>  
     </li>`)
   }
