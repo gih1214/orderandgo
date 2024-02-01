@@ -26,9 +26,16 @@ button.brand_fill {
   border: 1px solid var(--backgound-color-1fa);
   color: var(--background-color-ff);
 }
+
 button.brand {
   color: var(--backgound-color-1fa);
   border: 1px solid var(--backgound-color-1fa);
+  background: var(--background-color-ff);
+}
+
+button.red {
+  color: #F43E25;
+  border: 1px solid #F43E25;
   background: var(--background-color-ff);
 }
 

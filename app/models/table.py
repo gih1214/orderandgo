@@ -150,10 +150,16 @@ def update_table_name(table_id, name):
                         .filter(Table.id == table_id)\
                         .first()
     if not table_item:
-        return jsonify({'message': 'Not found table id'}), 400
+        return jsonify({
+            'code': 400,
+            'msg': '테이블 ID를 찾을 수 없습니다.'
+        }), 400
     table_item.name = name
     db.session.commit()
-    return jsonify({'message': 'Table name updated successfully'}), 200  
+    return jsonify({
+        'code' : 200,
+        'msg': '테이블 이름이 업데이트되었습니다.'
+    }), 200  
 
 
 # 테이블 위치 수정
