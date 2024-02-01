@@ -61,7 +61,7 @@ const posMenuListOrderListTopBtnsHtml = () => {
 }
 
 // 메뉴 메인 카테고리 설정 모달 HTML
-const modalSetMenuMainCategoryHtml = (categorys) => {
+const modalSetMenuMainCategoryHtml = (categorys, type) => {
   return `
     <div>
       <h3>카테고리명</h3>
@@ -73,7 +73,7 @@ const modalSetMenuMainCategoryHtml = (categorys) => {
             <input type="text" value="${category.name}" />
             <i class="ph ph-pencil"></i>
           </div>
-          <button class="delete" onclick="clickDeleteCategoryItem(event)"><i class="ph ph-trash"></i></button>
+          <button class="delete" onclick="clickDeleteCategoryItem(event, '${type}')"><i class="ph ph-trash"></i></button>
         </li>
         `).join('')}
       </ul>

@@ -238,7 +238,7 @@ const clickSetCategory = (event, type) => {
       id : data.subCategoryId
     }));
   }
-  modal.middle.innerHTML = modalSetMenuMainCategoryHtml(categorys);
+  modal.middle.innerHTML = modalSetMenuMainCategoryHtml(categorys, type);
   const btns = [
     {class: 'brand close',text: '취소', fun: ''},
     {class: 'brand_fill close',text: '저장', fun: ''}
@@ -258,20 +258,20 @@ const clickAddCategoryBtn = (event) => {
 }
 
 // 카테고리 삭제 버튼 클릭 시
-const clickDeleteCategoryItem = async (event) => {
+const clickDeleteCategoryItem = async (event, type) => {
   const _li = findParentTarget(event.target, 'li');
   const id = _li.dataset.id == '' ? null : Number(_li.dataset.id);
+  console.log(type)
   if(id){ // 이용 중인 메뉴 카테고리가 있는지 확인하는 api 통신
-    _li.remove(); 
-    // const url = '/store/get_table_id_yn';
-    // const method = 'GET';
-    // const fetchData = {id:id};
-    // const result = await fetchDataAsync(url, method, fetchData);
-    // console.log('result,', result);
-    // if(result.status){
-    //   _li.remove(); 
-    // }else{
-    //   alert('')
-    // }
+    const url = `/adm/check_delete_category`;
+    const method = 'GET';
+    const fetchData =  type == "MAIN" ?{main_category_id:id}:{sub_category_id:id};
+    const result = await fetchDataAsync(url, method, fetchData);
+    console.log('result,', result);
+    if(result.status){
+      _li.remove(); 
+    }else{
+      alert('식사 중인 메뉴가 포함된 카테고리는 삭제할 수 없습니다.')
+    }
   }
 }
