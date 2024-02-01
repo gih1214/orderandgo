@@ -241,7 +241,7 @@ const clickSetCategory = (event, type) => {
   modal.middle.innerHTML = modalSetMenuMainCategoryHtml(categorys, type);
   const btns = [
     {class: 'brand close',text: '취소', fun: ''},
-    {class: 'brand_fill close',text: '저장', fun: ''}
+    {class: 'brand_fill close',text: '저장', fun: `onclick="clickSetMenuCategoryData(event, '${type}')"`}
   ]
   modal.bottom.innerHTML = modalBottomHtml(btns);
 
@@ -265,7 +265,7 @@ const clickDeleteCategoryItem = async (event, type) => {
   if(id){ // 이용 중인 메뉴 카테고리가 있는지 확인하는 api 통신
     const url = `/adm/check_delete_category`;
     const method = 'GET';
-    const fetchData =  type == "MAIN" ?{main_category_id:id}:{sub_category_id:id};
+    const fetchData =  type == "MAIN" ? {main_category_id:id} : {sub_category_id:id};
     const result = await fetchDataAsync(url, method, fetchData);
     console.log('result,', result);
     if(result.status){
@@ -274,4 +274,26 @@ const clickDeleteCategoryItem = async (event, type) => {
       alert('식사 중인 메뉴가 포함된 카테고리는 삭제할 수 없습니다.')
     }
   }
+}
+
+// 카테고리 데이터 수정 저장 시
+const clickSetMenuCategoryData = async (event, type) => {
+  console.log(type)
+  const __li = document.querySelectorAll('.modal_middle > div ul li');
+  const url = `/adm/update_${type=='MAIN'? 'main':'sub'}_category`;
+  const method = 'PATCH';
+  const fetchData = {
+    [`${type == 'MAIN' ? 'main' : 'sub'}_category_list`] : 
+    [...__li].map((_li, index)=>{
+      return {
+        id : Number(_li.dataset.id),
+        name : _li.querySelector('.input_box input').value,
+        position : index + 1
+      };
+    })
+  }
+  console.log(fetchData)
+  const result = await fetchDataAsync(url, method, fetchData);
+  console.log(result)
+  
 }
