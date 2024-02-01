@@ -293,6 +293,7 @@ section ul li .submit_btn {
   background: #F43E25;
 }
 .set_menu_product main article .article_bottom ul li div:nth-child(5){
+  text-align: start;
   flex: 1;
 }
 .set_menu_product main article .article_bottom ul li div:nth-child(6){
