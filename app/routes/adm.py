@@ -422,7 +422,7 @@ def api_update_main_category():
         },
     ]
 
-    store_id = current_user.store_id
+    store_id = current_user.id
     main_categories = db.session.query(MainCategory)\
                                     .filter(MainCategory.store_id == store_id)\
                                     .all()
@@ -430,7 +430,7 @@ def api_update_main_category():
     left_main_category_id_list = [m.id for m in main_categories]
     for main_category in main_category_list:
         if main_category['id'] in main_category_id_list:     # 원래 있던 카테고리
-            category_item = session.query(MainCategory)\
+            category_item = db.session.query(MainCategory)\
                                 .filter(MainCategory.id == main_category['id']).first()
             category_item.name = main_category['name']
             category_item.position = main_category['position']
@@ -438,29 +438,33 @@ def api_update_main_category():
             left_main_category_id_list.remove(main_category['id'])
         else:                               # 새로 생성된 카테고리
             item = MainCategory(store_id=store_id, name=main_category['name'], position=main_category['position'])
-            session.add(item)
+            db.session.add(item)
+            db.session.commit()
+            new_sub = SubCategory(main_category_id=item.id, name=main_category['name'], position=1)
+            db.session.add(new_sub)
             
-        session.commit()
+        db.session.commit()
 
     if len(left_main_category_id_list) > 0:                # 삭제된 카테고리
         for main_category in left_main_category_id_list:
+            main_category = db.session.query(MainCategory).filter(MainCategory.id == main_category).first()
             sub_categories = db.session.query(SubCategory)\
-                                        .filter(SubCategory.main_category_id == main_category['id'])\
+                                        .filter(SubCategory.main_category_id == main_category.id)\
                                         .all()
             for s in sub_categories:
                 menus = db.session.query(Menu)\
                                     .filter(Menu.menu_category_id == s.id)\
                                     .all()
                 for m in menus:
-                    session.delete(m)
-                session.commit()
-                session.delete(s)
-            session.commit()
-            item = session.query(MainCategory)\
-                            .filter(MainCategory.id == main_category['id']).first()
-            session.delete(item)
-        session.commit()
-    return True
+                    db.session.delete(m)
+                db.session.commit()
+                db.session.delete(s)
+            db.session.commit()
+            item = db.session.query(MainCategory)\
+                            .filter(MainCategory.id == main_category.id).first()
+            db.session.delete(item)
+        db.session.commit()
+    return jsonify({'code':200})
 
 
 # 서브카테고리 수정
@@ -468,18 +472,20 @@ def api_update_main_category():
 def api_update_sub_category():
     data = request.get_json()
     sub_category_list = data['sub_category_list']
-    dummy = [
-        {
-            'id': 1,
-            'name': '식사',
-            'position': 1,
-        },
-        {
-            'id': 12,
-            'name': '식사2',
-            'position': 2,
-        },
-    ]
+    sub_category_list = sorted(sub_category_list, key=lambda x: x['id'], reverse=True)  # id 큰 순으로 정렬해서 main_category_id 찾을 수 있도록
+    # dummy = [
+    #     {
+    #         'id': 1,
+    #         'name': '식사',
+    #         'position': 1,
+    #     },
+    #     {
+    #         'id': 12,
+    #         'name': '식사2',
+    #         'position': 2,
+    #     },
+    # ]
+
 
     main_category_id = db.session.query(SubCategory.main_category_id)\
                                 .filter(SubCategory.id == sub_category_list[0]['id'])\
@@ -491,7 +497,7 @@ def api_update_sub_category():
     left_sub_category_id_list = [m.id for m in sub_categories]
     for sub_category in sub_category_list:
         if sub_category['id'] in sub_category_id_list:     # 원래 있던 카테고리
-            category_item = session.query(SubCategory)\
+            category_item = db.session.query(SubCategory)\
                                 .filter(SubCategory.id == sub_category['id']).first()
             category_item.name = sub_category['name']
             category_item.position = sub_category['position']
@@ -499,21 +505,22 @@ def api_update_sub_category():
             left_sub_category_id_list.remove(sub_category['id'])
         else:                               # 새로 생성된 카테고리
             item = SubCategory(main_category_id=main_category_id, name=sub_category['name'], position=sub_category['position'])
-            session.add(item)
+            db.session.add(item)
 
-        session.commit()
+        db.session.commit()
 
     if len(left_sub_category_id_list) > 0:                # 삭제된 카테고리
         for s in left_sub_category_id_list:
+            s = db.session.query(SubCategory).filter(SubCategory.id == s).first()
             menus = db.session.query(Menu)\
                                 .filter(Menu.menu_category_id == s.id)\
                                 .all()
             for m in menus:
-                session.delete(m)
-            session.commit()
-            session.delete(s)
-        session.commit()
-    return True
+                db.session.delete(m)
+            db.session.commit()
+            db.session.delete(s)
+        db.session.commit()
+    return jsonify({'code':200})
 
 
 # 카테고리 수정 가능 여부 체크
@@ -522,7 +529,7 @@ def api_check_delete_category():
     main_category_id = request.args.get('main_category_id', None)
     sub_category_id = request.args.get('sub_category_id', None)
 
-    store_id = current_user.store_id
+    store_id = current_user.id
     if main_category_id is not None:
         check = db.session.query(Order)\
                             .join(Menu, Menu.id == Order.menu_id)\
