@@ -516,6 +516,7 @@ def api_update_sub_category():
     return True
 
 
+# 카테고리 수정 가능 여부 체크
 @adm_bp.route('/check_delete_category', methods=['GET'])
 def api_check_delete_category():
     main_category_id = request.args.get('main_category_id', None)
@@ -535,10 +536,11 @@ def api_check_delete_category():
                             .join(SubCategory, SubCategory.id == Menu.menu_category_id)\
                             .filter(SubCategory.id == sub_category_id)\
                             .all()
-    if check is not None:
-        return jsonify({'status': False}), 200
-    else:
+    # print("\n\n\n@@@@@check:",check)
+    if len(check) == 0:
         return jsonify({'status': True}), 200
+    else:
+        return jsonify({'status': False}), 200
 
 ####################
 ### 카테고리 수정 시작 ###
