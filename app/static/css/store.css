@@ -15,6 +15,7 @@
 }
 .store_product main nav ul li{
   padding: 20px;
+  line-height: 1;
 }
 .store_product main nav ul li.active{
   background: #F3FAFA;
@@ -31,6 +32,7 @@
   flex-flow: column;
   align-items: start;
   height: initial;
+  gap: 0;
 }
 
 .store_product section ul li{
@@ -246,6 +248,9 @@ section ul li .submit_btn {
   border-bottom: 1px solid #000;
   font-weight: 700;
 }
+.set_menu_product main article .article_bottom ul li:first-child div{
+  justify-content: center;
+}
 .set_menu_product main article .article_bottom ul li:last-child{
   border-bottom: none;
 }
@@ -256,6 +261,7 @@ section ul li .submit_btn {
   padding: 5px 10px;
   display: flex;
   align-items: center;
+  justify-content: left;
 }
 .set_menu_product main article .article_bottom ul li div:not(:first-child){
   border-left: 1px solid #ccc;
@@ -293,7 +299,7 @@ section ul li .submit_btn {
   flex: 1;
 }
 .set_menu_product main article .article_bottom ul li:not(:first-child) div:nth-child(6){
-  text-align: end;
+  justify-content: right;
 }
 
 .set_menu_product main aside {

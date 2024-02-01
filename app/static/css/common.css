@@ -115,7 +115,6 @@ button.red {
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.4);
-  font-family: Inter;
 }
 
 .modal .modal_content{
@@ -287,7 +286,7 @@ button.red {
 }
 
 .modal-content h1 {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
 }
 
