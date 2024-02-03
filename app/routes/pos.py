@@ -10,7 +10,6 @@ from app.routes import pos_bp
 from app.models.table import \
     move_table, \
     select_table_category, \
-    update_table_category, \
     delete_table_category, \
     select_table, \
     set_table_group
