@@ -476,11 +476,11 @@ def set_table():
             # 삭제 진행
             is_delete_talbe = delete_table(table_id)
             if is_delete_talbe == True:
-                return jsonify({'message': '테이블이 성공적으로 삭제되었습니다.', 'code': 200}), 200
+                return jsonify({'msg': '테이블이 성공적으로 삭제되었습니다.', 'code': 200}), 200
             else:
-                return jsonify({'message': '없는 테이블입니다.', 'code': 400}), 200
+                return jsonify({'msg': '없는 테이블입니다.', 'code': 400}), 200
         else:
-            return jsonify({'message': '이용 중인 테이블로 삭제가 불가능합니다.', 'code': 422}), 200
+            return jsonify({'msg': '이용 중인 테이블로 삭제가 불가능합니다.', 'code': 422}), 200
     
 @store_bp.route('/get_table', methods=['GET'])
 def get_table():
