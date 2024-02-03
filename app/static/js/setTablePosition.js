@@ -184,7 +184,7 @@ const callChangeTablePostion = async (data, onSuccess) => { // 테이블 위치 
   fetchData('/adm/update_table_position', 'PATCH', data, onSuccess)
 }
 
-const callDeleteTable = async (id) => { // 테이블 삭제
+const callDeleteTable = async (event, id) => { // 테이블 삭제
   const result = await fetchDataAsync(`/store/set_table`, 'DELETE', {id: id});
   if(result.code != 200){
     return alert(result.msg)
@@ -287,7 +287,7 @@ const clickDeleteCategoryItem = async (event) => {
     if(result.status){
       _li.remove(); 
     }else{
-      alert('')
+      alert('이용 중인 테이블 있어 삭제가 불가능합니다.')
     }
   }
 }
