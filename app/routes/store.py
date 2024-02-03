@@ -546,7 +546,7 @@ def set_table_category():
         # id, store_id, category_name, position
         store_id = current_user.id
         json_data = request.get_json()
-        create_table_category(json_data, store_id)
+        table_category = create_table_category(json_data, store_id)
 
         '''
         json_data = [
@@ -556,17 +556,22 @@ def set_table_category():
                 "position": 1
             },
             {
-                "id": null,
+                "id": None,
                 "category_name": "2층",
                 "position": 2
             }
         ]
         '''
-
-        return jsonify({
-            'code' : 200,
-            'msg': '테이블 카테고리가 성공적으로 저장되었습니다.'
-        }), 200
+        if table_category == True:
+            return jsonify({
+                'code' : 200,
+                'msg': '테이블 카테고리가 성공적으로 저장되었습니다.'
+            }), 200
+        else:
+            return jsonify({
+                'code' : 400,
+                'msg': '테이블 카테고리 저장에 실패하였습니다.'
+            }), 400
 
 # 테이블 카테고리 삭제 시 테이블 이용 중 유무 확인 API
 # 테이블 카테고리 삭제 버튼 클릭 시 해당 카테고리에 테이블 있는지 조회하는 기능
