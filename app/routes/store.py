@@ -479,8 +479,10 @@ def set_table():
                 return jsonify({'msg': '테이블이 성공적으로 삭제되었습니다.', 'code': 200}), 200
             else:
                 return jsonify({'msg': '없는 테이블입니다.', 'code': 400}), 200
-        else:
+        elif table_yn == False:
             return jsonify({'msg': '이용 중인 테이블로 삭제가 불가능합니다.', 'code': 422}), 200
+        else:
+            return table_yn
     
 @store_bp.route('/get_table', methods=['GET'])
 def get_table():

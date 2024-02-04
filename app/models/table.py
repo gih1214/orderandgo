@@ -1,5 +1,5 @@
 from flask import session, jsonify
-from app.models import Order, TableOrderList, db, Table, TableCategory
+from app.models import Order, TableOrderList, TablePaymentList, db, Table, TableCategory
 
 #################
 # 테이블 카테고리
@@ -126,6 +126,15 @@ def update_table(table_id, change_dict):
 
 # 테이블 삭제
 def delete_table(table_id):
+    # TablePaymentList 테이블에 table_id 가 fk라 null로 변경 후 테이블 삭제 진행
+
+    # 1.결제내역에 table_id null 처리하기
+    payment_list = TablePaymentList.query.filter(TablePaymentList.table_id == table_id).all()
+    if payment_list:
+        for p in payment_list:
+            p.table_id = None
+            db.session.commit()
+    # 2.테이블 삭제
     item = Table.query.filter(Table.id == table_id).first()
     if not item:
         return False
@@ -220,5 +229,5 @@ def select_table_yn(id):
                 return True
         else: # 테이블오더리스트에 없으면 삭제 가능
             return True
-    else:  # menu 테이블에 데이터가 없으므로 잘못된 접근: 삭제 불가능 -> False
-        return False
+    else:  # table에 데이터가 없으므로 잘못된 접근: 삭제 불가능 -> False
+        return jsonify({'msg': '없는 테이블입니다.', 'code': 400}), 200
