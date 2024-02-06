@@ -253,6 +253,7 @@ section ul li .submit_btn {
 }
 .set_menu_product main article .article_bottom ul li:last-child{
   border-bottom: none;
+  box-shadow: 0 0px 0 1px #ccc;
 }
 .set_menu_product main article .article_bottom ul li > div{
   min-height: 34px;

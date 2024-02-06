@@ -101,6 +101,7 @@ def get_table_page():
                     "statusId": statusId,
                     "status": "",
                     "groupId" : table.is_group,
+                    "groupNum" : None,
                     "groupColor" : table.group_color,
                     "orderList" : orderList,
                 }
@@ -113,12 +114,13 @@ def get_table_page():
                     "statusId": 0,
                     "status": "",
                     "groupId" : table.is_group,
+                    "groupNum" : None,
                     "groupColor" : table.group_color,
                     "orderList" : [],
                 }
 
         # 페이지별로 그룹화
-        page_list = [];
+        page_list = []
         current_page = None
         for table in sorted_tables:
             if table.page != current_page:

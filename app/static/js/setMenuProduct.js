@@ -431,7 +431,7 @@ const clickDeleteOptionBtn = (event) => {
 }
 
 // 메뉴 데이터 저장 버튼 클릭 시
-const clickSaveMenuData = (event, type, id) => {
+const clickSaveMenuData = async (event, type, id) => {
   const elements = document.querySelectorAll('*[data-type="form"]');
   const new_data = {};
   const form_data = [];
@@ -470,19 +470,23 @@ const clickSaveMenuData = (event, type, id) => {
       new_data[title] = value;
     }
   })
-  new_data['id'] = id
-  const data = {
+  new_data['id'] = id;
+  const url = `/store/set_menu` ;
+  const method = type == 'PATCH' ? 'PATCH' : 'POST';
+  const fetchData = {
     json_data : new_data,
     form_data : form_data
   }
-  console.log(data);
-  const method = type == 'PATCH' ? 'PATCH' : 'POST';
-  fetchData(`/store/set_menu`, method, data, (data)=>{
-    console.log(data)
-    if(data.code == 200){
-      
-    }
-  },true)
+  const result = await fetchDataAsync(url, method, fetchData, true);
+  if(result.code == 200) {
+    const modal = openDefaultModal();
+    modal.container.classList.add('success');
+    modal.middle.innerHTML = `
+      <i class="ph ph-check-circle"></i>
+      <span>${result.msg}</span>
+    `
+    modal.bottom.innerHTML = modalBottomHtml([{class: 'close brand_fill', text: '확인', fun: ``}]);
+  }
 }
 
 // 체크박스 전체 토글

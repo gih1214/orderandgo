@@ -53,6 +53,7 @@ const createTableHtml = (data, categoryNum, pageNum) => {
 
 // 카테고리 클릭 시
 const changeTableCategory = (event, index) => {
+  curCategoryIndex = index;
   const _table = document.querySelector('main section article .items');
   const PAGE_INDEX = 0;
   createTableHtml(tableData, index, PAGE_INDEX);  
@@ -150,34 +151,31 @@ const clickTableArea = async (event) => {
       return ;
     }else{
       // 테이블 추가 api 요청;
-      const data = {
+      const url = `/adm/create_table`;
+      const method = 'POST';
+      console.log('curCategoryIndex,,',curCategoryIndex)
+      const fetchData = {
         name :`${tableData[curCategoryIndex].name} ${position}`,
         seat_count : 4,
         table_category: tableData[curCategoryIndex].id,
         page : page+1,
         position : position,
-      }
-      const onSuccess = (data) => {
-        if(data.code == 200){
-
-        }
-        _target.dataset.has = true;
-        _target.dataset.name = `${tableData[curCategoryIndex].name} ${position}`;
-        _target.dataset.id = data.id;
-        _target.innerHTML = `
-          <h2>${tableData[curCategoryIndex].name} ${position}</h2>
+      };
+      const result = await fetchDataAsync(url, method, fetchData);
+      console.log('result,',result)
+      _target.dataset.has = true;
+      _target.dataset.name = `${tableData[curCategoryIndex].name} ${position}`;
+      _target.dataset.id = result.table_id;
+      _target.innerHTML = `
+        <h2>${tableData[curCategoryIndex].name} ${position}</h2>
+        <div class="icons">
+          <i class="ph ph-pencil"></i>
           <i class="ph ph-trash"></i>
-          <div class="active"><i class="ph ph-arrows-out-cardinal"></i></div>
-        `
-      }
-      await callCreateTable(data, onSuccess)
+        </div>
+        <div class="active"><i class="ph ph-arrows-out-cardinal"></i></div>
+      `
     }
   }
-}
-
-
-const callCreateTable = async (data, onSuccess) => { // 테이블 생성
-  fetchData('/adm/create_table', 'POST', data, onSuccess)
 }
 
 const callChangeTablePostion = async (data, onSuccess) => { // 테이블 위치 변경
@@ -186,12 +184,11 @@ const callChangeTablePostion = async (data, onSuccess) => { // 테이블 위치 
 
 const callDeleteTable = async (event, id) => { // 테이블 삭제
   const result = await fetchDataAsync(`/store/set_table`, 'DELETE', {id: id});
-  if(result.code != 200){
-    return alert(result.msg)
-  }
-  const target = document.querySelector(`button.item[data-id="${id}"]`)
+  if(result.code != 200) alert(result.msg);
+  const target = document.querySelector(`button.item[data-id="${id}"]`);
   target.dataset.has = false; 
-  target.innerHTML = `<i class="ph ph-plus"></i>`
+  target.innerHTML = `<i class="ph ph-plus"></i>`;
+  document.querySelector('.modal').click();
 }
 const callChangeTableName = async (event, id) => {
   const _modal = document.querySelector('.modal');

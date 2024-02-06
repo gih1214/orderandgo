@@ -444,7 +444,10 @@ def set_menu():
             check_options_exist(menu.id) # DB에 등록된 옵션이 있는지 확인 후 있으면 삭제하고
             create_menu_option(options, menu.id) # 메뉴 옵션 재등록함
 
-        return jsonify({'message': '메뉴가 성공적으로 수정되었습니다.'}), 200
+        return jsonify({
+            'code' : 200,
+            'msg': '저장이 완료되었습니다.'
+            }), 200
     
     # 메뉴 삭제
     if request.method == 'DELETE':
