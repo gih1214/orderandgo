@@ -240,6 +240,9 @@ section ul li .submit_btn {
   flex: 1;
   border-bottom: 1px solid #ccc;
 }
+.set_menu_product main article .article_bottom ul li.active{
+  background: #F3FAFA; 
+}
 .set_menu_product main article .article_bottom ul li:first-child{
   position: sticky;
   top: 0;
@@ -264,18 +267,73 @@ section ul li .submit_btn {
   align-items: center;
   justify-content: left;
 }
+.custom-checkbox{
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none; /* 텍스트 선택 방지 */
+}
+
+.custom-checkbox input[type="checkbox"] {
+  visibility: hidden;
+}
+.custom-checkbox .checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 13.5px;
+  width: 13.5px;
+  border: 1px solid #000;
+  border-radius: 3px;
+  background-color: rgba(0,0,0,0); /* 체크박스 배경색 */
+}
+
+/* 체크박스에 체크했을 때의 스타일 */
+.custom-checkbox input:checked ~ .checkmark {
+  background-color: #1FAA9C; /* 체크했을 때의 배경색 */
+  border: 1px solid #1FAA9C;
+}
+
+/* 체크 표시 스타일 */
+.custom-checkbox .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* 체크했을 때 체크 표시 보이기 */
+.custom-checkbox input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* 체크 표시 디자인 */
+.custom-checkbox .checkmark:after {
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+
 .set_menu_product main article .article_bottom ul li div:not(:first-child){
   border-left: 1px solid #ccc;
 }
 
 .set_menu_product main article .article_bottom ul li div:nth-child(2){
-  flex: 1;
+  flex: .5;
 }
 .set_menu_product main article .article_bottom ul li div:nth-child(3){
-  flex: 1;
+  flex: .5;
 }
 .set_menu_product main article .article_bottom ul li div:nth-child(4){
-  flex: 2;
+  flex: .7;
 }
 .set_menu_product main article .article_bottom ul li:not(:first-child) div:nth-child(4){
   display: flex;
@@ -298,7 +356,7 @@ section ul li .submit_btn {
   flex: 1;
 }
 .set_menu_product main article .article_bottom ul li div:nth-child(6){
-  flex: 1;
+  flex: .3;
 }
 .set_menu_product main article .article_bottom ul li:not(:first-child) div:nth-child(6){
   justify-content: right;
