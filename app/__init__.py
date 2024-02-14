@@ -8,6 +8,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from contextlib import contextmanager
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, text
+from flask_cors import CORS
 
 db = SQLAlchemy()
 migrate = Migrate()     
@@ -16,7 +17,7 @@ login_manager = LoginManager()
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    
+    CORS(app)
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
