@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_socketio import SocketIO 
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -12,6 +13,7 @@ from sqlalchemy import create_engine, text
 db = SQLAlchemy()
 migrate = Migrate()     
 login_manager = LoginManager()
+socketio = SocketIO() 
 
 def create_app():
     app = Flask(__name__)
@@ -19,6 +21,7 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
+    socketio.init_app(app)
     
     # 모든 모델 클래스들을 한번에 import
     from app import models
@@ -33,6 +36,7 @@ def create_app():
     from app.routes.order import order_bp
     from app.routes.store import store_bp
     from app.routes.payment import payment_bp
+    from app.routes.table_order import table_order_bp
     
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
@@ -41,5 +45,6 @@ def create_app():
     app.register_blueprint(order_bp)
     app.register_blueprint(store_bp)
     app.register_blueprint(payment_bp)
+    app.register_blueprint(table_order_bp)
     
     return app

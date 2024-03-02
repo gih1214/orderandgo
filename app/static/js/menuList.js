@@ -723,7 +723,7 @@ const clickOrder = async (event) => {
       order_list : deepCopy(menuAllData)
     };
     const result = await fetchDataAsync(url, method, fetchData);
-    if(result.data = 'Success'){
+    if(result.code == 200){
       window.location.href = '/pos/tableList'
     }
   }else{ // 주문취소
@@ -732,7 +732,7 @@ const clickOrder = async (event) => {
     const method = `POST`;
     const fetchData = {order_id_list:cancel_order_list.map((data)=>data.order_id)}
     const result = await fetchDataAsync(url, method, fetchData)
-    if(result.data = 'Success'){
+    if(result.code == 200){
       window.location.href = '/pos/tableList'
     }
   }
